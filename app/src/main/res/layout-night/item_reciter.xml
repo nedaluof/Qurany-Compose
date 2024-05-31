@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="reciter"
+            type="com.nedaluof.qurany.data.model.Reciter" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/reciter_item_lyt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:cardBackgroundColor="@color/light_black"
+        app:cardCornerRadius="@dimen/dp_8"
+        app:cardElevation="2dp"
+        app:strokeColor="@color/green_200"
+        app:strokeWidth="@dimen/_1sdp"
+        app:cardPreventCornerOverlap="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@color/green_200"
+                android:contentDescription="@string/reciters_bar_title"
+                android:paddingTop="@dimen/dp_4"
+                android:src="@drawable/ic_reciter" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:layout_marginStart="2dp"
+                android:background="@color/green_200" />
+
+            <LinearLayout
+                android:id="@+id/reciter_data_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_4"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_reciter_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:text="@{reciter.name}"
+                    android:textColor="@color/green_200"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="Maher Al-Mueqle" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_reciter_rewaya"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:text="@{reciter.rewaya}"
+                    android:textColor="@color/green_200"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    tools:text="Hafs An Asem" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_reciter_sura_count"
+                    style="@style/TextAppearance.MaterialComponents.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:textColor="@color/white"
+                    app:suraCount="@{reciter.count}"
+                    tools:text="There 70 Suras" />
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dp_4"
+                app:cardCornerRadius="3dp"
+                app:cardPreventCornerOverlap="false">
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/add_reciter_to_favorite"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_favorite_navigation"
+                    android:visibility="@{reciter.inMyReciters ? View.GONE:View.VISIBLE }" />
+
+                <ProgressBar
+                    android:id="@+id/item_fav_progress"
+                    style="@style/Widget.AppCompat.ProgressBar"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+            </RelativeLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

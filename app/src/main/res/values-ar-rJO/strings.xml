@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">قُراّني</string>
+    <string name="app_player">مشغل قُراّني</string>
+
+    <string name="reciters_bar_title">قائمة القراء</string>
+    <string name="reciters_search_hint">إبحث في قائمة القراء</string>
+    <string name="reciters_suras_bar_title">السور الخاصة بالقارئ</string>
+    <string name="home_nav_title">القُراء</string>
+    <string name="favorite_nav_title">قُرائي</string>
+
+    <string name="my_reciters_appbar_title">قُرائي المفضلين</string>
+
+    <string name="no_reciters">لم تقم بإضافة أي قارئ لقائمتك ,إذهب الى قائمة القرائ وأضف واحدا لتراه هنا </string>
+
+    <string name="sura_count_1">هنالك </string>
+    <string name="sura_count_2">سورة</string>
+    <string name="sura_count_3">هنالك سورة واحدة فقط</string>
+    <string name="sura_number">رقم السورة : </string>
+    <string name="reciters_search_hit">إبحث عن قارئ</string>
+
+
+    <string name="alrt_add_success_msg">تم إضافة القارئ بنجاح لقائمة القرائ المفضلين</string>
+
+    <string name="alrt_err_occur_msg">حدث خطأ ما !</string>
+
+    <string name="alrt_delete_title">حذف القارئ من قائمة قرائي</string>
+    <string name="alrt_delete_msg1">هل أنت متأكد من حذف ( </string>
+    <string name="alrt_delete_msg2"> ) من قائمتك</string>
+    <string name="alrt_delete_btn_ok">حذف</string>
+    <string name="alrt_delete_btn_cancel">إلغاء</string>
+    <string name="alrt_delete_success">تم بنجاح</string>
+    <string name="alrt_delete_fail">لم يتم الحذف هنالك خطأ</string>
+
+    <string name="alrt_download_completed_msg">الأن يمكنك الإستماع للسورة بدون إنترنت</string>
+    <string name="alrt_download_start_title">بدء التحميل الرجاء الإنتظار</string>
+
+    <string name="alrt_no_internet_title">لايوجد إتصال بالإنترنت</string>
+    <string name="alrt_no_internet_msg">تأكد من أنك تملك إتصال بالشبكة</string>
+    .
+    <string name="alrt_sura_exist_message">السورة محملة مسبقا , يمكنك الإستماع لها مباشرة عند الضغط على زر التشغيل</string>
+
+    <string name="alrt_sura_playing_locally">تم الأن تشغيل السورة من ذاكرة الجهاز</string>
+    <string name="alrt_sura_playing_online">تم الأن تشغيل السورة عبر الإنترنت</string>
+
+    <string name="controller_ffwd">تقديم السورة إلى الأمام</string>
+    <string name="controller_rew">إرجاع السورة إلى الخلف</string>
+    <string name="controller_play">تشغيل السورة</string>
+    <string name="controller_pause">إيقاف السورة</string>
+
+    <string name="app_version">الإصدار : </string>
+    <string name="exit_app_msg">للخروج الرجاء الضغط على زر الرجوع مرة أخرى</string>
+
+</resources>

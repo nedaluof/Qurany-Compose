@@ -1,0 +1,25 @@
+/*
+ * Created By nedaluof  31/5/2024.
+ */
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://jitpack.io' }
+        //noinspection JcenterRepositoryObsolete
+        jcenter()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+        //noinspection JcenterRepositoryObsolete
+        jcenter()
+    }
+}
+include ':app'
+rootProject.name = 'Qurany-Compose'

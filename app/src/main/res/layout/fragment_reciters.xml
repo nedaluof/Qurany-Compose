@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewmodel"
+            type="com.nedaluof.qurany.ui.main.reciters.RecitersViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            app:elevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/app_bar_rounded_bg"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/_2sdp"
+                    android:layout_weight="1"
+                    android:text="@string/reciters_bar_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_15ssp" />
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/reciters_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_6sdp"
+                    android:background="@color/transparent"
+                    app:closeIcon="@drawable/ic_close"
+                    app:queryHint="@string/reciters_search_hint"
+                    app:searchHintIcon="@drawable/ic_search_2"
+                    app:searchIcon="@drawable/ic_search"
+                    app:setEmptyQuery="@{viewmodel.emptying}" />
+
+            </LinearLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/reciter_list_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:visibility="@{viewmodel.connected ? View.VISIBLE : View.GONE}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/reciters_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:layoutAnimation="@anim/recycler_view_items_animation"
+                android:overScrollMode="never"
+                android:paddingBottom="@dimen/_50sdp"
+                android:scrollbars="none"
+                app:items="@{viewmodel.recitersList}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_reciter" />
+
+            <ProgressBar
+                android:id="@+id/pro_reciters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="@{viewmodel.loading ? View.VISIBLE : View.GONE}" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/no_internet_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_100sdp"
+            android:orientation="vertical"
+            android:visibility="@{viewmodel.connected ? View.GONE : View.VISIBLE}"
+            tools:ignore="UseCompoundDrawables">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_no_internet" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/alrt_no_internet_title"
+                android:textColor="@color/green_200"
+                android:textSize="@dimen/_18ssp" />
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
