@@ -33,7 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.new_ui.screens.main.MainActivity
+import com.nedaluof.qurany.new_ui.MainActivity
 import com.nedaluof.qurany.new_ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.getAppVersionName
 import dagger.hilt.android.AndroidEntryPoint
