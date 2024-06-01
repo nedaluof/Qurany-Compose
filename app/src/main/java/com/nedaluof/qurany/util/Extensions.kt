@@ -37,6 +37,9 @@ fun Context.toastySuccess(@StringRes msg: Int) =
 fun Context.toastyInfo(@StringRes msg: Int) =
   Toasty.info(this, msg).show()
 
+fun Context.toastyInfo(msg: String) =
+  Toasty.info(this, msg).show()
+
 /**
  * @return user device language
  */
