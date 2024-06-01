@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.main.reciters
+package com.nedaluof.qurany.new_ui.screens.main.reciters
 
 import android.annotation.SuppressLint
 import android.os.Build

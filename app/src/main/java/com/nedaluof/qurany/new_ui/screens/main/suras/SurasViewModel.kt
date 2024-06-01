@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.main.suras
+package com.nedaluof.qurany.new_ui.screens.main.suras
 
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel

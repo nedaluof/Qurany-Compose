@@ -11,6 +11,7 @@ import com.nedaluof.qurany.util.connectivityFlow
 import com.nedaluof.qurany.util.getLanguage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.distinctUntilChanged
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,8 +23,7 @@ class RecitersRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
   private val preferences: PreferencesManager,
   private val recitersDao: RecitersDao,
-  @ApplicationContext
-  private val context: Context
+  @ApplicationContext private val context: Context
 ) : RecitersRepository {
 
   override suspend fun loadReciters(result: (Result<List<Reciter>>) -> Unit) {
@@ -58,4 +58,19 @@ class RecitersRepositoryImpl @Inject constructor(
   }
 
   override suspend fun observeConnectivity() = context.connectivityFlow()
+
+  override fun getMyReciters() = recitersDao.getMyReciters()
+    .distinctUntilChanged()
+
+  override suspend fun deleteFromMyReciters(reciter: Reciter, result: (Result<Boolean>) -> Unit) {
+    try {
+      recitersDao.deleteReciter(reciter)
+      // remove from preferences
+      preferences.removeFromPreferences(reciter.id!!)
+      // now inform  deletion successfully
+      result(Result.success(true))
+    } catch (exception: Exception) {
+      result(Result.error(null, exception.message!!))
+    }
+  }
 }

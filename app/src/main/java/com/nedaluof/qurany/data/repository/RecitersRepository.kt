@@ -12,4 +12,8 @@ interface RecitersRepository {
   suspend fun loadReciters(result: (Result<List<Reciter>>) -> Unit)
   suspend fun addReciterToDatabase(reciter: Reciter, result: (Result<Boolean>) -> Unit)
   suspend fun observeConnectivity(): Flow<ConnectivityStatus>
+
+  fun getMyReciters(): Flow<List<Reciter>>
+
+  suspend fun deleteFromMyReciters(reciter: Reciter, result: (Result<Boolean>) -> Unit)
 }

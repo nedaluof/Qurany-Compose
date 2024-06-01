@@ -3,8 +3,6 @@ package com.nedaluof.qurany.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -14,10 +12,7 @@ import com.nedaluof.qurany.R
 import com.nedaluof.qurany.databinding.ActivityMainBinding
 import com.nedaluof.qurany.new_ui.screens.splash.SplashActivity
 import com.nedaluof.qurany.ui.base.BaseActivity
-import com.nedaluof.qurany.ui.main.myreciters.MyRecitersFragment
-import com.nedaluof.qurany.ui.main.reciters.RecitersFragment
 import com.nedaluof.qurany.util.click
-import com.nedaluof.qurany.util.toast
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -41,7 +36,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     observeViewModel()
     initNavigation()
     initClicks()
-    loadFragment(RecitersFragment())
   }
 
   private fun initNavigation() {
@@ -52,12 +46,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         when (i) {
           R.id.nav_reciters -> {
             binding.navigation.setItemSelected(R.id.nav_reciters, true)
-            loadFragment(RecitersFragment())
           }
 
           R.id.nav_my_reciters -> {
             binding.navigation.setItemSelected(R.id.nav_my_reciters, true)
-            loadFragment(MyRecitersFragment())
           }
         }
       }
@@ -104,7 +96,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
   }
 
   override fun onBackPressed() {
-    val fragment = supportFragmentManager.findFragmentById(binding.container.id)
+    super.onBackPressed()
+    /*val fragment = supportFragmentManager.findFragmentById(binding.container.id)
     if (fragment is RecitersFragment) {
       if (doubleBackToExitPressedOnce) {
         doubleBackToExitPressedOnce = false
@@ -121,7 +114,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     } else if (fragment is MyRecitersFragment) {
       loadFragment(RecitersFragment())
       binding.navigation.setItemSelected(R.id.nav_reciters, true)
-    }
+    }*/
   }
 
 

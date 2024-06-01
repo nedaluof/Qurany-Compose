@@ -1,10 +1,8 @@
 package com.nedaluof.qurany.di
 
-import com.nedaluof.qurany.data.repository.MyRecitersRepository
 import com.nedaluof.qurany.data.repository.RecitersRepository
 import com.nedaluof.qurany.data.repository.SplashRepository
 import com.nedaluof.qurany.data.repository.SurasRepository
-import com.nedaluof.qurany.data.repositoryImpl.MyRecitersRepositoryImpl
 import com.nedaluof.qurany.data.repositoryImpl.RecitersRepositoryImpl
 import com.nedaluof.qurany.data.repositoryImpl.SplashRepositoryImpl
 import com.nedaluof.qurany.data.repositoryImpl.SurasRepositoryImpl
@@ -34,12 +32,6 @@ abstract class RepositoriesModule {
   abstract fun bindRecitersRepository(
     repoImpl: RecitersRepositoryImpl
   ): RecitersRepository
-
-  @ViewModelScoped
-  @Binds
-  abstract fun bindMyRecitersRepository(
-    repoImpl: MyRecitersRepositoryImpl
-  ): MyRecitersRepository
 
   @ViewModelScoped
   @Binds

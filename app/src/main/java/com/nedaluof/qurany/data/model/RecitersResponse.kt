@@ -10,8 +10,7 @@ import kotlinx.parcelize.Parcelize
  * Created by nedaluof on 12/2/2020.
  */
 data class Reciters(
-  @SerializedName("reciters")
-  var reciters: List<Reciter>? = null
+  @SerializedName("reciters") var reciters: List<Reciter>? = null
 )
 
 @Parcelize
@@ -27,4 +26,33 @@ data class Reciter(
   var inMyReciters: Boolean = false,
   @PrimaryKey(autoGenerate = true) var reciter_id: Int = 0,
   var isPlayingNow: Boolean = false
-) : Parcelable
+) : Parcelable {
+
+  companion object {
+    fun mockList() = listOf(Reciter().apply {
+      id = "1"
+      name = "Maher Al-Mueqle"
+      rewaya = "Hafs An Asem"
+      count = "There 114 Suras"
+      letter = ""
+      suras = ""
+      inMyReciters = false
+    }, Reciter().apply {
+      id = "2"
+      name = "Maher Al-Mueqle"
+      rewaya = "Hafs An Asem"
+      count = "There 114 Suras"
+      letter = ""
+      suras = ""
+      inMyReciters = false
+    }, Reciter().apply {
+      id = "3"
+      name = "Maher Al-Mueqle"
+      rewaya = "Hafs An Asem"
+      count = "There 114 Suras"
+      letter = ""
+      suras = ""
+      inMyReciters = false
+    })
+  }
+}

@@ -44,6 +44,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -139,6 +140,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:3.9.0'
 
     /*Compose*/
+    implementation 'androidx.hilt:hilt-navigation-compose:1.2.0'
     implementation 'androidx.activity:activity-compose:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.1'

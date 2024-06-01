@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,8 +40,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.new_ui.navigation.BottomNavigationScreens
-import com.nedaluof.qurany.new_ui.screens.main.myreciters.MyRecitersScreen
-import com.nedaluof.qurany.new_ui.screens.main.reciters.RecitersScreen
+import com.nedaluof.qurany.new_ui.screens.main.reciters.RecitersListScreen
 import com.nedaluof.qurany.new_ui.theme.QuranyComposeTheme
 
 /**
@@ -48,13 +49,15 @@ import com.nedaluof.qurany.new_ui.theme.QuranyComposeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(
+  modifier: Modifier = Modifier
+) {
   val navController = rememberNavController()
   val bottomNavigationItems = listOf(
     BottomNavigationScreens.Reciters, BottomNavigationScreens.MyReciters
   )
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-  Scaffold(topBar = {
+  Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
     TopAppBar(
       navController = navController, onSearchClickedClick = {}, scrollBehavior = scrollBehavior
     )
@@ -75,8 +78,10 @@ private fun TopAppBar(
   val navBackStackEntry by navController.currentBackStackEntryAsState()
   val currentDestination = navBackStackEntry?.destination?.route ?: "reciters"
   CenterAlignedTopAppBar(
-    colors = TopAppBarDefaults.topAppBarColors()
-      .copy(containerColor = MaterialTheme.colorScheme.primary),
+    colors = TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primary,
+      scrolledContainerColor = MaterialTheme.colorScheme.primary
+    ),
     title = {
       Row(
         Modifier.fillMaxWidth(),
@@ -144,7 +149,6 @@ private fun BottomNavigationBar(
         unselectedTextColor = Color.Gray,
       ), onClick = {
         if (currentDestination != navigationItem.route) {
-          //navController.navigate(navigationItem.route)
           navController.navigate(navigationItem.route) {
             popUpTo(navController.graph.findStartDestination().id) {
               saveState = true
@@ -168,10 +172,10 @@ private fun MainScreenNavigationConfigurations(
     modifier = Modifier.padding(paddingValues)
   ) {
     composable(BottomNavigationScreens.Reciters.route) {
-      RecitersScreen()
+      RecitersListScreen(Modifier.fillMaxSize())
     }
     composable(BottomNavigationScreens.MyReciters.route) {
-      MyRecitersScreen()
+      RecitersListScreen(Modifier.fillMaxSize(), true)
     }
   }
 }

@@ -1,5 +1,6 @@
 package com.nedaluof.qurany.new_ui.screens.main.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,10 +42,12 @@ fun ReciterItem(
   onClicked: () -> Unit = {},
   onAddToFavoriteClicked: () -> Unit = {},
 ) {
+  var isInMyReciters by remember { mutableStateOf(reciter.inMyReciters) }
   Card(
     onClick = onClicked,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
     shape = RoundedCornerShape(8.dp),
+    border = BorderStroke(1.dp, AppGreen),
     modifier = Modifier
       .height(70.dp)
       .padding(horizontal = 8.dp)
@@ -71,28 +78,24 @@ fun ReciterItem(
         )
 
         Text(
-          text = reciter.rewaya ?: "",
-          maxLines = 1,
-          style = MaterialTheme.typography.bodySmall,
-          color = AppGreen
+          text = reciter.rewaya ?: "", style = MaterialTheme.typography.bodySmall, color = AppGreen
         )
 
         Text(
-          text = reciter.count ?: "",
-          maxLines = 1,
-          style = MaterialTheme.typography.bodySmall,
-          color = AppGreen
+          text = reciter.count ?: "", style = MaterialTheme.typography.bodySmall, color = AppGreen
         )
       }
 
       IconButton(
-        onClick = onAddToFavoriteClicked,
-        modifier = Modifier.align(Alignment.CenterVertically)
+        onClick = {
+          isInMyReciters = !isInMyReciters
+          onAddToFavoriteClicked()
+        }, modifier = Modifier.align(Alignment.CenterVertically)
       ) {
         Icon(
           painter = painterResource(id = R.drawable.ic_favorite_navigation),
           contentDescription = "add to favorite",
-          tint = if (reciter.inMyReciters) Color.Red else AppGreen
+          tint = if (isInMyReciters) Color.Red else AppGreen
         )
       }
     }

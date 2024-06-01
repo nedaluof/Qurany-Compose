@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.main.suras.SurasActivity"
+            android:name=".new_ui.screens.main.suras.SurasActivity"
             android:launchMode="singleInstance"
             android:parentActivityName=".ui.main.MainActivity" /> <!-- services -->
         <service
