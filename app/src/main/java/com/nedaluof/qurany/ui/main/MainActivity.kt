@@ -1,7 +1,5 @@
 package com.nedaluof.qurany.ui.main
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
@@ -10,8 +8,8 @@ import androidx.fragment.app.Fragment
 import com.nedaluof.qurany.BR
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.databinding.ActivityMainBinding
+import com.nedaluof.qurany.new_ui.base.BaseActivity
 import com.nedaluof.qurany.new_ui.screens.splash.SplashActivity
-import com.nedaluof.qurany.ui.base.BaseActivity
 import com.nedaluof.qurany.util.click
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -115,12 +113,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
       loadFragment(RecitersFragment())
       binding.navigation.setItemSelected(R.id.nav_reciters, true)
     }*/
-  }
-
-
-  companion object {
-    fun getIntent(
-      context: Context
-    ) = Intent(context, MainActivity::class.java)
   }
 }

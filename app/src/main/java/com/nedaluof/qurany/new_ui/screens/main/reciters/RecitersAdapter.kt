@@ -10,7 +10,7 @@ import android.widget.Filterable
 import androidx.annotation.RequiresApi
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.databinding.ItemReciterBinding
-import com.nedaluof.qurany.ui.base.BaseRecyclerAdapter
+import com.nedaluof.qurany.new_ui.base.BaseRecyclerAdapter
 import com.nedaluof.qurany.util.getLanguage
 
 /**

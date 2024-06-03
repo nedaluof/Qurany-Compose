@@ -3,7 +3,7 @@ package com.nedaluof.qurany.new_ui.screens.main.suras
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.data.repository.SurasRepository
-import com.nedaluof.qurany.ui.base.BaseViewModel
+import com.nedaluof.qurany.new_ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

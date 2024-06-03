@@ -72,7 +72,6 @@ class SplashActivity : AppCompatActivity() {
           contentDescription = "app logo",
           modifier = Modifier.align(Alignment.Center)
         )
-
         Column(
           modifier = Modifier
             .fillMaxWidth()

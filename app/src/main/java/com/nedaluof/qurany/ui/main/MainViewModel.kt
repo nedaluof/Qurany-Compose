@@ -1,7 +1,7 @@
 package com.nedaluof.qurany.ui.main
 
 import com.nedaluof.qurany.data.repository.SettingsRepository
-import com.nedaluof.qurany.ui.base.BaseViewModel
+import com.nedaluof.qurany.new_ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -25,10 +25,9 @@
     <string name="alrt_err_occur_msg">حدث خطأ ما !</string>
 
     <string name="alrt_delete_title">حذف القارئ من قائمة قرائي</string>
-    <string name="alrt_delete_msg1">هل أنت متأكد من حذف ( </string>
-    <string name="alrt_delete_msg2"> ) من قائمتك</string>
-    <string name="alrt_delete_btn_ok">حذف</string>
-    <string name="alrt_delete_btn_cancel">إلغاء</string>
+    <string name="alrt_delete_msg">هل أنت متأكد من حذف ( %s ) من قائمتك</string>
+    <string name="delete_label">حذف</string>
+    <string name="cancel_label">إلغاء</string>
     <string name="alrt_delete_success">تم بنجاح</string>
     <string name="alrt_delete_fail">لم يتم الحذف هنالك خطأ</string>
 

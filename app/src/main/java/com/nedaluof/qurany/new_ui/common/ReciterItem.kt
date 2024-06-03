@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.new_ui.screens.main.common
+package com.nedaluof.qurany.new_ui.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.base
+package com.nedaluof.qurany.new_ui.base
 
 import android.content.Context
 import android.os.Bundle

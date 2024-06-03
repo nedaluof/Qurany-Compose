@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.Status
 import com.nedaluof.qurany.data.repository.RecitersRepository
-import com.nedaluof.qurany.ui.base.BaseViewModel
+import com.nedaluof.qurany.new_ui.base.BaseViewModel
 import com.nedaluof.qurany.util.ConnectivityStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +36,8 @@ class RecitersViewModel @Inject constructor(
 
   private val _resultOfDeletion = MutableStateFlow(false)
   val resultOfDeleteReciter = _resultOfDeletion.asStateFlow()
+
+  var reciterToBeProcessed: Reciter? = null
   //endregion
 
   fun loadReciters(
@@ -72,17 +74,19 @@ class RecitersViewModel @Inject constructor(
     }
   }
 
-  fun processAddOrDeleteFromMyReciters(
-    reciter: Reciter
-  ) {
-    viewModelScope.launch(Dispatchers.IO) {
-      if (reciter.inMyReciters) {
-        repository.deleteFromMyReciters(reciter) { result ->
-          _resultOfDeletion.value = result.status == Status.SUCCESS
-        }
-      } else {
-        repository.addReciterToDatabase(reciter) { result ->
-          _resultAdd.value = result.status == Status.SUCCESS
+  fun processAddOrDeleteFromMyReciters() {
+    reciterToBeProcessed?.let { reciter ->
+      viewModelScope.launch(Dispatchers.IO) {
+        if (reciter.inMyReciters) {
+          repository.deleteFromMyReciters(reciter) { result ->
+            _resultOfDeletion.value = result.status == Status.SUCCESS
+            reciterToBeProcessed = null
+          }
+        } else {
+          repository.addReciterToDatabase(reciter) { result ->
+            _resultAdd.value = result.status == Status.SUCCESS
+            reciterToBeProcessed = null
+          }
         }
       }
     }

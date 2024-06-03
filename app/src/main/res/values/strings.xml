@@ -30,11 +30,10 @@
 
     <string name="alrt_err_occur_msg">Something went Wrong !</string>
 
-    <string name="alrt_delete_title">Delete Reciter </string>
-    <string name="alrt_delete_msg1">Are you sure to delete ( </string>
-    <string name="alrt_delete_msg2"> ) from your reciters list</string>
-    <string name="alrt_delete_btn_ok">Delete</string>
-    <string name="alrt_delete_btn_cancel">Cancel</string>
+    <string name="alrt_delete_title">Delete Reciter</string>
+    <string name="alrt_delete_msg">Are you sure to delete ( %s ) from your reciters list</string>
+    <string name="delete_label">Delete</string>
+    <string name="cancel_label">Cancel</string>
     <string name="alrt_delete_success">Deleted Successfully</string>
     <string name="alrt_delete_fail">Deletion Fail</string>
     <string name="alrt_download_completed_msg">Download Completed , Now you can play the sura in offline mode</string>

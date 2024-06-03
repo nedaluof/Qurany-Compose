@@ -22,9 +22,9 @@ import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.databinding.ActivitySurasBinding
+import com.nedaluof.qurany.new_ui.base.BaseActivity
 import com.nedaluof.qurany.service.QuranyDownloadService
 import com.nedaluof.qurany.service.QuranyPlayerService
-import com.nedaluof.qurany.ui.base.BaseActivity
 import com.nedaluof.qurany.util.AppConstants
 import com.nedaluof.qurany.util.click
 import com.nedaluof.qurany.util.getParcelableExtraT

@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.databinding.ItemSuraBinding
-import com.nedaluof.qurany.ui.base.BaseRecyclerAdapter
+import com.nedaluof.qurany.new_ui.base.BaseRecyclerAdapter
 
 /**
  * Created by nedaluof on 12/17/2020.
