@@ -54,7 +54,7 @@ import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 @Composable
 fun MainScreen(
   modifier: Modifier = Modifier,
-  viewModel: MainViewModel = hiltViewModel(),
+  viewModel: MainViewModel,
   reloadApp: () -> Unit = {}
 ) {
   val navController = rememberNavController()
@@ -103,7 +103,8 @@ fun Toolbar(
     ) {
       Icon(
         painter = painterResource(id = if (viewModel.isNightModeEnabled.value) R.drawable.ic_light_mode else R.drawable.ic_night_mode),
-        contentDescription = "change app theme between light and night"
+        contentDescription = "change app theme between light and night",
+        tint = Color.Unspecified
       )
     }
   }
@@ -168,8 +169,7 @@ private fun BottomNavigationBar(
         width = 1.5.dp,
         color = MaterialTheme.colorScheme.primary,
         shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp)
-      )
-      .background(MaterialTheme.colorScheme.surface)
+      ),
   ) {
     items.forEach { navigationItem ->
       NavigationBarItem(selected = currentDestination == navigationItem.route, label = {
@@ -225,6 +225,6 @@ private fun MainScreenNavigationConfigurations(
 @Composable
 fun MainScreenPreview(modifier: Modifier = Modifier) {
   QuranyComposeTheme {
-    MainScreen()
+    MainScreen(viewModel = hiltViewModel<MainViewModel>())
   }
 }

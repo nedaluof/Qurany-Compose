@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.di.LocaleManagerEntryPoint
-import com.nedaluof.qurany.ui.MainActivity
+import com.nedaluof.qurany.ui.screens.main.MainActivity
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.getAppVersionName
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,12 +51,11 @@ class SplashActivity : AppCompatActivity() {
 
   override fun attachBaseContext(newBase: Context?) {
     val localeManager = EntryPointAccessors.fromApplication(
-      newBase!!,
-      LocaleManagerEntryPoint::class.java
+      newBase!!, LocaleManagerEntryPoint::class.java
     ).localeManager
     super.attachBaseContext(newBase.let { localeManager.configureAppLocale(it) })
   }
-  
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {

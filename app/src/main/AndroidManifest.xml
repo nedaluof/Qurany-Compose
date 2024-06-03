@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.screens.main.MainActivity"
             android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
