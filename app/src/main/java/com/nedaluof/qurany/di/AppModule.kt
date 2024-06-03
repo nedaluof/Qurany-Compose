@@ -1,7 +1,7 @@
 package com.nedaluof.qurany.di
 
-import com.nedaluof.qurany.data.repository.SettingsRepository
-import com.nedaluof.qurany.data.repositoryImpl.SettingsRepositoryImpl
+import com.nedaluof.qurany.data.repository.AppRepository
+import com.nedaluof.qurany.data.repositoryImpl.AppRepositoryImpl
 import com.nedaluof.qurany.util.LocaleManager
 import dagger.Binds
 import dagger.Module
@@ -19,8 +19,8 @@ abstract class AppModule {
 
   @Binds
   abstract fun bindSettingsRepository(
-    impl: SettingsRepositoryImpl
-  ): SettingsRepository
+    impl: AppRepositoryImpl
+  ): AppRepository
 }
 
 /**

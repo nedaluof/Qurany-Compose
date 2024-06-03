@@ -1,10 +1,14 @@
 package com.nedaluof.qurany.ui.main
 
-import com.nedaluof.qurany.data.repository.SettingsRepository
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.viewModelScope
+import com.nedaluof.qurany.data.repository.AppRepository
 import com.nedaluof.qurany.new_ui.base.BaseViewModel
+import com.nedaluof.qurany.util.ConnectivityStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -12,7 +16,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
-  private val settingsRepository: SettingsRepository
+  private val appRepository: AppRepository
 ) : BaseViewModel() {
 
   //app language
@@ -22,19 +26,33 @@ class MainViewModel @Inject constructor(
   private val _isNightModeEnabled = MutableStateFlow<Boolean?>(null)
   val isNightModeEnabled = _isNightModeEnabled.asStateFlow()
 
+  // connectivity status
+  val connected = mutableStateOf(true)
+
   fun changeDayNightMode() {
-    val currentMode = settingsRepository.isNightModeEnabled()
+    val currentMode = appRepository.isNightModeEnabled()
     val newMode = !currentMode
-    settingsRepository.updateNightMode(newMode)
+    appRepository.updateNightMode(newMode)
     _isNightModeEnabled.value = newMode
   }
 
   fun loadAppLanguage() {
     appLanguageEnglish.value =
-      if (settingsRepository.isCurrentLanguageEnglish()) "العربية" else "EN"
+      if (appRepository.isCurrentLanguageEnglish()) "العربية" else "EN"
   }
 
   fun changeAppLanguage() {
-    settingsRepository.updateCurrentLanguage()
+    appRepository.updateCurrentLanguage()
+  }
+
+  private fun observeConnectivity() {
+    viewModelScope.launch {
+      appRepository.observeConnectivity().collect { connectionState ->
+        when (connectionState) {
+          ConnectivityStatus.CONNECTED -> connected.value = true
+          ConnectivityStatus.NOT_CONNECTED -> connected.value = false
+        }
+      }
+    }
   }
 }

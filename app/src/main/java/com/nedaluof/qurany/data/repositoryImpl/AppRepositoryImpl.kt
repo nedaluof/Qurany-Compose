@@ -1,15 +1,25 @@
 package com.nedaluof.qurany.data.repositoryImpl
 
+import android.content.Context
 import com.nedaluof.qurany.data.datasource.localsource.preferences.PreferencesManager
-import com.nedaluof.qurany.data.repository.SettingsRepository
+import com.nedaluof.qurany.data.repository.AppRepository
+import com.nedaluof.qurany.util.ConnectivityStatus
+import com.nedaluof.qurany.util.connectivityFlow
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
  * Created by NedaluOf on 12/9/2022.
  */
-class SettingsRepositoryImpl @Inject constructor(
+class AppRepositoryImpl @Inject constructor(
+  @ApplicationContext private val context: Context,
   private val preferencesManager: PreferencesManager
-) : SettingsRepository {
+) : AppRepository {
+
+  @OptIn(ExperimentalCoroutinesApi::class)
+  override suspend fun observeConnectivity(): Flow<ConnectivityStatus> = context.connectivityFlow()
 
   override fun isNightModeEnabled(): Boolean {
     return preferencesManager.getFromPreferences(NIGHT_MODE_KEY, false) ?: false

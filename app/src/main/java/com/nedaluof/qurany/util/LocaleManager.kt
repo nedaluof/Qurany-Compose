@@ -1,7 +1,7 @@
 package com.nedaluof.qurany.util
 
 import android.content.Context
-import com.nedaluof.qurany.data.repository.SettingsRepository
+import com.nedaluof.qurany.data.repository.AppRepository
 import java.util.Locale
 import javax.inject.Inject
 
@@ -9,7 +9,7 @@ import javax.inject.Inject
  * Created by NedaluOf on 12/16/2022.
  */
 class LocaleManager @Inject constructor(
-  private val settingsRepository: SettingsRepository
+  private val appRepository: AppRepository
 ) {
 
   fun configureAppLocale(context: Context): Context {
@@ -30,5 +30,5 @@ class LocaleManager @Inject constructor(
     return context.createConfigurationContext(configuration)
   }
 
-  private fun getLanguage() = if (settingsRepository.isCurrentLanguageEnglish()) "en" else "ar"
+  private fun getLanguage() = if (appRepository.isCurrentLanguageEnglish()) "en" else "ar"
 }

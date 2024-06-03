@@ -42,7 +42,8 @@ fun RecitersListScreen(
     viewModel.loadReciters(isMyRecitersScreen)
   }
   val context = LocalContext.current
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val uiState by viewModel.recitersUiState.collectAsStateWithLifecycle()
+  val operationsUiState by viewModel.recitersOperationUiState.collectAsStateWithLifecycle()
   var showDeleteDialog by remember { mutableStateOf(false) }
   when (uiState) {
     is RecitersUiState.Error -> QuranySnackBar(message = (uiState as RecitersUiState.Error).message)
@@ -66,13 +67,26 @@ fun RecitersListScreen(
       })
   }
 
+  when (operationsUiState) {
+    is RecitersOperationsUiState.Error -> QuranySnackBar(message = (operationsUiState as RecitersOperationsUiState.Error).message)
+    is RecitersOperationsUiState.Idl -> {}
+    is RecitersOperationsUiState.Loading -> LoadingView()
+    is RecitersOperationsUiState.Success -> {
+      val isDeleted = (operationsUiState as RecitersOperationsUiState.Success).isDeleted
+      QuranySnackBar(message = stringResource(id = if (isDeleted) R.string.alrt_delete_success else R.string.alrt_add_success_msg))
+    }
+  }
+
   if (showDeleteDialog) {
     QuranyAlertDialog(
       onDismissRequest = {
         viewModel.reciterToBeProcessed = null
         showDeleteDialog = false
       },
-      onConfirmation = viewModel::processAddOrDeleteFromMyReciters,
+      onConfirmation = {
+        showDeleteDialog = false
+        viewModel.processAddOrDeleteFromMyReciters()
+      },
       title = stringResource(id = R.string.alrt_delete_title),
       description = stringResource(
         id = R.string.alrt_delete_msg,

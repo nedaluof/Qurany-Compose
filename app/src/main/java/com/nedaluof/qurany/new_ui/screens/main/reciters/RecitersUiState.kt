@@ -12,3 +12,11 @@ sealed interface RecitersUiState {
   data class Error(val message: String) : RecitersUiState
   data object Loading : RecitersUiState
 }
+
+@Stable
+sealed interface RecitersOperationsUiState {
+  data class Success(val isDeleted: Boolean) : RecitersOperationsUiState
+  data class Error(val message: String) : RecitersOperationsUiState
+  data object Loading : RecitersOperationsUiState
+  data object Idl : RecitersOperationsUiState
+}
