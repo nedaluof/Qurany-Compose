@@ -9,13 +9,13 @@
 
         <variable
             name="viewmodel"
-            type="com.nedaluof.qurany.new_ui.screens.main.suras.SurasViewModel" />
+            type="com.nedaluof.qurany.ui.screens.main.suras.SurasViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".new_ui.screens.main.suras.SurasActivity">
+        tools:context=".ui.screens.main.suras.SurasActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/suras_bar_layout"

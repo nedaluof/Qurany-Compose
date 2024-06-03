@@ -7,7 +7,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.new_ui.base.BaseRecyclerAdapter
+import com.nedaluof.qurany.ui.base.BaseRecyclerAdapter
 
 object QuranyViewsBindings {
 

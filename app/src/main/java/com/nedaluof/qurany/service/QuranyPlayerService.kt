@@ -21,7 +21,7 @@ import com.google.android.exoplayer2.util.NotificationUtil
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
-import com.nedaluof.qurany.new_ui.screens.main.suras.SurasActivity
+import com.nedaluof.qurany.ui.screens.main.suras.SurasActivity
 import com.nedaluof.qurany.util.AppConstants
 import com.nedaluof.qurany.util.getLogoAsBitmap
 import com.nedaluof.qurany.util.getParcelableExtraT

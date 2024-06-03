@@ -24,7 +24,7 @@
         tools:targetApi="s">
         <!-- activities -->
         <activity
-            android:name=".new_ui.screens.splash.SplashActivity"
+            android:name=".ui.screens.splash.SplashActivity"
             android:exported="true">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +34,7 @@
         </activity>
 
         <activity
-            android:name=".new_ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".new_ui.screens.main.suras.SurasActivity"
+            android:name=".ui.screens.main.suras.SurasActivity"
             android:launchMode="singleInstance"
             android:parentActivityName=".ui.main.MainActivity" /> <!-- services -->
         <service
