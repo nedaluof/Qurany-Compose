@@ -24,7 +24,6 @@ import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.ui.common.LoadingView
 import com.nedaluof.qurany.ui.common.QuranyAlertDialog
 import com.nedaluof.qurany.ui.common.QuranySnackBar
-import com.nedaluof.qurany.ui.common.ReciterItem
 import com.nedaluof.qurany.ui.screens.main.suras.SurasActivity
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.AppConstants

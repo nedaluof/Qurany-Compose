@@ -260,17 +260,17 @@ object SuraUtil {
 
   fun getPlayerTitle(suraId: Int, reciterName: String): String {
     return if (getLanguage() == "_arabic") {
-      reciterName + " | " + getArabicSuraName()[suraId - 1].suraName
+      reciterName + " | " + getArabicSuraName()[suraId - 1].name
     } else {
-      reciterName + " | " + getEnglishSuraName()[suraId - 1].suraName
+      reciterName + " | " + getEnglishSuraName()[suraId - 1].name
     }
   }
 
   fun getSuraName(suraId: Int): String {
     return if (getLanguage() == "_arabic") {
-      getArabicSuraName()[suraId - 1].suraName
+      getArabicSuraName()[suraId - 1].name
     } else {
-      getEnglishSuraName()[suraId - 1].suraName
+      getEnglishSuraName()[suraId - 1].name
     }
   }
 }

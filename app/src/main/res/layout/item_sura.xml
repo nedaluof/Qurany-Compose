@@ -31,7 +31,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/dp_8"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_sura" />
+                android:src="@drawable/ic_opened_quran" />
 
             <View
                 android:layout_width="1dp"
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_margin="6dp"
-                    android:text="@{sura.suraName}"
+                    android:text="@{sura.name}"
                     android:textColor="@color/green_200"
                     android:textSize="15sp"
                     android:textStyle="bold"

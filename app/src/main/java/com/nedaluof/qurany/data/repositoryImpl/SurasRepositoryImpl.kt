@@ -35,7 +35,7 @@ class SurasRepositoryImpl @Inject constructor(
     for (i in currentReciterSuras.indices) {
       val currentSura = currentReciterSuras[i].toInt()
       if (getLanguage() == "_arabic") {
-        val suraName = SuraUtil.getArabicSuraName()[currentSura - 1].suraName
+        val suraName = SuraUtil.getArabicSuraName()[currentSura - 1].name
         val suraUrl = reciterData.server + "/" + SuraUtil.getSuraIndex(currentSura) + ".mp3"
         val subPath = "/Qurany/${reciterData.name}/${SuraUtil.getSuraName(currentSura)}.mp3"
         mappedReciterSuraModels.add(
@@ -53,7 +53,7 @@ class SurasRepositoryImpl @Inject constructor(
           )
         )
       } else {
-        val suraName = SuraUtil.getEnglishSuraName()[currentSura - 1].suraName
+        val suraName = SuraUtil.getEnglishSuraName()[currentSura - 1].name
         val suraUrl = reciterData.server + "/" + SuraUtil.getSuraIndex(currentSura) + ".mp3"
         val subPath = "/Qurany/${reciterData.name}/${SuraUtil.getSuraName(currentSura)}.mp3"
         mappedReciterSuraModels.add(

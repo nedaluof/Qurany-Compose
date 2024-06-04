@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class SuraModel(
   var id: Int = 0,
-  var suraName: String = "",
+  var name: String = "",
   var rewaya: String = "",
   var suraUrl: String = "",
   var reciterName: String = "",

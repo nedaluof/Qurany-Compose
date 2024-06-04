@@ -10,8 +10,3 @@ import androidx.compose.ui.Modifier
 fun SurasListScreen(modifier: Modifier = Modifier) {
 
 }
-
-@Composable
-fun SuraItem(modifier: Modifier = Modifier) {
-
-}

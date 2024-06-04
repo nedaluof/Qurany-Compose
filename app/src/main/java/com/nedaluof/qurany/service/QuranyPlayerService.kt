@@ -120,7 +120,7 @@ class QuranyPlayerService : Service() {
         }
       }
 
-      override fun getCurrentContentText(player: Player): CharSequence = sura.suraName
+      override fun getCurrentContentText(player: Player): CharSequence = sura.name
       override fun getCurrentLargeIcon(
         player: Player,
         callback: PlayerNotificationManager.BitmapCallback
