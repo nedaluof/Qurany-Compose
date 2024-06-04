@@ -3,15 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="viewmodel"
-            type="com.nedaluof.qurany.ui.screens.main.suras.SurasViewModel" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,9 +17,9 @@
 
             <RelativeLayout
                 android:id="@+id/bar_layout"
-                android:layoutDirection="ltr"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp">
+                android:layout_height="@dimen/_50sdp"
+                android:layoutDirection="ltr">
 
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/back_button"
@@ -46,7 +37,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_margin="@dimen/_8sdp"
-                    android:text="@{viewmodel.reciterName}"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_15ssp"
                     app:layout_scrollFlags="scroll|enterAlways|snap"
@@ -69,16 +59,13 @@
                 android:overScrollMode="never"
                 android:paddingBottom="@dimen/_50sdp"
                 android:scrollbars="none"
-                app:items="@{viewmodel.reciterSuras}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_sura" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
             <ProgressBar
                 android:id="@+id/progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="@{viewmodel.loading? View.VISIBLE : View.GONE}" />
+                android:layout_centerInParent="true" />
         </RelativeLayout>
 
         <include

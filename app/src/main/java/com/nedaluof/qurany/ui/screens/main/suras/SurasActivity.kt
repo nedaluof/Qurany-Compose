@@ -5,50 +5,50 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.view.View
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.nedaluof.qurany.BR
-import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
-import com.nedaluof.qurany.databinding.ActivitySurasBinding
 import com.nedaluof.qurany.service.QuranyDownloadService
 import com.nedaluof.qurany.service.QuranyPlayerService
-import com.nedaluof.qurany.ui.base.BaseActivity
+import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.AppConstants
-import com.nedaluof.qurany.util.click
-import com.nedaluof.qurany.util.getParcelableExtraT
-import com.nedaluof.qurany.util.isNetworkOk
+import com.nedaluof.qurany.util.parcelable
+import com.nedaluof.qurany.util.postDelayed
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
  * Created by nedaluof on 12/5/2020.
  * Updated by nedaluof on 9/13/2021.
+ * Updated by NedaluOf on 6/4/2024.
  */
 @AndroidEntryPoint
-class SurasActivity : BaseActivity<ActivitySurasBinding>() {
+class SurasActivity : AppCompatActivity() {
 
-  override val layoutId = R.layout.activity_suras
-  override val bindingVariable = BR.viewmodel
+  //region variables
   private val surasViewModel: SurasViewModel by viewModels()
-  override fun getViewModel() = surasViewModel
 
   private lateinit var reciterData: Reciter
   private var sheetBehavior: BottomSheetBehavior<*>? = null
 
   // Player & QuranyPlayerService
-  private lateinit var exoPlayer: ExoPlayer
+  private var exoPlayer: ExoPlayer? = null
   private var service: QuranyPlayerService? = null
 
   private val quranyPlayerServiceIntent: Intent by lazy {
@@ -56,46 +56,35 @@ class SurasActivity : BaseActivity<ActivitySurasBinding>() {
   }
   private var serviceConnection: ServiceConnection? = null
   private var bound = false
+  //endregion
 
+  @OptIn(ExperimentalMaterial3Api::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding.backButton.click(::finish)
-    loadComingIntent()
-  }
-
-  private fun loadComingIntent() {
-    reciterData = intent?.getParcelableExtraT(AppConstants.RECITER_KEY)!!
-    surasViewModel.loadSurasToUI(reciterData)
-    initComponents()
-  }
-
-  private fun initComponents() {
-    initBottomSheetBehavior()
-    initRecyclerView()
+    reciterData = intent?.parcelable(AppConstants.RECITER_KEY)!!
     initServiceConnection()
-  }
+    setContent {
+      QuranyComposeTheme {
+        val sheetState = rememberModalBottomSheetState()
+        var showPlayerSheet by remember { surasViewModel.playerSheetVisibility }
+        Box(modifier = Modifier.fillMaxSize()) {
+          SurasListScreen(
+            reciter = reciterData,
+            onPlayClicked = ::onPlaySuraRequested,
+            onDownloadClicked = ::onDownloadSuraRequested
+          )
 
-  private fun initBottomSheetBehavior() {
-    with(binding.playerBottomSheet) {
-      sheetBehavior = BottomSheetBehavior.from<View>(bottomSheet)
-      closeBtn.setOnClickListener {
-        resetPlayerView()
-        stopService()
+          if (showPlayerSheet) {
+            QuranyPlayerSheet(exoPlayer = exoPlayer,
+              sheetState = sheetState,
+              onClosePlayerClicked = {
+                stopService()
+                showPlayerSheet = false
+              }) {}
+          }
+        }
       }
     }
-  }
-
-  private fun resetPlayerView() {
-    with(binding.playerBottomSheet) {
-      bottomSheet.isVisible = true
-      reciterSuraName.text = getString(R.string.app_player)
-      sheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-    }
-    Handler(Looper.getMainLooper()).postDelayed(
-      {
-        binding.playerBottomSheet.bottomSheet.isVisible = true
-      }, 750
-    )
   }
 
   private fun initServiceConnection() {
@@ -117,29 +106,16 @@ class SurasActivity : BaseActivity<ActivitySurasBinding>() {
   private fun initializePlayer() {
     if (bound) {
       exoPlayer = service?.getPlayerInstance()!!
-      binding.playerBottomSheet.playerController.player = exoPlayer
       if (service?.playerIsRunning()!!) {
-        Handler(Looper.getMainLooper()).postDelayed(
-          {
-            with(binding.playerBottomSheet) {
-              bottomSheet.isVisible = true
-              sheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-              reciterSuraName.text = service?.getCurrentSuraRunning()?.playerTitle
-            }
-          },
-          700
-        )
+        {
+          surasViewModel.playerSheetVisibility.value = true
+        }.postDelayed(700)
       }
       initPlayerListener()
     }
   }
 
-  private fun initRecyclerView() {
-    with(binding.surasRecyclerView) {
-      adapter = SurasAdapter(
-        { sura -> onClickPlay(sura) },
-        { sura -> downloadSura(sura) }
-      )
+  private fun initRecyclerView() {/*with(binding.surasRecyclerView) {
       setHasFixedSize(true)
       addOnScrollListener(object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -151,20 +127,24 @@ class SurasActivity : BaseActivity<ActivitySurasBinding>() {
           }
         }
       })
-    }
+    }*/
   }
 
-  private fun onClickPlay(sura: SuraModel) {
-    with(surasViewModel) {
-      lifecycleScope.launch {
-        checkSuraExist(sura).collect { exist ->
-          if (exist != null) {
-            if (exist) sura.playingType = AppConstants.PLAYING_LOCALLY
-            playSura(sura)
-          }
+  private fun onPlaySuraRequested(sura: SuraModel) {
+    lifecycleScope.launch {
+      surasViewModel.checkSuraExist(sura).collect { exist ->
+        if (exist != null) {
+          if (exist) sura.playingType = AppConstants.PLAYING_LOCALLY
+          playSura(sura)
         }
       }
     }
+  }
+
+  private fun onDownloadSuraRequested(sura: SuraModel) {
+    startService(
+      Intent(this, QuranyDownloadService::class.java).putExtra(AppConstants.DOWNLOAD_SURA_KEY, sura)
+    )
   }
 
   private fun playSura(sura: SuraModel) {
@@ -172,29 +152,25 @@ class SurasActivity : BaseActivity<ActivitySurasBinding>() {
       putExtra(AppConstants.SURA_KEY, sura)
       putExtra(AppConstants.RECITER_KEY, reciterData)
     }
-    if (!this::exoPlayer.isInitialized || !exoPlayer.isPlaying) {
-      bindService(
-        quranyPlayerServiceIntent,
-        serviceConnection!!,
-        Context.BIND_AUTO_CREATE
-      )
-    } else {
+    exoPlayer?.let { exoPlayer ->
+      if (!exoPlayer.isPlaying) {
+        bindService(
+          quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_AUTO_CREATE
+        )
+      }
+    } ?: run {
       service?.stopSelf()
       unbindService(serviceConnection!!)
       bound = false
       bindService(
-        quranyPlayerServiceIntent,
-        serviceConnection!!,
-        Context.BIND_ADJUST_WITH_ACTIVITY
+        quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_ADJUST_WITH_ACTIVITY
       )
     }
     reInitToPlaySura(sura)
-    // this startForegroundService if SDK >= 26 or startService(myIntent) for SDK < 26
     Util.startForegroundService(this@SurasActivity, quranyPlayerServiceIntent)
   }
 
-  private fun reInitToPlaySura(sura: SuraModel) {
-    with(binding.playerBottomSheet) {
+  private fun reInitToPlaySura(sura: SuraModel) {/*with(binding.playerBottomSheet) {
       bottomSheet.isVisible = true
       reciterSuraName.text = sura.playerTitle
       sheetBehavior?.state = if (sura.playingType == AppConstants.PLAYING_ONLINE) {
@@ -206,29 +182,15 @@ class SurasActivity : BaseActivity<ActivitySurasBinding>() {
       } else {
         BottomSheetBehavior.STATE_EXPANDED
       }
-    }
-  }
-
-  private fun downloadSura(sura: SuraModel) {
-    startService(
-      Intent(this, QuranyDownloadService::class.java)
-        .putExtra(AppConstants.DOWNLOAD_SURA_KEY, sura)
-    )
+    }*/
   }
 
   private fun initPlayerListener() {
-    exoPlayer.addListener(object : Player.Listener {
+    exoPlayer?.addListener(object : Player.Listener {
       override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
         if (playbackState == Player.STATE_ENDED) {
-          sheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-          Handler(Looper.getMainLooper()).postDelayed(
-            {
-              binding.playerBottomSheet.bottomSheet.isVisible = false
-            },
-            1500
-          )
-          // stopService()
+          { surasViewModel.playerSheetVisibility.value = false }.postDelayed(1500)
         }
       }
     })
@@ -239,7 +201,7 @@ class SurasActivity : BaseActivity<ActivitySurasBinding>() {
       service?.stop()
       unbindService(serviceConnection!!)
       bound = false
-      binding.playerBottomSheet.playerController.player = null
+      //binding.playerBottomSheet.playerController.player = null
     }
   }
 

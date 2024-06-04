@@ -24,9 +24,9 @@ import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.ui.screens.main.suras.SurasActivity
 import com.nedaluof.qurany.util.AppConstants
 import com.nedaluof.qurany.util.getLogoAsBitmap
-import com.nedaluof.qurany.util.getParcelableExtraT
 import com.nedaluof.qurany.util.getSuraPath
 import com.nedaluof.qurany.util.isNetworkOk
+import com.nedaluof.qurany.util.parcelable
 import com.nedaluof.qurany.util.toastyError
 import com.nedaluof.qurany.util.toastySuccess
 
@@ -49,8 +49,8 @@ class QuranyPlayerService : Service() {
   override fun onBind(intent: Intent?): IBinder = playerBinder
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    sura = intent?.getParcelableExtraT(AppConstants.SURA_KEY)!!
-    reciter = intent.getParcelableExtraT(AppConstants.RECITER_KEY)!!
+    sura = intent?.parcelable(AppConstants.SURA_KEY)!!
+    reciter = intent.parcelable(AppConstants.RECITER_KEY)!!
     startPlayer()
     isRunning = true
     return START_NOT_STICKY

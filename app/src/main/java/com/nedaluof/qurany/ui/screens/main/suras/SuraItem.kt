@@ -35,10 +35,12 @@ import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
  */
 @Composable
 fun SuraItem(
-  sura: SuraModel, onClicked: () -> Unit = {}, onAddToFavoriteClicked: () -> Unit = {}
+  sura: SuraModel,
+  onPlayClicked: () -> Unit = {},
+  onDownloadClicked: () -> Unit = {}
 ) {
   Card(
-    onClick = onClicked,
+    onClick = onPlayClicked,
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
     shape = RoundedCornerShape(8.dp),
     border = BorderStroke(1.dp, AppGreen),
@@ -87,11 +89,11 @@ fun SuraItem(
           .background(MaterialTheme.colorScheme.primary)
           .fillMaxHeight()
       ) {
-        IconButton(modifier = Modifier
-          .weight(1f)
-          .padding(6.dp), onClick = {
-          onAddToFavoriteClicked()
-        }) {
+        IconButton(
+          modifier = Modifier
+            .weight(1f)
+            .padding(6.dp), onClick = onPlayClicked
+        ) {
           Icon(
             painter = painterResource(id = R.drawable.ic_play),
             contentDescription = "run sura in media player",
@@ -103,9 +105,7 @@ fun SuraItem(
           modifier = Modifier
             .padding(6.dp)
             .weight(1f),
-          onClick = {
-            onAddToFavoriteClicked()
-          },
+          onClick = onDownloadClicked,
         ) {
           Icon(
             painter = painterResource(id = R.drawable.ic_download),

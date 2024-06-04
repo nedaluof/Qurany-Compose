@@ -36,7 +36,6 @@ import com.nedaluof.qurany.R
 import com.nedaluof.qurany.di.LocaleManagerEntryPoint
 import com.nedaluof.qurany.ui.screens.main.MainActivity
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
-import com.nedaluof.qurany.util.getAppVersionName
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 
@@ -73,7 +72,7 @@ class SplashActivity : AppCompatActivity() {
   @Composable
   fun SplashScreen() {
     val versionLabel = stringResource(R.string.app_version)
-    val versionName = LocalContext.current.getAppVersionName()
+    val versionName = LocalContext.current.packageManager.getPackageInfo(packageName, 0).versionName
     Surface(modifier = Modifier.fillMaxSize()) {
       Box {
         Image(

@@ -14,9 +14,9 @@ import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.util.AppConstants
 import com.nedaluof.qurany.util.SuraUtil
 import com.nedaluof.qurany.util.checkIfSuraExist
-import com.nedaluof.qurany.util.getParcelableExtraT
 import com.nedaluof.qurany.util.getSuraPath
 import com.nedaluof.qurany.util.isNetworkOk
+import com.nedaluof.qurany.util.parcelable
 import com.nedaluof.qurany.util.toastyError
 import com.nedaluof.qurany.util.toastyInfo
 import com.nedaluof.qurany.util.toastySuccess
@@ -35,7 +35,7 @@ class QuranyDownloadService : Service() {
   override fun onBind(intent: Intent?): IBinder? = null
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    sura = intent?.getParcelableExtraT(AppConstants.DOWNLOAD_SURA_KEY)!!
+    sura = intent?.parcelable(AppConstants.DOWNLOAD_SURA_KEY)!!
     registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     startDownload()
     return START_NOT_STICKY

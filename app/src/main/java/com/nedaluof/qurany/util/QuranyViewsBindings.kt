@@ -5,20 +5,9 @@ package com.nedaluof.qurany.util
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.ui.base.BaseRecyclerAdapter
 
 object QuranyViewsBindings {
-
-  /**bind list of items with the base recycler view adapter**/
-  @BindingAdapter("items")
-  @JvmStatic
-  fun <Any> addItems(recyclerView: RecyclerView?, items: List<Any>?) {
-    if (recyclerView != null && items != null) {
-      (recyclerView.adapter as? BaseRecyclerAdapter<Any>)?.addItems(items)
-    }
-  }
 
   @JvmStatic
   @BindingAdapter("suraCount")

@@ -1,5 +1,6 @@
 package com.nedaluof.qurany.ui.screens.main.suras
 
+import androidx.compose.runtime.mutableStateOf
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.data.repository.SurasRepository
@@ -17,15 +18,11 @@ class SurasViewModel @Inject constructor(
   private val repository: SurasRepository
 ) : BaseViewModel() {
 
-  val reciterName = MutableStateFlow("")
-  val reciterSuras = MutableStateFlow<List<SuraModel>>(emptyList())
-  val loading = MutableStateFlow(true)
+  //region ui states
+  val playerSheetVisibility = mutableStateOf(true)
 
-  fun loadSurasToUI(reciterData: Reciter) {
-    reciterName.value = reciterData.name ?: ""
-    reciterSuras.value = repository.getMappedReciterSuras(reciterData)
-    loading.value = false
-  }
+  //endregion
+  fun loadReciterSuras(reciter: Reciter) = repository.getMappedReciterSuras(reciter)
 
   fun checkSuraExist(sura: SuraModel): StateFlow<Boolean?> =
     MutableStateFlow<Boolean?>(null).apply {
