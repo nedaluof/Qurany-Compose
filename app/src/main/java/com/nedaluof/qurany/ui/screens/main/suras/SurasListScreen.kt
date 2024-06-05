@@ -3,9 +3,11 @@ package com.nedaluof.qurany.ui.screens.main.suras
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,7 +44,8 @@ fun SurasListScreen(
   viewModel: SurasViewModel = hiltViewModel(),
   onPlayClicked: (SuraModel) -> Unit,
   onDownloadClicked: (SuraModel) -> Unit,
-  onCloseClicked: () -> Unit = {}
+  onCloseClicked: () -> Unit = {},
+  onScrolled: () -> Unit = {},
 ) {
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
@@ -51,12 +55,26 @@ fun SurasListScreen(
       onCloseClicked = onCloseClicked
     )
   }) { paddingValues ->
-    SurasList(
-      paddingValues = paddingValues,
-      items = viewModel.loadReciterSuras(reciter),
-      onPlayClicked = onPlayClicked,
-      onDownloadClicked = onDownloadClicked
-    )
+    val state = rememberLazyListState()
+    LazyColumn(
+      modifier = modifier
+        .padding(paddingValues)
+        .fillMaxHeight(),
+      state = state,
+      contentPadding = PaddingValues(top = 10.dp, bottom = 60.dp)
+    ) {
+      val items = viewModel.loadReciterSuras(reciter)
+      items(count = items.size, key = { items[it].id }) { index ->
+        val item = items[index]
+        SuraItem(sura = item,
+          onPlayClicked = { onPlayClicked(item) },
+          onDownloadClicked = { onDownloadClicked(item) })
+      }
+    }
+
+    LaunchedEffect(state.isScrollInProgress) {
+      onScrolled()
+    }
   }
 }
 
@@ -83,10 +101,12 @@ fun SurasTopBar(
         )
       }
     },
-    actions = {
-      IconButton(onClick = onCloseClicked) {
+    navigationIcon = {
+      IconButton(
+        onClick = onCloseClicked
+      ) {
         Icon(
-          painter = painterResource(id = R.drawable.ic_search_2),
+          painter = painterResource(id = R.drawable.ic_back_arrow),
           contentDescription = "close suras screen",
           tint = Color.White
         )
@@ -97,34 +117,12 @@ fun SurasTopBar(
   )
 }
 
-@Composable
-fun SurasList(
-  modifier: Modifier = Modifier,
-  paddingValues: PaddingValues,
-  items: List<SuraModel>,
-  onPlayClicked: (SuraModel) -> Unit,
-  onDownloadClicked: (SuraModel) -> Unit
-) {
-  LazyColumn(
-    modifier = modifier.padding(paddingValues),
-    contentPadding = PaddingValues(top = 10.dp, bottom = 40.dp)
-  ) {
-    items(count = items.size, key = { items[it].id }) { index ->
-      val item = items[index]
-      SuraItem(sura = item,
-        onPlayClicked = { onPlayClicked(item) },
-        onDownloadClicked = { onDownloadClicked(item) })
-    }
-  }
-}
-
 @Preview
 @Composable
 fun SurasListPreview(modifier: Modifier = Modifier) {
   QuranyComposeTheme {
-    SurasList(
-      paddingValues = PaddingValues(0.dp),
-      items = SuraModel.mockList(),
+    SurasListScreen(
+      reciter = Reciter.mockList()[0],
       onPlayClicked = {},
       onDownloadClicked = {},
     )

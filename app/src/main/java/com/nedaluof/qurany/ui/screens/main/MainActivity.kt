@@ -7,9 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
+import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.di.LocaleManagerEntryPoint
+import com.nedaluof.qurany.ui.screens.main.suras.SurasActivity
 import com.nedaluof.qurany.ui.screens.splash.SplashActivity
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
+import com.nedaluof.qurany.util.AppConstants
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 
@@ -37,10 +40,19 @@ class MainActivity : AppCompatActivity() {
               startActivity(SplashActivity.getIntent(this))
               finish()
             }
-          })
+          }, onReciterClicked = ::openSurasActivity)
         }
       }
     }
+  }
+
+  private fun openSurasActivity(reciter: Reciter) {
+    startActivity(
+      Intent(this@MainActivity, SurasActivity::class.java).putExtra(
+        AppConstants.RECITER_KEY,
+        reciter
+      )
+    )
   }
 
   companion object {

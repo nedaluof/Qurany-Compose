@@ -9,25 +9,29 @@ import android.os.IBinder
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.util.Util
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
+import com.nedaluof.qurany.databinding.PlayerBottomSheetLayoutBinding
 import com.nedaluof.qurany.service.QuranyDownloadService
 import com.nedaluof.qurany.service.QuranyPlayerService
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.AppConstants
+import com.nedaluof.qurany.util.isNetworkOk
 import com.nedaluof.qurany.util.parcelable
 import com.nedaluof.qurany.util.postDelayed
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,7 +49,6 @@ class SurasActivity : AppCompatActivity() {
   private val surasViewModel: SurasViewModel by viewModels()
 
   private lateinit var reciterData: Reciter
-  private var sheetBehavior: BottomSheetBehavior<*>? = null
 
   // Player & QuranyPlayerService
   private var exoPlayer: ExoPlayer? = null
@@ -65,23 +68,51 @@ class SurasActivity : AppCompatActivity() {
     initServiceConnection()
     setContent {
       QuranyComposeTheme {
-        val sheetState = rememberModalBottomSheetState()
-        var showPlayerSheet by remember { surasViewModel.playerSheetVisibility }
-        Box(modifier = Modifier.fillMaxSize()) {
-          SurasListScreen(
-            reciter = reciterData,
-            onPlayClicked = ::onPlaySuraRequested,
-            onDownloadClicked = ::onDownloadSuraRequested
+        val coroutineScope = rememberCoroutineScope()
+        val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+          bottomSheetState = rememberStandardBottomSheetState(
+            initialValue = SheetValue.Expanded
           )
-
-          if (showPlayerSheet) {
-            QuranyPlayerSheet(exoPlayer = exoPlayer,
-              sheetState = sheetState,
-              onClosePlayerClicked = {
-                stopService()
-                showPlayerSheet = false
-              }) {}
-          }
+        )
+        val suraToPlay by remember { surasViewModel.currentPlayingSura }
+        BottomSheetScaffold(sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+          sheetPeekHeight = if (suraToPlay == null) 0.dp else 60.dp,
+          sheetDragHandle = null,
+          scaffoldState = bottomSheetScaffoldState,
+          sheetContent = {
+            if (suraToPlay != null) {
+              AndroidViewBinding(PlayerBottomSheetLayoutBinding::inflate) {
+                playerController.player = exoPlayer
+                closeBtn.setOnClickListener {
+                  stopService()
+                }
+                reciterSuraName.text = suraToPlay?.playerTitle ?: ""
+                coroutineScope.launch {
+                  if (suraToPlay?.playingType == AppConstants.PLAYING_ONLINE) {
+                    if (this@SurasActivity.isNetworkOk()) {
+                      bottomSheetScaffoldState.bottomSheetState.expand()
+                    } else {
+                      bottomSheetScaffoldState.bottomSheetState.partialExpand()
+                    }
+                  } else {
+                    bottomSheetScaffoldState.bottomSheetState.expand()
+                  }
+                }
+              }
+            }
+          }) {
+          SurasListScreen(reciter = reciterData, onPlayClicked = { sura ->
+            coroutineScope.launch {
+              bottomSheetScaffoldState.bottomSheetState.expand()
+            }
+            onPlaySuraRequested(sura)
+          }, onDownloadClicked = ::onDownloadSuraRequested, onCloseClicked = {
+            this.onBackPressedDispatcher.onBackPressed()
+          }, onScrolled = {
+            coroutineScope.launch {
+              bottomSheetScaffoldState.bottomSheetState.partialExpand()
+            }
+          })
         }
       }
     }
@@ -108,26 +139,18 @@ class SurasActivity : AppCompatActivity() {
       exoPlayer = service?.getPlayerInstance()!!
       if (service?.playerIsRunning()!!) {
         {
-          surasViewModel.playerSheetVisibility.value = true
+          surasViewModel.currentPlayingSura.value = null
         }.postDelayed(700)
       }
-      initPlayerListener()
-    }
-  }
-
-  private fun initRecyclerView() {/*with(binding.surasRecyclerView) {
-      setHasFixedSize(true)
-      addOnScrollListener(object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-          super.onScrolled(recyclerView, dx, dy)
-          if (dy > 0) {
-            sheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
-          } else if (dy < 0) {
-            sheetBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+      exoPlayer?.addListener(object : Player.Listener {
+        override fun onPlaybackStateChanged(playbackState: Int) {
+          super.onPlaybackStateChanged(playbackState)
+          if (playbackState == Player.STATE_ENDED) {
+            { surasViewModel.currentPlayingSura.value = null }.postDelayed(1500)
           }
         }
       })
-    }*/
+    }
   }
 
   private fun onPlaySuraRequested(sura: SuraModel) {
@@ -135,7 +158,26 @@ class SurasActivity : AppCompatActivity() {
       surasViewModel.checkSuraExist(sura).collect { exist ->
         if (exist != null) {
           if (exist) sura.playingType = AppConstants.PLAYING_LOCALLY
-          playSura(sura)
+          quranyPlayerServiceIntent.apply {
+            putExtra(AppConstants.SURA_KEY, sura)
+            putExtra(AppConstants.RECITER_KEY, reciterData)
+          }
+          exoPlayer?.let { exoPlayer ->
+            if (!exoPlayer.isPlaying) {
+              bindService(
+                quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_AUTO_CREATE
+              )
+            }
+          } ?: run {
+            service?.stopSelf()
+            unbindService(serviceConnection!!)
+            bound = false
+            bindService(
+              quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_ADJUST_WITH_ACTIVITY
+            )
+          }
+          surasViewModel.currentPlayingSura.value = sura
+          Util.startForegroundService(this@SurasActivity, quranyPlayerServiceIntent)
         }
       }
     }
@@ -147,61 +189,11 @@ class SurasActivity : AppCompatActivity() {
     )
   }
 
-  private fun playSura(sura: SuraModel) {
-    quranyPlayerServiceIntent.apply {
-      putExtra(AppConstants.SURA_KEY, sura)
-      putExtra(AppConstants.RECITER_KEY, reciterData)
-    }
-    exoPlayer?.let { exoPlayer ->
-      if (!exoPlayer.isPlaying) {
-        bindService(
-          quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_AUTO_CREATE
-        )
-      }
-    } ?: run {
-      service?.stopSelf()
-      unbindService(serviceConnection!!)
-      bound = false
-      bindService(
-        quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_ADJUST_WITH_ACTIVITY
-      )
-    }
-    reInitToPlaySura(sura)
-    Util.startForegroundService(this@SurasActivity, quranyPlayerServiceIntent)
-  }
-
-  private fun reInitToPlaySura(sura: SuraModel) {/*with(binding.playerBottomSheet) {
-      bottomSheet.isVisible = true
-      reciterSuraName.text = sura.playerTitle
-      sheetBehavior?.state = if (sura.playingType == AppConstants.PLAYING_ONLINE) {
-        if (this@SurasActivity.isNetworkOk()) {
-          BottomSheetBehavior.STATE_EXPANDED
-        } else {
-          BottomSheetBehavior.STATE_COLLAPSED
-        }
-      } else {
-        BottomSheetBehavior.STATE_EXPANDED
-      }
-    }*/
-  }
-
-  private fun initPlayerListener() {
-    exoPlayer?.addListener(object : Player.Listener {
-      override fun onPlaybackStateChanged(playbackState: Int) {
-        super.onPlaybackStateChanged(playbackState)
-        if (playbackState == Player.STATE_ENDED) {
-          { surasViewModel.playerSheetVisibility.value = false }.postDelayed(1500)
-        }
-      }
-    })
-  }
-
   private fun stopService() {
     if (bound) {
       service?.stop()
       unbindService(serviceConnection!!)
       bound = false
-      //binding.playerBottomSheet.playerController.player = null
     }
   }
 

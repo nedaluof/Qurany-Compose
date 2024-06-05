@@ -1,6 +1,5 @@
 package com.nedaluof.qurany.ui.screens.main.reciters
 
-import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,9 +22,7 @@ import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.ui.common.LoadingView
 import com.nedaluof.qurany.ui.common.QuranyAlertDialog
 import com.nedaluof.qurany.ui.common.QuranySnackBar
-import com.nedaluof.qurany.ui.screens.main.suras.SurasActivity
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
-import com.nedaluof.qurany.util.AppConstants
 
 /**
  * Created By NedaluOf - 5/31/2024.
@@ -36,11 +32,11 @@ fun RecitersListScreen(
   modifier: Modifier = Modifier,
   isMyRecitersScreen: Boolean = false,
   viewModel: RecitersViewModel = hiltViewModel(),
+  onReciterClicked: (Reciter) -> Unit = {}
 ) {
   LaunchedEffect(isMyRecitersScreen) {
     viewModel.loadReciters(isMyRecitersScreen)
   }
-  val context = LocalContext.current
   val uiState by viewModel.recitersUiState.collectAsStateWithLifecycle()
   val operationsUiState by viewModel.recitersOperationUiState.collectAsStateWithLifecycle()
   var showDeleteDialog by remember { mutableStateOf(false) }
@@ -49,13 +45,7 @@ fun RecitersListScreen(
     is RecitersUiState.Loading -> LoadingView()
     is RecitersUiState.Success -> RecitersList(modifier = modifier,
       items = (uiState as RecitersUiState.Success).reciters,
-      onReciterClicked = { reciter ->
-        with(context) {
-          startActivity(
-            Intent(this, SurasActivity::class.java).putExtra(AppConstants.RECITER_KEY, reciter)
-          )
-        }
-      },
+      onReciterClicked = onReciterClicked,
       onAddToFavoriteClicked = { reciter ->
         viewModel.reciterToBeProcessed = reciter
         if (reciter.inMyReciters) {

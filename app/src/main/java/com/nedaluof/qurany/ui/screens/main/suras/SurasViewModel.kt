@@ -20,6 +20,7 @@ class SurasViewModel @Inject constructor(
 
   //region ui states
   val playerSheetVisibility = mutableStateOf(true)
+  val currentPlayingSura = mutableStateOf<SuraModel?>(null)
 
   //endregion
   fun loadReciterSuras(reciter: Reciter) = repository.getMappedReciterSuras(reciter)

@@ -42,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nedaluof.qurany.R
+import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.ui.navigation.BottomNavigationScreens
 import com.nedaluof.qurany.ui.screens.main.reciters.RecitersListScreen
 import com.nedaluof.qurany.ui.theme.AppGreen
@@ -55,7 +56,8 @@ import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 fun MainScreen(
   modifier: Modifier = Modifier,
   viewModel: MainViewModel,
-  reloadApp: () -> Unit = {}
+  reloadApp: () -> Unit = {},
+  onReciterClicked: (Reciter) -> Unit = {}
 ) {
   val navController = rememberNavController()
   val bottomNavigationItems = listOf(
@@ -73,7 +75,8 @@ fun MainScreen(
     }) { paddingValues ->
       MainScreenNavigationConfigurations(
         navController = navController,
-        paddingValues = paddingValues
+        paddingValues = paddingValues,
+        onReciterClicked
       )
     }
   }
@@ -205,7 +208,8 @@ private fun BottomNavigationBar(
 
 @Composable
 private fun MainScreenNavigationConfigurations(
-  navController: NavHostController, paddingValues: PaddingValues
+  navController: NavHostController, paddingValues: PaddingValues,
+  onReciterClicked: (Reciter) -> Unit
 ) {
   NavHost(
     navController = navController,
@@ -213,13 +217,14 @@ private fun MainScreenNavigationConfigurations(
     modifier = Modifier.padding(paddingValues)
   ) {
     composable(BottomNavigationScreens.Reciters.route) {
-      RecitersListScreen(Modifier.fillMaxSize())
+      RecitersListScreen(Modifier.fillMaxSize(), onReciterClicked = onReciterClicked)
     }
     composable(BottomNavigationScreens.MyReciters.route) {
-      RecitersListScreen(Modifier.fillMaxSize(), true)
+      RecitersListScreen(Modifier.fillMaxSize(), true, onReciterClicked = onReciterClicked)
     }
   }
 }
+
 
 @Preview
 @Composable

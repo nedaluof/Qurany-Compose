@@ -46,7 +46,8 @@
         <activity
             android:name=".ui.screens.main.suras.SurasActivity"
             android:launchMode="singleInstance"
-            android:parentActivityName=".ui.main.MainActivity" /> <!-- services -->
+            android:parentActivityName=".ui.screens.main.MainActivity" />
+        <!-- services -->
         <service
             android:name=".service.QuranyPlayerService"
             android:exported="false"
