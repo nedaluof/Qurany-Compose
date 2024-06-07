@@ -21,14 +21,13 @@ import com.google.android.exoplayer2.util.NotificationUtil
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
-import com.nedaluof.qurany.ui.screens.main.suras.SurasActivity
+import com.nedaluof.qurany.ui.screens.suras.SurasActivity
 import com.nedaluof.qurany.util.AppConstants
 import com.nedaluof.qurany.util.getLogoAsBitmap
 import com.nedaluof.qurany.util.getSuraPath
 import com.nedaluof.qurany.util.isNetworkOk
 import com.nedaluof.qurany.util.parcelable
-import com.nedaluof.qurany.util.toastyError
-import com.nedaluof.qurany.util.toastySuccess
+import com.nedaluof.qurany.util.toast
 
 /**
  * Created by nedaluof on 12/27/2020.
@@ -68,9 +67,9 @@ class QuranyPlayerService : Service() {
               prepare()
               playWhenReady = true
             }
-            this.toastySuccess(R.string.alrt_sura_playing_online)
+            this.toast(R.string.alrt_sura_playing_online)
           } else {
-            toastyError(R.string.alrt_no_internet_msg)
+            toast(R.string.alrt_no_internet_msg)
           }
         }
 
@@ -83,7 +82,7 @@ class QuranyPlayerService : Service() {
             prepare()
             playWhenReady = true
           }
-          this@QuranyPlayerService.toastySuccess(R.string.alrt_sura_playing_locally)
+          this@QuranyPlayerService.toast(R.string.alrt_sura_playing_locally)
         }
       }
       initPlayerNotification()

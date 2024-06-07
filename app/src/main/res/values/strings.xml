@@ -14,10 +14,11 @@
     <string name="favorite_nav_title">My Reciters</string>
     <string name="my_reciters_appbar_title">My Reciters</string>
     <string name="no_reciters">You not added any reciters to your my reciters list , try to add one by viewing the reciters list then click on heart button to add it.</string>
-    <string name="sura_count_1">There </string>
-    <string name="sura_count_2"> Suras</string>
-    <string name="sura_count_3">There is only one sura</string>
-    <string name="sura_number">Sura No : </string>
+    <string name="sura_count_1">There %d Suras</string>
+    <string name="sura_count_2">There is only one sura</string>
+
+
+    <string name="sura_number">Sura No : %d</string>
     <string name="reciters_search_hit">Search about reciter</string>
     <string name="alrt_add_success_msg">The Reciter Added Successfully to your Reciters List</string>
     <string name="alrt_err_occur_msg">Something went Wrong !</string>

@@ -1,11 +1,9 @@
 package com.nedaluof.qurany.di
 
-import com.nedaluof.qurany.data.repository.RecitersRepository
-import com.nedaluof.qurany.data.repository.SplashRepository
-import com.nedaluof.qurany.data.repository.SurasRepository
-import com.nedaluof.qurany.data.repositoryImpl.RecitersRepositoryImpl
-import com.nedaluof.qurany.data.repositoryImpl.SplashRepositoryImpl
-import com.nedaluof.qurany.data.repositoryImpl.SurasRepositoryImpl
+import com.nedaluof.qurany.data.repositories.reciters.RecitersRepository
+import com.nedaluof.qurany.data.repositories.reciters.RecitersRepositoryImpl
+import com.nedaluof.qurany.data.repositories.suras.SurasRepository
+import com.nedaluof.qurany.data.repositories.suras.SurasRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,12 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @InstallIn(ViewModelComponent::class)
 @Module
 abstract class RepositoriesModule {
-
-  @ViewModelScoped
-  @Binds
-  abstract fun bindSplashRepository(
-    repoImpl: SplashRepositoryImpl
-  ): SplashRepository
 
   @ViewModelScoped
   @Binds

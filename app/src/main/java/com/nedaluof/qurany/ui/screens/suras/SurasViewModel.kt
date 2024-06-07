@@ -1,0 +1,31 @@
+package com.nedaluof.qurany.ui.screens.suras
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import com.nedaluof.qurany.data.model.Reciter
+import com.nedaluof.qurany.data.model.SuraModel
+import com.nedaluof.qurany.data.repositories.suras.SurasRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
+
+/**
+ * Created by nedaluof on 12/16/2020.
+ */
+@HiltViewModel
+class SurasViewModel @Inject constructor(
+  private val repository: SurasRepository
+) : ViewModel() {
+
+  //region ui states
+  val currentPlayingSura = mutableStateOf<SuraModel?>(null)
+
+  //endregion
+  fun loadReciterSuras(reciter: Reciter) = repository.getMappedReciterSuras(reciter)
+
+  fun checkSuraExist(sura: SuraModel): StateFlow<Boolean?> =
+    MutableStateFlow<Boolean?>(null).apply {
+      value = repository.checkIfSuraExist(sura.suraSubPath)
+    }
+}

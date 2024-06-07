@@ -6,11 +6,7 @@
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/player_rounded_bg"
-        android:orientation="vertical"
-        app:behavior_hideable="false"
-        app:behavior_peekHeight="60dp"
-        app:layout_behavior="@string/bottom_sheet_behavior">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,17 +17,17 @@
                 android:id="@+id/reciter_sura_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_8sdp"
+                android:layout_margin="12dp"
                 android:layout_weight="1"
                 android:text="@string/app_player"
-                android:textSize="@dimen/_16ssp" />
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/close_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_margin="@dimen/_6sdp"
+                android:layout_margin="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_close" />

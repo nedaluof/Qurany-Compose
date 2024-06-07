@@ -1,5 +1,6 @@
 package com.nedaluof.qurany.service
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -8,45 +9,61 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.IBinder
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.SuraModel
+import com.nedaluof.qurany.data.repositories.app.AppRepository
+import com.nedaluof.qurany.data.repositories.suras.SuraUtil
 import com.nedaluof.qurany.util.AppConstants
-import com.nedaluof.qurany.util.SuraUtil
 import com.nedaluof.qurany.util.checkIfSuraExist
 import com.nedaluof.qurany.util.getSuraPath
 import com.nedaluof.qurany.util.isNetworkOk
 import com.nedaluof.qurany.util.parcelable
-import com.nedaluof.qurany.util.toastyError
-import com.nedaluof.qurany.util.toastyInfo
-import com.nedaluof.qurany.util.toastySuccess
+import com.nedaluof.qurany.util.toast
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.File
+import javax.inject.Inject
 
 /**
  * Created by nedaluof on 12/29/2020.
  */
+@AndroidEntryPoint
 class QuranyDownloadService : Service() {
+
+  @Inject
+  lateinit var appRepository: AppRepository
 
   // unique id for the being sura downloaded
   var downloadId: Long = 0
   private lateinit var sura: SuraModel
   private lateinit var subPath: String
+  private val appLanguage by lazy { if (appRepository.isCurrentLanguageEnglish()) "en" else "ar" }
   override fun onBind(intent: Intent?): IBinder? = null
 
+  @SuppressLint("UnspecifiedRegisterReceiverFlag")
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     sura = intent?.parcelable(AppConstants.DOWNLOAD_SURA_KEY)!!
-    registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      registerReceiver(
+        onComplete,
+        IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
+        RECEIVER_EXPORTED
+      )
+    } else {
+      registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
     startDownload()
     return START_NOT_STICKY
   }
 
   private fun startDownload() {
     if (this::sura.isInitialized) {
-      subPath = "/Qurany/${sura.reciterName}/${SuraUtil.getSuraName(sura.id)}.mp3"
+      subPath = "/Qurany/${sura.reciterName}/${SuraUtil.getSuraName(appLanguage, sura.id)}.mp3"
       if (!this.checkIfSuraExist(subPath)) {
         if (this.isNetworkOk()) {
-          toastySuccess(R.string.alrt_download_start_title)
+          toast(R.string.alrt_download_start_title)
           val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
           val request = DownloadManager.Request(Uri.parse(sura.suraUrl))
           request.setAllowedNetworkTypes(
@@ -54,16 +71,16 @@ class QuranyDownloadService : Service() {
                 DownloadManager.Request.NETWORK_MOBILE
           )
             .setAllowedOverRoaming(false)
-            .setTitle(SuraUtil.getSuraName(sura.id))
-            .setDescription(SuraUtil.getSuraName(sura.id) + "| " + sura.reciterName)
+            .setTitle(SuraUtil.getSuraName(appLanguage, sura.id))
+            .setDescription(SuraUtil.getSuraName(appLanguage, sura.id) + "| " + sura.reciterName)
             .setDestinationInExternalFilesDir(this, null, subPath)
           downloadId = downloadManager.enqueue(request)
         } else {
-          toastyError(R.string.alrt_no_internet_msg)
+          toast(R.string.alrt_no_internet_msg)
           stopSelf()
         }
       } else {
-        toastyInfo(R.string.alrt_sura_exist_message)
+        toast(R.string.alrt_sura_exist_message)
         stopSelf()
       }
     } else {
@@ -77,7 +94,7 @@ class QuranyDownloadService : Service() {
       val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
       // Checking if the received broadcast is for our enqueued download by matching download id
       if (downloadId == id) {
-        toastySuccess(R.string.alrt_download_completed_msg)
+        toast(R.string.alrt_download_completed_msg)
         scan()
       } else {
         Timber.d(TAG, "onReceive: download id not match")

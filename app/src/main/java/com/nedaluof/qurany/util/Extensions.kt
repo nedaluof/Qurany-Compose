@@ -9,26 +9,17 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.nedaluof.qurany.R
-import es.dmoral.toasty.Toasty
 import java.io.File
-import java.util.Locale
 
 /**
  * Created by nedaluof on 12/13/2020.
  */
-fun Context.toastyError(@StringRes msg: Int) = Toasty.error(this, msg).show()
-
-fun Context.toastySuccess(@StringRes msg: Int) = Toasty.success(this, msg).show()
-
-fun Context.toastyInfo(@StringRes msg: Int) = Toasty.info(this, msg).show()
-
-/**
- * @return user device language
- */
-fun getLanguage() = if (Locale.getDefault().language.contains("ar")) "_arabic" else "_english"
+fun Context.toast(@StringRes msg: Int) =
+  Toast.makeText(this, this.getString(msg), Toast.LENGTH_LONG).show()
 
 fun Context.checkIfSuraExist(subPath: String) =
   File(this.getExternalFilesDir(null).toString() + subPath).exists()

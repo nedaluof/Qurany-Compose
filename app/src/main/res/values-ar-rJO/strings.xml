@@ -13,10 +13,11 @@
 
     <string name="no_reciters">لم تقم بإضافة أي قارئ لقائمتك ,إذهب الى قائمة القرائ وأضف واحدا لتراه هنا </string>
 
-    <string name="sura_count_1">هنالك </string>
-    <string name="sura_count_2">سورة</string>
-    <string name="sura_count_3">هنالك سورة واحدة فقط</string>
-    <string name="sura_number">رقم السورة : </string>
+    <string name="sura_count_1">هنالك %d سورة</string>
+    <string name="sura_count_2">هنالك سورة واحدة فقط</string>
+
+
+    <string name="sura_number">رقم السورة : %d</string>
     <string name="reciters_search_hit">إبحث عن قارئ</string>
 
 

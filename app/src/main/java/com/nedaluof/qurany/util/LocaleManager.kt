@@ -1,7 +1,7 @@
 package com.nedaluof.qurany.util
 
 import android.content.Context
-import com.nedaluof.qurany.data.repository.AppRepository
+import com.nedaluof.qurany.data.repositories.app.AppRepository
 import java.util.Locale
 import javax.inject.Inject
 

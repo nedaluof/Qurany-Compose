@@ -22,11 +22,10 @@ object DatabaseModule {
     Room.databaseBuilder(
       context,
       QuranyDatabase::class.java,
-      QuranyDatabase.DB_NAME
+      "Qurany.db"
     ).build()
 
   @Singleton
   @Provides
-  fun provideReciterDao(database: QuranyDatabase) =
-    database.getRecitersDao()
+  fun provideReciterDao(database: QuranyDatabase) = database.recitersDao
 }

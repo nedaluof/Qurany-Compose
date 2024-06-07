@@ -41,14 +41,4 @@ class PreferencesManager @Inject constructor(
   fun hasKeyInPreferences(key: String, result: (Boolean) -> Unit) {
     MiHawk.contains(key, result)
   }
-
-  fun hasKeyInPreferences(key: String): Boolean {
-    var hasKey = false
-    runBlocking {
-      MiHawk.contains(key) {
-        hasKey = it
-      }
-    }
-    return hasKey
-  }
 }

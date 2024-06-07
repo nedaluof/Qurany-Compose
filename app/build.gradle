@@ -30,14 +30,6 @@ android {
         versionCode versions.versionCode
         versionName versions.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += [
-                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
-                        "room.incremental"     : "true",
-                        "room.expandProjection": "true"]
-            }
-        }
     }
 
     buildTypes {
@@ -69,34 +61,37 @@ dependencies {
     /** app **/
     //app compat
     implementation "androidx.appcompat:appcompat:$versions.appCompat"
-    //constraint layout
-    implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
-    //recycler view
-    implementation "androidx.recyclerview:recyclerview:$versions.recyclerView"
+    //core extensions
+    implementation "androidx.core:core-ktx:$versions.coreKtx"
     //MDC
-    implementation "com.google.android.material:material:$versions.material"
-    //swipe refresh layout
-    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swipeRefreshLayout"
-    //layouts design sizes helper
-    implementation "com.intuit.sdp:sdp-android:$versions.intuit"
-    implementation "com.intuit.ssp:ssp-android:$versions.intuit"
-    //text painter animation
-    implementation "com.yanzhikai:TextPathView:$versions.painter"
-    //chips navigation
-    implementation "com.ismaeldivita.chipnavigation:chip-navigation-bar:$versions.chipNavigation"
-    //alerter
-    implementation "com.tapadoo.android:alerter:$versions.alerter"
-    //toasty
-    implementation "com.github.GrenderG:Toasty:$versions.toasty"
-    //fragment extensions
-    implementation "androidx.fragment:fragment-ktx:$versions.fragmentKtx"
+    implementation "com.google.android.material:material:1.12.0"
+    /*Compose*/
+    def composeBom = platform("androidx.compose:compose-bom:$versions.compose_bom")
+    implementation composeBom
+    androidTestImplementation composeBom
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.ui:ui-viewbinding'
+    implementation 'androidx.compose.foundation:foundation'
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    //hilt navigation compose
+    implementation "androidx.hilt:hilt-navigation-compose:$versions.hilt_navigation_compose"
+    //compose activity
+    implementation "androidx.activity:activity-compose:$versions.compose_activity"
+    //compose nav component
+    implementation "androidx.navigation:navigation-compose:$versions.compose_navigation"
     //exoPlayer
     implementation "com.google.android.exoplayer:exoplayer:$versions.exoPlayer"
     /**jet-pack Components**/
     //lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$versions.compose_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:$versions.compose_lifecycle"
+    //implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    //implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
+    //implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
     //room database
     implementation "androidx.room:room-runtime:$versions.room"
     implementation "androidx.room:room-ktx:$versions.room"
@@ -120,14 +115,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
     /** kotlin **/
-    //kotlin extensions
-    implementation "androidx.core:core-ktx:$versions.coreKtx"
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
     //kotlin reflect
     implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.reflect"
     // debugging
     implementation "com.jakewharton.timber:timber:$versions.timber"
+
     //Test libs
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -138,22 +132,4 @@ dependencies {
     //testImplementation "io.mockk:mockk:$mockk_version"
     testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.mockito:mockito-inline:3.9.0'
-
-    /*Compose*/
-    implementation 'androidx.hilt:hilt-navigation-compose:1.2.0'
-    implementation 'androidx.activity:activity-compose:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.8.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.8.1'
-    implementation "androidx.navigation:navigation-compose:2.7.7"
-    def composeBom = platform('androidx.compose:compose-bom:2024.05.00')
-    implementation composeBom
-    androidTestImplementation composeBom
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.compose.ui:ui-viewbinding'
-    implementation 'androidx.compose.foundation:foundation'
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
 }
