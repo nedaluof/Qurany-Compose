@@ -51,7 +51,8 @@ class SurasRepositoryImpl @Inject constructor(
               currentSura,
               reciterData.name ?: ""
             ),
-            subPath
+            subPath,
+            checkIfSuraExist(subPath)
           )
         )
       } else {
@@ -67,7 +68,8 @@ class SurasRepositoryImpl @Inject constructor(
             suraUrl,
             reciterData.name ?: "",
             SuraUtil.getPlayerTitle(appLanguage, currentSura, reciterData.name ?: ""),
-            subPath
+            subPath,
+            checkIfSuraExist(subPath)
           )
         )
       }

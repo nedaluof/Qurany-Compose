@@ -30,7 +30,8 @@
                 android:layout_margin="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_close" />
+                android:tint="@color/light_black"
+                app:srcCompat="@drawable/ic_close" />
         </LinearLayout>
 
         <com.google.android.exoplayer2.ui.PlayerControlView

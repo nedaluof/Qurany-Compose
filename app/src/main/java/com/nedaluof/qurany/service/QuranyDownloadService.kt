@@ -15,7 +15,6 @@ import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.data.repositories.app.AppRepository
 import com.nedaluof.qurany.data.repositories.suras.SuraUtil
-import com.nedaluof.qurany.util.AppConstants
 import com.nedaluof.qurany.util.checkIfSuraExist
 import com.nedaluof.qurany.util.getSuraPath
 import com.nedaluof.qurany.util.isNetworkOk
@@ -44,12 +43,10 @@ class QuranyDownloadService : Service() {
 
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    sura = intent?.parcelable(AppConstants.DOWNLOAD_SURA_KEY)!!
+    sura = intent?.parcelable(DOWNLOAD_SURA_KEY)!!
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       registerReceiver(
-        onComplete,
-        IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE),
-        RECEIVER_EXPORTED
+        onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), RECEIVER_EXPORTED
       )
     } else {
       registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
@@ -67,11 +64,8 @@ class QuranyDownloadService : Service() {
           val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
           val request = DownloadManager.Request(Uri.parse(sura.suraUrl))
           request.setAllowedNetworkTypes(
-            DownloadManager.Request.NETWORK_WIFI or
-                DownloadManager.Request.NETWORK_MOBILE
-          )
-            .setAllowedOverRoaming(false)
-            .setTitle(SuraUtil.getSuraName(appLanguage, sura.id))
+            DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
+          ).setAllowedOverRoaming(false).setTitle(SuraUtil.getSuraName(appLanguage, sura.id))
             .setDescription(SuraUtil.getSuraName(appLanguage, sura.id) + "| " + sura.reciterName)
             .setDestinationInExternalFilesDir(this, null, subPath)
           downloadId = downloadManager.enqueue(request)
@@ -97,7 +91,7 @@ class QuranyDownloadService : Service() {
         toast(R.string.alrt_download_completed_msg)
         scan()
       } else {
-        Timber.d(TAG, "onReceive: download id not match")
+        Timber.d("onReceive: download id not match")
       }
     }
   }
@@ -105,8 +99,7 @@ class QuranyDownloadService : Service() {
   fun scan() {
     val file = File(this.getSuraPath(subPath))
     MediaScannerConnection.scanFile(
-      this, arrayOf(file.toString()),
-      arrayOf(file.name), null
+      this, arrayOf(file.toString()), arrayOf(file.name), null
     )
   }
 
@@ -116,6 +109,10 @@ class QuranyDownloadService : Service() {
   }
 
   companion object {
-    private val TAG = QuranyDownloadService::class.java.name
+    private const val DOWNLOAD_SURA_KEY = "DOWNLOAD_SURA_KEY"
+
+    fun getIntent(
+      context: Context, suraModel: SuraModel
+    ) = Intent(context, QuranyDownloadService::class.java).putExtra(DOWNLOAD_SURA_KEY, suraModel)
   }
 }

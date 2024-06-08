@@ -1,7 +1,6 @@
 package com.nedaluof.qurany.data.model
 
 import android.os.Parcelable
-import com.nedaluof.qurany.util.AppConstants
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -16,7 +15,7 @@ data class SuraModel(
   var reciterName: String = "",
   var playerTitle: String = "",
   var suraSubPath: String = "",
-  var playingType: Int = AppConstants.PLAYING_ONLINE,
+  var isSuraExistInLocalStorage: Boolean = false
 ) : Parcelable {
   companion object {
     fun mockList() = listOf(

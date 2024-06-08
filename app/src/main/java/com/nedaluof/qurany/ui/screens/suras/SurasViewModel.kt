@@ -6,8 +6,6 @@ import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.data.repositories.suras.SurasRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 /**
@@ -20,12 +18,9 @@ class SurasViewModel @Inject constructor(
 
   //region ui states
   val currentPlayingSura = mutableStateOf<SuraModel?>(null)
-
   //endregion
-  fun loadReciterSuras(reciter: Reciter) = repository.getMappedReciterSuras(reciter)
 
-  fun checkSuraExist(sura: SuraModel): StateFlow<Boolean?> =
-    MutableStateFlow<Boolean?>(null).apply {
-      value = repository.checkIfSuraExist(sura.suraSubPath)
-    }
+  //region logic
+  fun loadReciterSuras(reciter: Reciter) = repository.getMappedReciterSuras(reciter)
+  //endregion
 }

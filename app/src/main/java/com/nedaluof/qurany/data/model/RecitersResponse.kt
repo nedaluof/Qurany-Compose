@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 
 /**
  * Created by nedaluof on 12/2/2020.
@@ -13,8 +14,8 @@ data class Reciters(
   @SerializedName("reciters") var reciters: List<Reciter>? = null
 )
 
-@Parcelize
 @Entity(tableName = "reciter")
+@Parcelize
 data class Reciter(
   @SerializedName("id") var id: String? = null,
   @SerializedName("name") var name: String? = null,
@@ -24,9 +25,8 @@ data class Reciter(
   @SerializedName("letter") var letter: String? = null,
   @SerializedName("suras") var suras: String? = null,
   var inMyReciters: Boolean = false,
-  @PrimaryKey(autoGenerate = true) var reciter_id: Int = 0,
-  var isPlayingNow: Boolean = false
-) : Parcelable {
+  @PrimaryKey(autoGenerate = true) var reciterId: Int = 0
+) : Parcelable, Serializable {
 
   companion object {
     fun mockList() = listOf(Reciter().apply {

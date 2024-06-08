@@ -57,7 +57,7 @@ import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 @Composable
 fun MainScreen(
   modifier: Modifier = Modifier,
-  viewModel: MainViewModel,
+  viewModel: MainViewModel = hiltViewModel(),
   reloadApp: () -> Unit = {},
   onReciterClicked: (Reciter) -> Unit = {}
 ) {
@@ -75,7 +75,7 @@ fun MainScreen(
     }, bottomBar = {
       BottomNavigationBar(navController = navController, items = bottomNavigationItems)
     }) { paddingValues ->
-      MainScreenNavigationConfigurations(
+      BottomBarNavigation(
         navController = navController,
         paddingValues = paddingValues,
         onReciterClicked
@@ -209,7 +209,7 @@ private fun BottomNavigationBar(
 }
 
 @Composable
-private fun MainScreenNavigationConfigurations(
+private fun BottomBarNavigation(
   navController: NavHostController, paddingValues: PaddingValues,
   onReciterClicked: (Reciter) -> Unit
 ) {

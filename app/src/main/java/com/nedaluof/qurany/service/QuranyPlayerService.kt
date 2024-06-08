@@ -19,10 +19,8 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.NotificationUtil
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
-import com.nedaluof.qurany.ui.screens.suras.SurasActivity
-import com.nedaluof.qurany.util.AppConstants
+import com.nedaluof.qurany.ui.screens.MainActivity
 import com.nedaluof.qurany.util.getLogoAsBitmap
 import com.nedaluof.qurany.util.getSuraPath
 import com.nedaluof.qurany.util.isNetworkOk
@@ -40,7 +38,6 @@ class QuranyPlayerService : Service() {
 
   private var playerNotificationManager: PlayerNotificationManager? = null
   lateinit var sura: SuraModel // coming sura to run on the player
-  lateinit var reciter: Reciter // coming reciter to serve the state of the suras activity
   private var isRunning = false
 
   // binder of the service to connect to the PlayerView in [SurasActivity]
@@ -48,8 +45,7 @@ class QuranyPlayerService : Service() {
   override fun onBind(intent: Intent?): IBinder = playerBinder
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    sura = intent?.parcelable(AppConstants.SURA_KEY)!!
-    reciter = intent.parcelable(AppConstants.RECITER_KEY)!!
+    sura = intent?.parcelable(SURA_KEY)!!
     startPlayer()
     isRunning = true
     return START_NOT_STICKY
@@ -57,32 +53,28 @@ class QuranyPlayerService : Service() {
 
   private fun startPlayer() {
     if (this::sura.isInitialized) {
-      when (sura.playingType) {
-        AppConstants.PLAYING_ONLINE -> {
-          if (this.isNetworkOk()) {
-            val suraURI = Uri.parse(sura.suraUrl)
-            val suraMediaSource = buildMediaSource(suraURI)
-            player.apply {
-              setMediaSource(suraMediaSource)
-              prepare()
-              playWhenReady = true
-            }
-            this.toast(R.string.alrt_sura_playing_online)
-          } else {
-            toast(R.string.alrt_no_internet_msg)
-          }
+      if (sura.isSuraExistInLocalStorage) {
+        val localSuraPath = this.getSuraPath(sura.suraSubPath)
+        val suraURI = Uri.parse(localSuraPath)
+        val suraMediaSource = buildMediaSource(suraURI)
+        player.apply {
+          setMediaSource(suraMediaSource)
+          prepare()
+          playWhenReady = true
         }
-
-        AppConstants.PLAYING_LOCALLY -> {
-          val localSuraPath = this.getSuraPath(sura.suraSubPath)
-          val suraURI = Uri.parse(localSuraPath)
+        this@QuranyPlayerService.toast(R.string.alrt_sura_playing_locally)
+      } else {
+        if (this.isNetworkOk()) {
+          val suraURI = Uri.parse(sura.suraUrl)
           val suraMediaSource = buildMediaSource(suraURI)
           player.apply {
             setMediaSource(suraMediaSource)
             prepare()
             playWhenReady = true
           }
-          this@QuranyPlayerService.toast(R.string.alrt_sura_playing_locally)
+          this.toast(R.string.alrt_sura_playing_online)
+        } else {
+          toast(R.string.alrt_no_internet_msg)
         }
       }
       initPlayerNotification()
@@ -104,10 +96,8 @@ class QuranyPlayerService : Service() {
 
       override fun createCurrentContentIntent(player: Player): PendingIntent? {
         val resultIntent =
-          Intent(this@QuranyPlayerService, SurasActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
-            reciter.isPlayingNow = true
-            putExtra(AppConstants.RECITER_KEY, reciter)
+          Intent(this@QuranyPlayerService, MainActivity::class.java).also {
+            it.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
           }
         // Create the TaskStackBuilder
         return TaskStackBuilder.create(this@QuranyPlayerService).run {
@@ -200,5 +190,9 @@ class QuranyPlayerService : Service() {
 
   inner class PlayerBinder : Binder() {
     val playerService: QuranyPlayerService = this@QuranyPlayerService
+  }
+
+  companion object {
+    const val SURA_KEY = "SURA_KEY"
   }
 }

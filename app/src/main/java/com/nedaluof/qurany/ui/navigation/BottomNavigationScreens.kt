@@ -12,7 +12,6 @@ sealed class BottomNavigationScreens(
 ) {
   data object Reciters :
     BottomNavigationScreens("reciters", R.string.home_nav_title, R.drawable.ic_home_navigation)
-
   data object MyReciters : BottomNavigationScreens(
     "my_reciters", R.string.favorite_nav_title, R.drawable.ic_favorite_navigation
   )

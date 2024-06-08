@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -14,6 +15,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.nedaluof.qurany.R
 import java.io.File
+import java.io.Serializable
 
 /**
  * Created by nedaluof on 12/13/2020.
@@ -68,6 +70,11 @@ inline fun <reified CLASS> Intent?.parcelable(key: String): CLASS {
   } else {
     this?.getParcelableExtra(key)!!
   }
+}
+
+inline fun <reified T : Serializable> Bundle.serializable(key: String): T? = when {
+  Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializable(key, T::class.java)
+  else -> @Suppress("DEPRECATION") getSerializable(key) as? T
 }
 
 fun (() -> Unit).postDelayed(
