@@ -9,15 +9,14 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.TaskStackBuilder
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.NotificationUtil
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.NotificationUtil
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.ui.PlayerNotificationManager
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.ui.screens.MainActivity
@@ -81,24 +80,14 @@ class QuranyPlayerService : Service() {
     }
   }
 
-  fun playerIsRunning() = isRunning
-
-  fun getCurrentSuraRunning() = if (this::sura.isInitialized) {
-    sura
-  } else {
-    SuraModel()
-  }
-
   private fun initPlayerNotification() {
     val mediaDescriptionAdapter = object : PlayerNotificationManager.MediaDescriptionAdapter {
-      override fun getCurrentContentTitle(player: Player): CharSequence =
-        sura.reciterName
+      override fun getCurrentContentTitle(player: Player): CharSequence = sura.reciterName
 
       override fun createCurrentContentIntent(player: Player): PendingIntent? {
-        val resultIntent =
-          Intent(this@QuranyPlayerService, MainActivity::class.java).also {
-            it.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
-          }
+        val resultIntent = Intent(this@QuranyPlayerService, MainActivity::class.java).also {
+          it.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+        }
         // Create the TaskStackBuilder
         return TaskStackBuilder.create(this@QuranyPlayerService).run {
           addNextIntentWithParentStack(resultIntent)
@@ -111,22 +100,17 @@ class QuranyPlayerService : Service() {
 
       override fun getCurrentContentText(player: Player): CharSequence = sura.name
       override fun getCurrentLargeIcon(
-        player: Player,
-        callback: PlayerNotificationManager.BitmapCallback
-      ) =
-        this@QuranyPlayerService.getLogoAsBitmap()
+        player: Player, callback: PlayerNotificationManager.BitmapCallback
+      ) = this@QuranyPlayerService.getLogoAsBitmap()
     }
 
-    val notificationListener = object :
-      PlayerNotificationManager.NotificationListener {
+    val notificationListener = object : PlayerNotificationManager.NotificationListener {
       override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
         stopSelf()
       }
 
       override fun onNotificationPosted(
-        notificationId: Int,
-        notification: Notification,
-        ongoing: Boolean
+        notificationId: Int, notification: Notification, ongoing: Boolean
       ) {
         if (ongoing) {
           startForeground(notificationId, notification)
@@ -135,19 +119,14 @@ class QuranyPlayerService : Service() {
         }
       }
     }
-    playerNotificationManager =
-      PlayerNotificationManager.Builder(
-        this,
-        1,
-        R.string.notification_id.toString(),
-        mediaDescriptionAdapter
-      )
-        //.setMediaDescriptionAdapter(mediaDescriptionAdapter)
-        .setNotificationListener(notificationListener)
-        .setChannelImportance(NotificationUtil.IMPORTANCE_HIGH)
-        .setChannelNameResourceId(R.string.notification_channel_des)
-        .build()
-        .also { it.setPlayer(player) }
+    playerNotificationManager = PlayerNotificationManager.Builder(
+      this, 1, R.string.notification_id.toString()
+    )
+      .setMediaDescriptionAdapter(mediaDescriptionAdapter)
+      .setNotificationListener(notificationListener)
+      .setChannelImportance(NotificationUtil.IMPORTANCE_HIGH)
+      .setChannelNameResourceId(R.string.notification_channel_des).build()
+      .also { it.setPlayer(player) }
   }
 
   fun getPlayerInstance(): ExoPlayer {
@@ -163,17 +142,16 @@ class QuranyPlayerService : Service() {
   }
 
   private fun buildMediaSource(uri: Uri): MediaSource {
-    //val dataSourceFactory: DataSource.Factory = DefaultDataSource.Factory(this)
-    val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this)
+    val dataSourceFactory = DefaultDataSource.Factory(this)
     val mediaItem = MediaItem.Builder().setUri(uri).build()
-    return ProgressiveMediaSource.Factory(dataSourceFactory)
-      .createMediaSource(mediaItem)
+    return ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(mediaItem)
   }
 
   private fun stopForegroundT(removeNotification: Boolean) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       stopForeground(if (removeNotification) STOP_FOREGROUND_REMOVE else STOP_FOREGROUND_DETACH)
     } else {
+      @Suppress("DEPRECATION")
       stopForeground(removeNotification)
     }
   }

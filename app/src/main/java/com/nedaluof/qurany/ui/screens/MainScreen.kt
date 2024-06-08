@@ -64,9 +64,6 @@ fun MainScreen(
   onReciterClicked: (Reciter) -> Unit = {}
 ) {
   val navController = rememberNavController()
-  val bottomNavigationItems = listOf(
-    BottomNavigationScreens.Reciters, BottomNavigationScreens.MyReciters
-  )
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Column {
     Toolbar(viewModel = viewModel)
@@ -75,7 +72,7 @@ fun MainScreen(
         navController = navController, onSearchClickedClick = {}, scrollBehavior = scrollBehavior
       )
     }, bottomBar = {
-      BottomNavigationBar(navController = navController, items = bottomNavigationItems)
+      BottomNavigationBar(navController = navController)
     }) { paddingValues ->
       BottomBarNavigation(
         navController = navController,
@@ -168,7 +165,7 @@ private fun TopAppBar(
 
 @Composable
 private fun BottomNavigationBar(
-  navController: NavHostController, items: List<BottomNavigationScreens>
+  navController: NavHostController
 ) {
   val navBackStackEntry by navController.currentBackStackEntryAsState()
   val currentDestination = navBackStackEntry?.destination?.route ?: "reciters"
@@ -180,8 +177,11 @@ private fun BottomNavigationBar(
         color = MaterialTheme.colorScheme.primary,
         shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp)
       ),
+    containerColor = MaterialTheme.colorScheme.background
   ) {
-    items.forEach { navigationItem ->
+    listOf(
+      BottomNavigationScreens.Reciters, BottomNavigationScreens.MyReciters
+    ).forEach { navigationItem ->
       NavigationBarItem(selected = currentDestination == navigationItem.route, label = {
         Text(stringResource(id = navigationItem.resourceId))
       }, icon = {

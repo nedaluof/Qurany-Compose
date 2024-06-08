@@ -37,8 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.Player
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
@@ -115,14 +115,11 @@ fun SurasListScreen(
       }
       surasViewModel.currentPlayingSura.value = sura
       onPlayClicked(sura)
-    },
-      onDownloadClicked = onDownloadClicked,
-      onCloseClicked = onBackPressed,
-      onScrolled = {
-        coroutineScope.launch {
-          bottomSheetScaffoldState.bottomSheetState.partialExpand()
-        }
-      })
+    }, onDownloadClicked = onDownloadClicked, onCloseClicked = onBackPressed, onScrolled = {
+      coroutineScope.launch {
+        bottomSheetScaffoldState.bottomSheetState.partialExpand()
+      }
+    })
   }
 }
 

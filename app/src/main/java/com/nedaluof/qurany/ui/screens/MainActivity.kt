@@ -12,10 +12,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.media3.common.util.Util
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.util.Util
 import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.service.QuranyDownloadService
 import com.nedaluof.qurany.service.QuranyPlayerService
@@ -61,6 +61,9 @@ class MainActivity : AppCompatActivity() {
           BackHandler {
             if (navBackStackEntry?.destination?.route == "main") {
               this@MainActivity.finish()
+            } else if (navBackStackEntry?.destination?.route == "suras") {
+              navController.popBackStack()
+              stopService()
             } else {
               navController.popBackStack()
             }
@@ -76,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         val binder = iBinder as QuranyPlayerService.PlayerBinder
         service = binder.playerService
         isServiceBound = true
-        initializePlayer()
+        exoPlayer = service?.getPlayerInstance()!!
       }
 
       override fun onServiceDisconnected(componentName: ComponentName) {
@@ -84,12 +87,6 @@ class MainActivity : AppCompatActivity() {
       }
     }
     bindService(quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_AUTO_CREATE)
-  }
-
-  private fun initializePlayer() {
-    if (isServiceBound) {
-      exoPlayer = service?.getPlayerInstance()!!
-    }
   }
 
   private fun onPlaySuraRequested(sura: SuraModel) {

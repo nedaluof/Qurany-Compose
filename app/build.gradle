@@ -83,15 +83,13 @@ dependencies {
     implementation "androidx.activity:activity-compose:$versions.compose_activity"
     //compose nav component
     implementation "androidx.navigation:navigation-compose:$versions.compose_navigation"
-    //exoPlayer
-    implementation "com.google.android.exoplayer:exoplayer:$versions.exoPlayer"
+    //media3
+    implementation "androidx.media3:media3-exoplayer:$versions.media3"
+    implementation "androidx.media3:media3-ui:$versions.media3"
     /**jet-pack Components**/
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$versions.compose_lifecycle"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$versions.compose_lifecycle"
-    //implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
-    //implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle"
-    //implementation "androidx.lifecycle:lifecycle-runtime-ktx:$versions.lifecycle"
     //room database
     implementation "androidx.room:room-runtime:$versions.room"
     implementation "androidx.room:room-ktx:$versions.room"

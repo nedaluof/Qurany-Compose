@@ -6,6 +6,7 @@
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -34,7 +35,7 @@
                 app:srcCompat="@drawable/ic_close" />
         </LinearLayout>
 
-        <com.google.android.exoplayer2.ui.PlayerControlView
+        <androidx.media3.ui.LegacyPlayerControlView
             android:id="@+id/player_controller"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
