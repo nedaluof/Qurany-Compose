@@ -3,11 +3,8 @@ package com.nedaluof.qurany.ui.screens
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.nedaluof.qurany.data.repositories.app.AppRepository
-import com.nedaluof.qurany.util.ConnectivityStatus
+import com.nedaluof.data.repositories.app.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -44,13 +41,13 @@ class MainViewModel @Inject constructor(
   }
 
   private fun observeConnectivity() {
-    viewModelScope.launch {
+    /*viewModelScope.launch {
       appRepository.observeConnectivity().collect { connectionState ->
         when (connectionState) {
           ConnectivityStatus.CONNECTED -> connected.value = true
           ConnectivityStatus.NOT_CONNECTED -> connected.value = false
         }
       }
-    }
+    }*/
   }
 }

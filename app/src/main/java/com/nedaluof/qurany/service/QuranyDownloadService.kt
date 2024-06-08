@@ -11,10 +11,10 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
+import com.nedaluof.data.model.SuraModel
+import com.nedaluof.data.repositories.app.AppRepository
+import com.nedaluof.data.repositories.suras.SuraUtil
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.data.model.SuraModel
-import com.nedaluof.qurany.data.repositories.app.AppRepository
-import com.nedaluof.qurany.data.repositories.suras.SuraUtil
 import com.nedaluof.qurany.util.checkIfSuraExist
 import com.nedaluof.qurany.util.getSuraPath
 import com.nedaluof.qurany.util.isNetworkOk

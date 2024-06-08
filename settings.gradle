@@ -21,5 +21,5 @@ dependencyResolutionManagement {
         jcenter()
     }
 }
-include ':app'
 rootProject.name = 'Qurany-Compose'
+include ':app', ':data'

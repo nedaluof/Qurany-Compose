@@ -26,8 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.ui.theme.AppGreen
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 

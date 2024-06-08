@@ -45,8 +45,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.nedaluof.data.model.Reciter
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.ui.navigation.BottomNavigationScreens
 import com.nedaluof.qurany.ui.screens.reciters.RecitersListScreen
 import com.nedaluof.qurany.ui.theme.AppGreen

@@ -2,9 +2,9 @@ package com.nedaluof.qurany.ui.screens.suras
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.nedaluof.qurany.data.model.Reciter
-import com.nedaluof.qurany.data.model.SuraModel
-import com.nedaluof.qurany.data.repositories.suras.SurasRepository
+import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.SuraModel
+import com.nedaluof.data.repositories.suras.SurasRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

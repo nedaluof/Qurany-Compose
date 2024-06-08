@@ -16,7 +16,7 @@ import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.nedaluof.qurany.data.model.SuraModel
+import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.service.QuranyDownloadService
 import com.nedaluof.qurany.service.QuranyPlayerService
 import com.nedaluof.qurany.ui.navigation.AppNavigation

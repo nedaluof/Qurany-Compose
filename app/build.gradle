@@ -21,7 +21,7 @@ android {
         }
     }
     namespace 'com.nedaluof.qurany'
-    compileSdkVersion versions.compileSdk
+    compileSdk versions.compileSdk
 
     defaultConfig {
         applicationId "com.nedaluof.qurany"
@@ -59,6 +59,8 @@ android {
 
 dependencies {
     /** app **/
+    //activity ktx
+    implementation "androidx.activity:activity-ktx:$versions.activityKtx"
     //app compat
     implementation "androidx.appcompat:appcompat:$versions.appCompat"
     //core extensions
@@ -90,36 +92,18 @@ dependencies {
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$versions.compose_lifecycle"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$versions.compose_lifecycle"
-    //room database
-    implementation "androidx.room:room-runtime:$versions.room"
-    implementation "androidx.room:room-ktx:$versions.room"
-    implementation 'androidx.activity:activity-ktx:1.9.0'
-    ksp "androidx.room:room-compiler:$versions.room_compiler"
     //hilt dependencies injection
     implementation "com.google.dagger:hilt-android:$versions.hilt"
     ksp "com.google.dagger:hilt-android-compiler:$versions.hilt"
-    //DataStore
-    implementation "com.github.nedaluof:MiHawk:$versions.mihawk"
     //startup
     implementation "androidx.startup:startup-runtime:$versions.startup"
-    /** remote **/
-    implementation("com.squareup.retrofit2:retrofit:$versions.retrofit") { exclude module: 'okhttp' }
-    implementation "com.squareup.retrofit2:converter-gson:$versions.converter"
-    implementation "com.squareup.okhttp3:logging-interceptor:$versions.interceptor"
-    implementation "com.google.code.gson:gson:$versions.gson"
     /**Firebase**/
     implementation platform("com.google.firebase:firebase-bom:$versions.firebase_bom")
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
-    /** kotlin **/
-    //Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
-    //kotlin reflect
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.reflect"
-    // debugging
-    implementation "com.jakewharton.timber:timber:$versions.timber"
-
+    /*data*/
+    api project(":data")
     //Test libs
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -127,7 +111,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
     androidTestImplementation 'androidx.test:rules:1.5.0'
-    //testImplementation "io.mockk:mockk:$mockk_version"
     testImplementation 'org.mockito:mockito-core:5.11.0'
     testImplementation 'org.mockito:mockito-inline:3.9.0'
 }

@@ -17,8 +17,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.PlayerNotificationManager
+import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.ui.screens.MainActivity
 import com.nedaluof.qurany.util.getLogoAsBitmap
 import com.nedaluof.qurany.util.getSuraPath

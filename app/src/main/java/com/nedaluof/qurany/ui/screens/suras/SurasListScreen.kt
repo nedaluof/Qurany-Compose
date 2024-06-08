@@ -39,9 +39,9 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.data.model.Reciter
-import com.nedaluof.qurany.data.model.SuraModel
 import com.nedaluof.qurany.databinding.PlayerBottomSheetLayoutBinding
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.isNetworkOk

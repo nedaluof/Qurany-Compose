@@ -1,7 +1,7 @@
 package com.nedaluof.qurany.ui.screens.reciters
 
 import androidx.compose.runtime.Stable
-import com.nedaluof.qurany.data.model.Reciter
+import com.nedaluof.data.model.Reciter
 
 /**
  * Created By NedaluOf - 6/1/2024.

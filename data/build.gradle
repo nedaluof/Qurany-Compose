@@ -1,0 +1,63 @@
+plugins {
+  id 'com.android.library'
+  id 'org.jetbrains.kotlin.android'
+  id 'com.google.devtools.ksp'
+  id 'kotlin-parcelize'
+  id 'com.google.dagger.hilt.android'
+}
+
+apply from: "$rootDir/versions.gradle"
+
+android {
+  namespace 'com.nedaluof.data'
+  compileSdk versions.compileSdk
+
+  defaultConfig {
+    minSdk versions.minSdk
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    consumerProguardFiles "consumer-rules.pro"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = '17'
+  }
+}
+
+dependencies {
+  //room database
+  implementation "androidx.room:room-runtime:$versions.room"
+  implementation "androidx.room:room-ktx:$versions.room"
+  ksp "androidx.room:room-compiler:$versions.room_compiler"
+  //hilt dependencies injection
+  implementation "com.google.dagger:hilt-android:$versions.hilt"
+  ksp "com.google.dagger:hilt-android-compiler:$versions.hilt"
+  //MiHawk DataStore
+  implementation "com.github.nedaluof:MiHawk:$versions.mihawk"
+  /** remote **/
+  implementation("com.squareup.retrofit2:retrofit:$versions.retrofit") { exclude module: 'okhttp' }
+  implementation "com.squareup.okhttp3:logging-interceptor:$versions.interceptor"
+  implementation "com.squareup.retrofit2:converter-moshi:$versions.converter"
+  implementation "com.squareup.moshi:moshi:$versions.moshi"
+  ksp "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
+  /** kotlin **/
+  //Coroutines
+  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
+  //kotlin reflect
+  implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.reflect"
+  // debugging
+  api "com.jakewharton.timber:timber:$versions.timber"
+  //testing
+  testImplementation 'junit:junit:4.13.2'
+  androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}

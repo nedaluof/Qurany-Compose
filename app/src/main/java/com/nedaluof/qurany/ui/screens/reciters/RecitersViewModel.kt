@@ -2,9 +2,9 @@ package com.nedaluof.qurany.ui.screens.reciters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nedaluof.qurany.data.model.Reciter
-import com.nedaluof.qurany.data.model.Status
-import com.nedaluof.qurany.data.repositories.reciters.RecitersRepository
+import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.Status
+import com.nedaluof.data.repositories.reciters.RecitersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

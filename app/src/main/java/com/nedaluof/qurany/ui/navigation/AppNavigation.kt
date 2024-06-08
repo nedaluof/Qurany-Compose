@@ -11,8 +11,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.nedaluof.qurany.data.model.Reciter
-import com.nedaluof.qurany.data.model.SuraModel
+import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.ui.screens.MainScreen
 import com.nedaluof.qurany.ui.screens.MainViewModel
 import com.nedaluof.qurany.ui.screens.splash.SplashScreen
