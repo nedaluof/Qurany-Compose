@@ -1,5 +1,6 @@
 package com.nedaluof.qurany.ui.screens
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -49,6 +51,7 @@ import com.nedaluof.qurany.ui.navigation.BottomNavigationScreens
 import com.nedaluof.qurany.ui.screens.reciters.RecitersListScreen
 import com.nedaluof.qurany.ui.theme.AppGreen
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
+import java.util.Locale
 
 /**
  * Created By NedaluOf - 5/31/2024.
@@ -57,8 +60,7 @@ import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 @Composable
 fun MainScreen(
   modifier: Modifier = Modifier,
-  viewModel: MainViewModel = hiltViewModel(),
-  reloadApp: () -> Unit = {},
+  viewModel: MainViewModel,
   onReciterClicked: (Reciter) -> Unit = {}
 ) {
   val navController = rememberNavController()
@@ -67,7 +69,7 @@ fun MainScreen(
   )
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Column {
-    Toolbar(viewModel = viewModel, reloadApp = reloadApp)
+    Toolbar(viewModel = viewModel)
     Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
       TopAppBar(
         navController = navController, onSearchClickedClick = {}, scrollBehavior = scrollBehavior
@@ -87,8 +89,7 @@ fun MainScreen(
 @Composable
 fun Toolbar(
   modifier: Modifier = Modifier,
-  viewModel: MainViewModel,
-  reloadApp: () -> Unit
+  viewModel: MainViewModel
 ) {
   Row(
     modifier
@@ -97,8 +98,12 @@ fun Toolbar(
   ) {
     TextButton(
       onClick = {
+        AppCompatDelegate.setApplicationLocales(
+          LocaleListCompat.create(
+            Locale(if (viewModel.isCurrentLanguageEnglish.value) "ar" else "en")
+          )
+        )
         viewModel.changeAppLanguage()
-        reloadApp()
       }
     ) {
       Text(viewModel.appLanguageEnglish.value, color = Color.White)

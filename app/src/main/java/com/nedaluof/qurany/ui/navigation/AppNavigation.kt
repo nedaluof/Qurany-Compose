@@ -7,15 +7,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.android.exoplayer2.ExoPlayer
 import com.nedaluof.qurany.data.model.Reciter
 import com.nedaluof.qurany.data.model.SuraModel
-import com.nedaluof.qurany.ui.screens.MainActivity
 import com.nedaluof.qurany.ui.screens.MainScreen
+import com.nedaluof.qurany.ui.screens.MainViewModel
 import com.nedaluof.qurany.ui.screens.splash.SplashScreen
 import com.nedaluof.qurany.ui.screens.suras.SurasListScreen
 import kotlinx.coroutines.delay
@@ -27,6 +26,7 @@ import kotlinx.coroutines.delay
 fun AppNavigation(
   modifier: Modifier = Modifier,
   navController: NavHostController,
+  mainViewModel: MainViewModel,
   getExoPlayer: () -> ExoPlayer?,
   onPlayClicked: (SuraModel) -> Unit,
   onDownloadClicked: (SuraModel) -> Unit,
@@ -42,7 +42,6 @@ fun AppNavigation(
   if (isSplashShown) {
     navController.navigate(route = AppNavigationScreens.Main.route)
   }
-  val context = LocalContext.current
   var reciter by remember { mutableStateOf<Reciter?>(null) }
   NavHost(
     navController = navController,
@@ -53,12 +52,7 @@ fun AppNavigation(
       SplashScreen()
     }
     composable(AppNavigationScreens.Main.route) {
-      MainScreen(reloadApp = {
-        with(context) {
-          startActivity(MainActivity.getIntent(this))
-          //context.finish()
-        }
-      }) { comingReciter ->
+      MainScreen(viewModel = mainViewModel) { comingReciter ->
         reciter = comingReciter
         navController.navigate(AppNavigationScreens.Suras.route)
       }

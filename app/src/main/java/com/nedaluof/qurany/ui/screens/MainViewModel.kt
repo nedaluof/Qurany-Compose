@@ -1,5 +1,6 @@
 package com.nedaluof.qurany.ui.screens
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,11 +19,12 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
   //app language
-  val appLanguageEnglish =
-    mutableStateOf(if (appRepository.isCurrentLanguageEnglish()) "العربية" else "EN")
+  val appLanguageEnglish: MutableState<String>
+    get() = mutableStateOf(if (appRepository.isCurrentLanguageEnglish()) "العربية" else "EN")
 
-  //splash shown
-  val splashScreenShown = mutableStateOf(false)
+  val isCurrentLanguageEnglish: MutableState<Boolean>
+    get() = mutableStateOf(appRepository.isCurrentLanguageEnglish())
+
 
   //night mode
   val isNightModeEnabled = mutableStateOf(appRepository.isNightModeEnabled())
@@ -35,10 +37,6 @@ class MainViewModel @Inject constructor(
     val newMode = !currentMode
     appRepository.updateNightMode(newMode)
     isNightModeEnabled.value = newMode
-  }
-
-  fun loadAppLanguage() {
-    appLanguageEnglish.value = if (appRepository.isCurrentLanguageEnglish()) "العربية" else "EN"
   }
 
   fun changeAppLanguage() {
