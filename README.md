@@ -6,9 +6,9 @@
 
 ## ScreenShot
 
-| Reciters List                 | Reciter Sura list          | Holy Quran Sura audio player         | My Reciters List                |
-|-------------------------------|----------------------------|--------------------------------------|---------------------------------|
-| ![Reciters](/art/qurany1.png) | ![Suras](/art/qurany2.png) | ![Suraaudioplayer](/art/qurany3.png) | ![MyReciters](/art/qurany4.png) |
+| Reciters List                 | Reciter Sura list          | Holy Quran Sura audio player         | Favorites List                 |
+|-------------------------------|----------------------------|--------------------------------------|--------------------------------|
+| ![Reciters](/art/qurany1.png) | ![Suras](/art/qurany2.png) | ![Suraaudioplayer](/art/qurany3.png) | ![Favorites](/art/qurany4.png) |
 
 ### Tech stack 3pr Libs Used in Qurany
 
