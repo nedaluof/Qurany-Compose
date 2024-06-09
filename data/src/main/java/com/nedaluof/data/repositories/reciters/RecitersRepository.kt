@@ -1,6 +1,6 @@
 package com.nedaluof.data.repositories.reciters
 
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.Result
 import kotlinx.coroutines.flow.Flow
 
@@ -8,8 +8,13 @@ import kotlinx.coroutines.flow.Flow
  * Created by NedaluOf on 8/16/2021.
  */
 interface RecitersRepository {
-  suspend fun loadReciters(result: (Result<List<Reciter>>) -> Unit)
-  suspend fun addReciterToDatabase(reciter: Reciter, result: (Result<Boolean>) -> Unit)
-  fun getMyReciters(): Flow<List<Reciter>>
-  suspend fun deleteFromMyReciters(reciter: Reciter, result: (Result<Boolean>) -> Unit)
+  fun loadReciters(): Flow<List<ReciterModel>>
+
+  fun loadFavoriteReciters(): Flow<List<ReciterModel>>
+
+  fun addOrRemoveReciterFromFavorites(
+    reciterId: Int,
+    isInMyFavorites: Boolean,
+    result: (Result<Boolean>) -> Unit
+  )
 }

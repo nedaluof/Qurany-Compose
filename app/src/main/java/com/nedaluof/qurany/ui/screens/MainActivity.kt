@@ -9,9 +9,11 @@ import android.os.IBinder
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,13 +61,14 @@ class MainActivity : AppCompatActivity() {
             onStopPlaying = ::stopService
           )
           BackHandler {
-            if (navBackStackEntry?.destination?.route == "main") {
-              this@MainActivity.finish()
-            } else if (navBackStackEntry?.destination?.route == "suras") {
-              navController.popBackStack()
-              stopService()
-            } else {
-              navController.popBackStack()
+            when (navBackStackEntry?.destination?.route) {
+              "main" -> this@MainActivity.finish()
+              "suras" -> {
+                navController.popBackStack()
+                stopService()
+              }
+
+              else -> navController.popBackStack()
             }
           }
         }
@@ -89,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     bindService(quranyPlayerServiceIntent, serviceConnection!!, Context.BIND_AUTO_CREATE)
   }
 
+  @OptIn(UnstableApi::class)
   private fun onPlaySuraRequested(sura: SuraModel) {
     quranyPlayerServiceIntent.also {
       it.putExtra(QuranyPlayerService.SURA_KEY, sura)

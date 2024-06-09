@@ -1,6 +1,6 @@
 package com.nedaluof.data.repositories.suras
 
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.SuraModel
 
 /**
@@ -8,5 +8,5 @@ import com.nedaluof.data.model.SuraModel
  */
 interface SurasRepository {
   fun checkIfSuraExist(subPath: String): Boolean
-  fun getMappedReciterSuras(reciterData: Reciter): List<SuraModel>
+  fun loadReciterSuras(reciter: ReciterModel): List<SuraModel>
 }

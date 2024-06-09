@@ -13,7 +13,6 @@ import android.os.Build
 import android.os.IBinder
 import com.nedaluof.data.model.SuraModel
 import com.nedaluof.data.repositories.app.AppRepository
-import com.nedaluof.data.repositories.suras.SuraUtil
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.util.checkIfSuraExist
 import com.nedaluof.qurany.util.getSuraPath
@@ -37,7 +36,6 @@ class QuranyDownloadService : Service() {
   // unique id for the being sura downloaded
   var downloadId: Long = 0
   private lateinit var sura: SuraModel
-  private lateinit var subPath: String
   private val appLanguage by lazy { if (appRepository.isCurrentLanguageEnglish()) "en" else "ar" }
   override fun onBind(intent: Intent?): IBinder? = null
 
@@ -57,17 +55,17 @@ class QuranyDownloadService : Service() {
 
   private fun startDownload() {
     if (this::sura.isInitialized) {
-      subPath = "/Qurany/${sura.reciterName}/${SuraUtil.getSuraName(appLanguage, sura.id)}.mp3"
-      if (!this.checkIfSuraExist(subPath)) {
+      if (!this.checkIfSuraExist(sura.suraSubPath)) {
         if (this.isNetworkOk()) {
           toast(R.string.alrt_download_start_title)
           val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
           val request = DownloadManager.Request(Uri.parse(sura.suraUrl))
           request.setAllowedNetworkTypes(
             DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
-          ).setAllowedOverRoaming(false).setTitle(SuraUtil.getSuraName(appLanguage, sura.id))
-            .setDescription(SuraUtil.getSuraName(appLanguage, sura.id) + "| " + sura.reciterName)
-            .setDestinationInExternalFilesDir(this, null, subPath)
+          ).setAllowedOverRoaming(false)
+            .setTitle(sura.name)
+            .setDescription(sura.playerTitle)
+            .setDestinationInExternalFilesDir(this, null, sura.suraSubPath)
           downloadId = downloadManager.enqueue(request)
         } else {
           toast(R.string.alrt_no_internet_msg)
@@ -97,7 +95,7 @@ class QuranyDownloadService : Service() {
   }
 
   fun scan() {
-    val file = File(this.getSuraPath(subPath))
+    val file = File(this.getSuraPath(sura.suraSubPath))
     MediaScannerConnection.scanFile(
       this, arrayOf(file.toString()), arrayOf(file.name), null
     )

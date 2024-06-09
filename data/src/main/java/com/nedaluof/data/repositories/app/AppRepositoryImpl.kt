@@ -27,7 +27,7 @@ class AppRepositoryImpl @Inject constructor(
   }
 
   override fun isCurrentLanguageEnglish(): Boolean {
-    return (preferencesManager.getFromPreferences<String>(LANGUAGE_KEY, "en") ?: "en") == "en"
+    return (preferencesManager.getFromPreferences<String>(LANGUAGE_KEY, "ar") ?: "ar") == "en"
   }
 
   override fun updateNightMode(isEnabled: Boolean) {

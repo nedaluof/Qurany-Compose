@@ -2,7 +2,7 @@ package com.nedaluof.qurany.ui.screens.suras
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.SuraModel
 import com.nedaluof.data.repositories.suras.SurasRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +21,6 @@ class SurasViewModel @Inject constructor(
   //endregion
 
   //region logic
-  fun loadReciterSuras(reciter: Reciter) = repository.getMappedReciterSuras(reciter)
+  fun loadReciterSuras(reciter: ReciterModel) = repository.loadReciterSuras(reciter)
   //endregion
 }

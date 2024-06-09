@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.ui.common.LoadingView
 import com.nedaluof.qurany.ui.common.QuranyAlertDialog
@@ -30,12 +30,12 @@ import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 @Composable
 fun RecitersListScreen(
   modifier: Modifier = Modifier,
-  isMyRecitersScreen: Boolean = false,
+  isForFavorites: Boolean = false,
   viewModel: RecitersViewModel = hiltViewModel(),
-  onReciterClicked: (Reciter) -> Unit = {}
+  onReciterClicked: (ReciterModel) -> Unit = {}
 ) {
-  LaunchedEffect(isMyRecitersScreen) {
-    viewModel.loadReciters(isMyRecitersScreen)
+  LaunchedEffect(isForFavorites) {
+    viewModel.loadReciters(isForFavorites)
   }
   val uiState by viewModel.recitersUiState.collectAsStateWithLifecycle()
   val operationsUiState by viewModel.recitersOperationUiState.collectAsStateWithLifecycle()
@@ -48,10 +48,10 @@ fun RecitersListScreen(
       onReciterClicked = onReciterClicked,
       onAddToFavoriteClicked = { reciter ->
         viewModel.reciterToBeProcessed = reciter
-        if (reciter.inMyReciters) {
+        if (reciter.isInMyFavorites) {
           showDeleteDialog = true
         } else {
-          viewModel.processAddOrDeleteFromMyReciters()
+          viewModel.processAddOrDeleteFromFavorites()
         }
       })
   }
@@ -74,12 +74,11 @@ fun RecitersListScreen(
       },
       onConfirmation = {
         showDeleteDialog = false
-        viewModel.processAddOrDeleteFromMyReciters()
+        viewModel.processAddOrDeleteFromFavorites()
       },
       title = stringResource(id = R.string.alrt_delete_title),
       description = stringResource(
-        id = R.string.alrt_delete_msg,
-        viewModel.reciterToBeProcessed?.name ?: ""
+        id = R.string.alrt_delete_msg, viewModel.reciterToBeProcessed?.name ?: ""
       ),
       confirmationButtonTitle = stringResource(id = R.string.delete_label),
       dismissButtonTitle = stringResource(id = R.string.cancel_label),
@@ -90,9 +89,9 @@ fun RecitersListScreen(
 @Composable
 fun RecitersList(
   modifier: Modifier = Modifier,
-  items: List<Reciter>,
-  onReciterClicked: (Reciter) -> Unit = {},
-  onAddToFavoriteClicked: (Reciter) -> Unit = {}
+  items: List<ReciterModel>,
+  onReciterClicked: (ReciterModel) -> Unit = {},
+  onAddToFavoriteClicked: (ReciterModel) -> Unit = {}
 ) {
   LazyColumn(
     modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
@@ -112,6 +111,6 @@ fun RecitersList(
 @Composable
 fun RecitersScreenPreview(modifier: Modifier = Modifier) {
   QuranyComposeTheme {
-    RecitersList(Modifier.fillMaxSize(), Reciter.mockList())
+    RecitersList(Modifier.fillMaxSize(), ReciterModel.mockList())
   }
 }

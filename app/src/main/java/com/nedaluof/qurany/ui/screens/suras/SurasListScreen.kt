@@ -38,8 +38,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.databinding.PlayerBottomSheetLayoutBinding
@@ -52,11 +53,12 @@ import kotlinx.coroutines.launch
  * Created By NedaluOf - 6/3/2024.
  */
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SurasListScreen(
   modifier: Modifier = Modifier,
-  reciter: Reciter,
+  reciter: ReciterModel,
   exoPlayer: ExoPlayer? = null,
   surasViewModel: SurasViewModel = hiltViewModel(),
   onPlayClicked: (SuraModel) -> Unit,
@@ -127,7 +129,7 @@ fun SurasListScreen(
 @Composable
 fun SurasList(
   modifier: Modifier = Modifier,
-  reciter: Reciter,
+  reciter: ReciterModel,
   viewModel: SurasViewModel = hiltViewModel(),
   onPlayClicked: (SuraModel) -> Unit,
   onDownloadClicked: (SuraModel) -> Unit,
@@ -137,7 +139,7 @@ fun SurasList(
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
     SurasTopBar(
-      reciterName = reciter.name ?: "",
+      reciterName = reciter.name,
       scrollBehavior = scrollBehavior,
       onCloseClicked = onCloseClicked
     )
@@ -209,7 +211,7 @@ fun SurasTopBar(
 fun SurasListPreview(modifier: Modifier = Modifier) {
   QuranyComposeTheme {
     SurasList(
-      reciter = Reciter.mockList()[0],
+      reciter = ReciterModel.mockList()[0],
       onPlayClicked = {},
       onDownloadClicked = {},
     )

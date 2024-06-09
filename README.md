@@ -2,7 +2,7 @@
 
 ### The development are continuous in this project ⚒️ ⚒️
 
-## Qurany : Simple Android Application aims to provide a way for listen to Holy Quran Online over 209 Quran Karim Reciters with ability to download suras.
+## Qurany : Simple Android Application aims to provide a way to listen The Holy Quran Online/Offline with over 209 Quran Karim Reciters with the ability to download suras.
 
 ## ScreenShot
 
@@ -12,28 +12,25 @@
 
 ### Tech stack 3pr Libs Used in Qurany
 
-* The entire app re-written with [Kotlin](https://kotlinlang.org/).
+* The entire app written with [Kotlin](https://kotlinlang.org/).
 * [AndroidX](https://developer.android.com/jetpack/androidx).
-* [ExoPlayer](https://github.com/google/ExoPlayer) main audio player.
+* [Compose](https://developer.android.com/develop/ui/compose).
+* [Media3](https://developer.android.com/media/media3) for media player.
 * [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/)
   for asynchronous tasks.
 * [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for dependency
   injection.💉
-* [ReactiveNetwork](https://github.com/pwittchen/ReactiveNetwork) for observing/checking
-  internet/network connection availability .
 * [Retrofit](https://square.github.io/retrofit/) and [OkHttp](https://square.github.io/okhttp/) for
   network layer.
-* [Chip Navigation Bar](https://github.com/ismaeldivita/chip-navigation-bar) Bottom Navigation mixed
-  with Chips component.
-* [TextPathView](https://github.com/totond/TextPathView) for animated text in splash screen.
+* [Moshi](https://github.com/square/moshi) for json serializer.
+*
 * JetPack
-    - LiveData.
     - Lifecycle.
     - ViewModel.
     - Room Persistence.
 
 * Architecture
-    - MVVM Architecture
+  - MVVM Architecture - Data Layer
     - Repository pattern
 
 ## Run the project
@@ -47,11 +44,7 @@
 * .....
 
 ### Coming changes :-
-
-- ~~Replace RxJava with Coroutines & Flow.~~
-  -~~Optimize The UI with the Material Component with simple animations.~~
 - Expand the Functionality of the player by support play full play-list of sura's.
-- ~~Replace Reactive Network lib that depend on RxJava with Coroutines & Flow API Solution.~~
 
 ### License
 

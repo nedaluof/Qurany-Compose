@@ -22,6 +22,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="allowBackup"
         tools:targetApi="s">
+
         <!-- activities -->
         <activity
             android:name=".ui.screens.MainActivity"
@@ -43,7 +44,9 @@
             android:roundIcon="@mipmap/ic_qurany" />
         <service
             android:name=".service.QuranyDownloadService"
-            android:exported="false" /> <!-- provider -->
+            android:exported="false" />
+
+        <!-- provider -->
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.nedaluof.qurany.androidx-startup"

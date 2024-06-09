@@ -1,38 +1,32 @@
 package com.nedaluof.data.datasource.localsource.room
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by nedaluof on 12/11/2020.
+ * Updated by nedaluof on 6/9/2024.
  */
 @Dao
 interface RecitersDao {
-  /*For Future use Todo (Caching) */
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  suspend fun insertReciters(list: List<Reciter>)
+  suspend fun insertReciters(list: List<ReciterEntity>)
 
-  @Insert(onConflict = OnConflictStrategy.IGNORE)
-  suspend fun insertReciter(reciter: Reciter)
+  @Query("select * from reciters_table order by name")
+  fun loadReciters(): Flow<List<ReciterEntity>>
 
-  /* Used in MyReciters */
-  @Query("select * from reciter order by name")
-  fun getMyReciters(): Flow<List<Reciter>>
+  @Query("select * from reciters_table where isInMyFavorites order by name")
+  fun loadFavoriteReciters(): Flow<List<ReciterEntity>>
 
-  // to check records number
-  @Query("SELECT COUNT(*) FROM reciter")
-  fun getRecitersRecordsNumber(): Int
+  @Query("UPDATE reciters_table SET isInMyFavorites=:isInMyFavorites WHERE reciterId = :reciterId")
+  fun updateReciter(
+    isInMyFavorites: Boolean, reciterId: Int
+  )
 
-  /* For Future use Todo (setting delete All Reciters in My Reciters) */
-  @Query("Delete from reciter")
-  suspend fun deleteAllReciters()
-
-  /* Used in MyReciters */
-  @Delete
-  suspend fun deleteReciter(reciter: Reciter)
+  @Query("SELECT COUNT(*) FROM reciters_table")
+  suspend fun loadRecitersCount(): Int
 }

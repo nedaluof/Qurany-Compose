@@ -45,7 +45,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.ui.navigation.BottomNavigationScreens
 import com.nedaluof.qurany.ui.screens.reciters.RecitersListScreen
@@ -61,7 +61,7 @@ import java.util.Locale
 fun MainScreen(
   modifier: Modifier = Modifier,
   viewModel: MainViewModel,
-  onReciterClicked: (Reciter) -> Unit = {}
+  onReciterClicked: (ReciterModel) -> Unit = {}
 ) {
   val navController = rememberNavController()
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -180,35 +180,37 @@ private fun BottomNavigationBar(
     containerColor = MaterialTheme.colorScheme.background
   ) {
     listOf(
-      BottomNavigationScreens.Reciters, BottomNavigationScreens.MyReciters
+      BottomNavigationScreens.Reciters,
+      BottomNavigationScreens.MyReciters
     ).forEach { navigationItem ->
       NavigationBarItem(selected = currentDestination == navigationItem.route, label = {
         Text(stringResource(id = navigationItem.resourceId))
-      }, icon = {
-        Icon(
-          painterResource(id = navigationItem.icon),
-          contentDescription = stringResource(id = navigationItem.resourceId),
-          modifier = Modifier.size(24.dp)
-        )
-      }, alwaysShowLabel = false, colors = NavigationBarItemColors(
-        selectedIconColor = MaterialTheme.colorScheme.primary,
-        selectedTextColor = MaterialTheme.colorScheme.primary,
-        selectedIndicatorColor = Color.Transparent,
-        disabledIconColor = Color.Gray,
-        disabledTextColor = Color.Gray,
-        unselectedIconColor = Color.Gray,
-        unselectedTextColor = Color.Gray,
-      ), onClick = {
-        if (currentDestination != navigationItem.route) {
-          navController.navigate(navigationItem.route) {
-            popUpTo(navController.graph.findStartDestination().id) {
-              saveState = true
+      },
+        icon = {
+          Icon(
+            painterResource(id = navigationItem.icon),
+            contentDescription = stringResource(id = navigationItem.resourceId),
+            modifier = Modifier.size(24.dp)
+          )
+        }, alwaysShowLabel = false, colors = NavigationBarItemColors(
+          selectedIconColor = MaterialTheme.colorScheme.primary,
+          selectedTextColor = MaterialTheme.colorScheme.primary,
+          selectedIndicatorColor = Color.Transparent,
+          disabledIconColor = Color.Gray,
+          disabledTextColor = Color.Gray,
+          unselectedIconColor = Color.Gray,
+          unselectedTextColor = Color.Gray,
+        ), onClick = {
+          if (currentDestination != navigationItem.route) {
+            navController.navigate(navigationItem.route) {
+              popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+              }
+              launchSingleTop = true
+              restoreState = true
             }
-            launchSingleTop = true
-            restoreState = true
           }
-        }
-      })
+        })
     }
   }
 }
@@ -216,7 +218,7 @@ private fun BottomNavigationBar(
 @Composable
 private fun BottomBarNavigation(
   navController: NavHostController, paddingValues: PaddingValues,
-  onReciterClicked: (Reciter) -> Unit
+  onReciterClicked: (ReciterModel) -> Unit
 ) {
   NavHost(
     navController = navController,

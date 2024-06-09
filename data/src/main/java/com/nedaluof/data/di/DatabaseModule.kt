@@ -21,8 +21,7 @@ object DatabaseModule {
   fun provideDatabase(@ApplicationContext context: Context) =
     Room.databaseBuilder(
       context,
-      QuranyDatabase::class.java,
-      "Qurany.db"
+      QuranyDatabase::class.java, "qurany_database"
     ).build()
 
   @Singleton

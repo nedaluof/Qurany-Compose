@@ -77,7 +77,9 @@ fun SuraItem(
         )
 
         Text(
-          text = sura.rewaya, style = MaterialTheme.typography.bodySmall, color = AppGreen
+          text = "${stringResource(id = R.string.rewaya_label)} ${sura.rewaya}",
+          style = MaterialTheme.typography.bodySmall,
+          color = AppGreen
         )
 
         Text(

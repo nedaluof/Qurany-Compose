@@ -2,7 +2,7 @@ package com.nedaluof.qurany.ui.screens.reciters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.Status
 import com.nedaluof.data.repositories.reciters.RecitersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,62 +21,46 @@ class RecitersViewModel @Inject constructor(
 ) : ViewModel() {
 
   //region variables
-  // reciters list from API or from DB
   val recitersUiState = MutableStateFlow<RecitersUiState>(RecitersUiState.Loading)
-
-  //reciter operations state for delete / add processes
   val recitersOperationUiState =
     MutableStateFlow<RecitersOperationsUiState>(RecitersOperationsUiState.Idl)
-
-  var reciterToBeProcessed: Reciter? = null
+  var reciterToBeProcessed: ReciterModel? = null
   //endregion
 
   fun loadReciters(
-    loadMyReciters: Boolean = false
+    loadFavoriteReciters: Boolean = false
   ) {
     recitersUiState.value = RecitersUiState.Success(emptyList())
     recitersUiState.value = RecitersUiState.Loading
-    viewModelScope.launch(Dispatchers.Default) {
-      if (loadMyReciters) {
-        repository.getMyReciters().catch { cause ->
+    viewModelScope.launch(Dispatchers.IO) {
+      if (loadFavoriteReciters) {
+        repository.loadFavoriteReciters().catch { cause ->
           recitersUiState.value = RecitersUiState.Error(cause.message.toString())
         }.collect {
           recitersUiState.value = RecitersUiState.Success(it)
         }
       } else {
-        repository.loadReciters { result ->
-          when (result.status) {
-            Status.SUCCESS -> recitersUiState.value =
-              RecitersUiState.Success(result.data ?: emptyList())
-
-            Status.ERROR -> recitersUiState.value = RecitersUiState.Error(result.message ?: "")
-          }
+        repository.loadReciters().catch { cause ->
+          recitersUiState.value = RecitersUiState.Error(cause.message.toString())
+        }.collect {
+          recitersUiState.value = RecitersUiState.Success(it)
         }
       }
     }
   }
 
-  fun processAddOrDeleteFromMyReciters() {
+  fun processAddOrDeleteFromFavorites() {
     reciterToBeProcessed?.let { reciter ->
-      recitersOperationUiState.value = RecitersOperationsUiState.Loading
-      viewModelScope.launch(Dispatchers.IO) {
-        if (reciter.inMyReciters) {
-          repository.deleteFromMyReciters(reciter) { result ->
-            recitersOperationUiState.value =
-              if (result.status == Status.SUCCESS) RecitersOperationsUiState.Success(true) else RecitersOperationsUiState.Error(
-                result.message ?: ""
-              )
-            reciterToBeProcessed = null
-          }
-        } else {
-          repository.addReciterToDatabase(reciter) { result ->
-            recitersOperationUiState.value =
-              if (result.status == Status.SUCCESS) RecitersOperationsUiState.Success(false) else RecitersOperationsUiState.Error(
-                result.message ?: ""
-              )
-            reciterToBeProcessed = null
-          }
-        }
+      repository.addOrRemoveReciterFromFavorites(
+        reciter.id,
+        reciter.isInMyFavorites
+      ) { result ->
+        recitersOperationUiState.value =
+          if (result.status == Status.SUCCESS) RecitersOperationsUiState.Success(reciter.isInMyFavorites)
+          else RecitersOperationsUiState.Error(
+            result.message ?: ""
+          )
+        reciterToBeProcessed = null
       }
     }
   }

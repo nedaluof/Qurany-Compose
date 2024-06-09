@@ -11,7 +11,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.nedaluof.data.model.Reciter
+import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.ui.screens.MainScreen
 import com.nedaluof.qurany.ui.screens.MainViewModel
@@ -42,7 +42,7 @@ fun AppNavigation(
   if (isSplashShown) {
     navController.navigate(route = AppNavigationScreens.Main.route)
   }
-  var reciter by remember { mutableStateOf<Reciter?>(null) }
+  var reciter by remember { mutableStateOf<ReciterModel?>(null) }
   NavHost(
     navController = navController,
     startDestination = AppNavigationScreens.Splash.route,

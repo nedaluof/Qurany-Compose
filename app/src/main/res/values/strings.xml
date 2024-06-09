@@ -7,6 +7,8 @@
     <string name="app_powered_by" translatable="false">Qurany Powered By 8K-Developers</string>
     <string name="notification_channel_des" translatable="false">This is Qurany App Notification Channel</string>
     <string name="notification_id" translatable="false">Qurany App</string>
+
+    <string name="rewaya_label">Rewaya:</string>
     <string name="reciters_bar_title">Reciters List</string>
     <string name="reciters_search_hint">Search in reciters</string>
     <string name="reciters_suras_bar_title">Suras Of Reciter</string>
