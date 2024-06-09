@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:id="@+id/bottom_sheet"
@@ -20,8 +21,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
                 android:layout_weight="1"
-                android:text="@string/app_player"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="Qurany Player" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/close_btn"

@@ -152,7 +152,7 @@ private fun TopAppBar(
           Icon(
             Icons.Default.Search,
             contentDescription = stringResource(
-              id = R.string.reciters_search_hint
+              id = R.string.reciters_search_hint_label
             ),
             tint = Color.White
           )

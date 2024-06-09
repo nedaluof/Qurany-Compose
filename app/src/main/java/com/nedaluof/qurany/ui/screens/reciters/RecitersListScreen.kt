@@ -1,27 +1,32 @@
 package com.nedaluof.qurany.ui.screens.reciters
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.ui.common.LoadingView
-import com.nedaluof.qurany.ui.common.QuranyAlertDialog
-import com.nedaluof.qurany.ui.common.QuranySnackBar
+import com.nedaluof.qurany.ui.components.LoadingView
+import com.nedaluof.qurany.ui.components.QuranyAlertDialog
+import com.nedaluof.qurany.ui.components.QuranySnackBar
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 
 /**
@@ -43,17 +48,32 @@ fun RecitersListScreen(
   when (uiState) {
     is RecitersUiState.Error -> QuranySnackBar(message = (uiState as RecitersUiState.Error).message)
     is RecitersUiState.Loading -> LoadingView()
-    is RecitersUiState.Success -> RecitersList(modifier = modifier,
-      items = (uiState as RecitersUiState.Success).reciters,
-      onReciterClicked = onReciterClicked,
-      onAddToFavoriteClicked = { reciter ->
-        viewModel.reciterToBeProcessed = reciter
-        if (reciter.isInMyFavorites) {
-          showDeleteDialog = true
-        } else {
-          viewModel.processAddOrDeleteFromFavorites()
+    is RecitersUiState.Success -> {
+      val items = (uiState as RecitersUiState.Success).reciters
+      if (items.isNotEmpty()) {
+        RecitersList(modifier = modifier,
+          items = items,
+          onReciterClicked = onReciterClicked,
+          onAddToFavoriteClicked = { reciter ->
+            viewModel.reciterToBeProcessed = reciter
+            if (reciter.isInMyFavorites) {
+              showDeleteDialog = true
+            } else {
+              viewModel.processAddOrDeleteFromFavorites()
+            }
+          })
+      } else {
+        Box(modifier = Modifier.fillMaxSize()) {
+          Text(
+            stringResource(id = R.string.no_favorite_reciters_label),
+            modifier = Modifier
+              .align(Alignment.Center)
+              .padding(start = 18.dp, end = 18.dp),
+            textAlign = TextAlign.Center
+          )
         }
-      })
+      }
+    }
   }
 
   when (operationsUiState) {

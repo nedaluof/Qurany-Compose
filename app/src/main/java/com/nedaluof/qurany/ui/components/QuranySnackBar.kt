@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.common
+package com.nedaluof.qurany.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

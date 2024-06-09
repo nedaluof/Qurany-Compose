@@ -13,17 +13,26 @@ import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nedaluof.data.model.SuraModel
+import com.nedaluof.qurany.R
 import com.nedaluof.qurany.service.QuranyDownloadService
 import com.nedaluof.qurany.service.QuranyPlayerService
 import com.nedaluof.qurany.ui.navigation.AppNavigation
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
+import com.nedaluof.qurany.util.toast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -48,6 +57,9 @@ class MainActivity : AppCompatActivity() {
     setContent {
       val navController = rememberNavController()
       val navBackStackEntry by navController.currentBackStackEntryAsState()
+      val context = LocalContext.current
+      val scope = rememberCoroutineScope()
+      var isBackPressedCounter by remember { mutableStateOf(0) }
       CompositionLocalProvider(
         androidx.lifecycle.compose.LocalLifecycleOwner provides androidx.compose.ui.platform.LocalLifecycleOwner.current,
       ) {
@@ -60,9 +72,20 @@ class MainActivity : AppCompatActivity() {
             onDownloadClicked = ::onDownloadSuraRequested,
             onStopPlaying = ::stopService
           )
+
           BackHandler {
             when (navBackStackEntry?.destination?.route) {
-              "main" -> this@MainActivity.finish()
+              "main" -> {
+                isBackPressedCounter++
+                context.toast(R.string.alrt_exit_app_msg)
+                scope.launch {
+                  delay(2000L)
+                  isBackPressedCounter = 0
+                }
+                if (isBackPressedCounter >= 2) {
+                  this@MainActivity.finish()
+                }
+              }
               "suras" -> {
                 navController.popBackStack()
                 stopService()

@@ -11,8 +11,9 @@ sealed class BottomNavigationScreens(
   val route: String, @StringRes val resourceId: Int, @DrawableRes val icon: Int
 ) {
   data object Reciters :
-    BottomNavigationScreens("reciters", R.string.home_nav_title, R.drawable.ic_home_navigation)
+    BottomNavigationScreens("reciters", R.string.reciters_nav_label, R.drawable.ic_home_navigation)
+
   data object MyReciters : BottomNavigationScreens(
-    "my_reciters", R.string.favorite_nav_title, R.drawable.ic_favorite_navigation
+    "favorites", R.string.favorites_nav_label, R.drawable.ic_favorite_navigation
   )
 }

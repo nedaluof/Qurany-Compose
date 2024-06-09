@@ -83,7 +83,7 @@ fun SuraItem(
         )
 
         Text(
-          text = stringResource(id = R.string.sura_number, sura.id),
+          text = stringResource(id = R.string.sura_number_label, sura.id),
           style = MaterialTheme.typography.bodySmall,
           color = AppGreen
         )

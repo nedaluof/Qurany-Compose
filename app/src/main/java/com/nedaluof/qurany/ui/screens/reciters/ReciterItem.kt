@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -22,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -83,9 +83,9 @@ fun ReciterItem(
 
         Text(
           text = if (reciter.count.toInt() > 1) {
-            stringResource(id = R.string.sura_count_1, reciter.count.toInt())
+            stringResource(id = R.string.sura_count_more_label, reciter.count.toInt())
           } else {
-            stringResource(id = R.string.sura_count_2, reciter.count.toInt())
+            stringResource(id = R.string.sura_count_one_label, reciter.count.toInt())
           }, style = MaterialTheme.typography.bodySmall, color = AppGreen
         )
       }
@@ -95,9 +95,9 @@ fun ReciterItem(
         modifier = Modifier.align(Alignment.CenterVertically)
       ) {
         Icon(
-          Icons.Default.Favorite,
+          if (reciter.isInMyFavorites) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
           contentDescription = "add to favorite",
-          tint = if (reciter.isInMyFavorites) Color.Red else AppGreen
+          tint = AppGreen
         )
       }
     }
