@@ -1,26 +1,16 @@
 package com.nedaluof.data.repositories.app
 
-import android.content.Context
 import com.nedaluof.data.datasource.localsource.preferences.PreferencesKeys.LANGUAGE_KEY
 import com.nedaluof.data.datasource.localsource.preferences.PreferencesKeys.NIGHT_MODE_KEY
 import com.nedaluof.data.datasource.localsource.preferences.PreferencesManager
-import com.nedaluof.data.enum.ConnectivityStatus
-import com.nedaluof.data.util.connectivityFlow
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
  * Created by NedaluOf on 12/9/2022.
  */
 class AppRepositoryImpl @Inject constructor(
-  @ApplicationContext private val context: Context,
   private val preferencesManager: PreferencesManager
 ) : AppRepository {
-
-  @OptIn(ExperimentalCoroutinesApi::class)
-  override suspend fun observeConnectivity(): Flow<ConnectivityStatus> = context.connectivityFlow()
 
   override fun isNightModeEnabled(): Boolean {
     return preferencesManager.getFromPreferences(NIGHT_MODE_KEY, false) ?: false

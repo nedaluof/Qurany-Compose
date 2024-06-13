@@ -33,18 +33,10 @@ class RecitersViewModel @Inject constructor(
     recitersUiState.value = RecitersUiState.Success(emptyList())
     recitersUiState.value = RecitersUiState.Loading
     viewModelScope.launch(Dispatchers.IO) {
-      if (loadFavoriteReciters) {
-        repository.loadFavoriteReciters().catch { cause ->
-          recitersUiState.value = RecitersUiState.Error(cause.message.toString())
-        }.collect {
-          recitersUiState.value = RecitersUiState.Success(it)
-        }
-      } else {
-        repository.loadReciters().catch { cause ->
-          recitersUiState.value = RecitersUiState.Error(cause.message.toString())
-        }.collect {
-          recitersUiState.value = RecitersUiState.Success(it)
-        }
+      repository.loadReciters(loadFavoriteReciters).catch { cause ->
+        recitersUiState.value = RecitersUiState.Error(cause.message.toString())
+      }.collect {
+        recitersUiState.value = RecitersUiState.Success(it)
       }
     }
   }

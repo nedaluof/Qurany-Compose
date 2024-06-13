@@ -88,6 +88,7 @@ dependencies {
     //media3
     implementation "androidx.media3:media3-exoplayer:$versions.media3"
     implementation "androidx.media3:media3-ui:$versions.media3"
+  implementation "androidx.media3:media3-session:$versions.media3"
     /**jet-pack Components**/
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$versions.compose_lifecycle"

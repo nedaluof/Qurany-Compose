@@ -12,31 +12,25 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import com.nedaluof.data.model.SuraModel
-import com.nedaluof.data.repositories.app.AppRepository
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.util.checkIfSuraExist
-import com.nedaluof.qurany.util.getSuraPath
-import com.nedaluof.qurany.util.isNetworkOk
+import com.nedaluof.qurany.util.getFilePath
+import com.nedaluof.qurany.util.isInternetAvailable
 import com.nedaluof.qurany.util.parcelable
 import com.nedaluof.qurany.util.toast
-import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.File
-import javax.inject.Inject
 
 /**
  * Created by nedaluof on 12/29/2020.
  */
-@AndroidEntryPoint
 class QuranyDownloadService : Service() {
 
-  @Inject
-  lateinit var appRepository: AppRepository
 
-  // unique id for the being sura downloaded
-  var downloadId: Long = 0
+  //region variables
+  private var downloadId: Long = 0
   private lateinit var sura: SuraModel
-  private val appLanguage by lazy { if (appRepository.isCurrentLanguageEnglish()) "en" else "ar" }
+  //endregion
+
   override fun onBind(intent: Intent?): IBinder? = null
 
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -55,8 +49,10 @@ class QuranyDownloadService : Service() {
 
   private fun startDownload() {
     if (this::sura.isInitialized) {
-      if (!this.checkIfSuraExist(sura.suraSubPath)) {
-        if (this.isNetworkOk()) {
+      val isSuraFileExist =
+        File(this.getExternalFilesDir(null).toString() + sura.suraSubPath).exists()
+      if (!isSuraFileExist) {
+        if (this.isInternetAvailable()) {
           toast(R.string.alrt_download_start_title)
           val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
           val request = DownloadManager.Request(Uri.parse(sura.suraUrl))
@@ -84,18 +80,15 @@ class QuranyDownloadService : Service() {
   private val onComplete: BroadcastReceiver = object : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
       val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-      // Checking if the received broadcast is for our enqueued download by matching download id
       if (downloadId == id) {
         toast(R.string.alrt_download_completed_msg)
-        scan()
-      } else {
-        Timber.d("onReceive: download id not match")
+        runMediaScanner()
       }
     }
   }
 
-  fun scan() {
-    val file = File(this.getSuraPath(sura.suraSubPath))
+  private fun runMediaScanner() {
+    val file = File(this.getFilePath(sura.suraSubPath))
     MediaScannerConnection.scanFile(
       this, arrayOf(file.toString()), arrayOf(file.name), null
     )

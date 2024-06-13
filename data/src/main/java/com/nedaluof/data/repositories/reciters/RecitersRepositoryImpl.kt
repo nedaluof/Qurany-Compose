@@ -9,6 +9,7 @@ import com.nedaluof.data.model.ReciterDto
 import com.nedaluof.data.model.ReciterEntity
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.Result
+import com.nedaluof.data.model.asReciterModels
 import com.nedaluof.data.util.catchOn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +43,33 @@ class RecitersRepositoryImpl @Inject constructor(
   //endregion
 
   //region logic
-  override fun loadReciters(): Flow<List<ReciterModel>> {
+  override fun loadReciters(
+    loadFavoriteReciters: Boolean
+  ): Flow<List<ReciterModel>> {
+    return if (loadFavoriteReciters) {
+      recitersDao.loadFavoriteReciters().map {
+        it.asReciterModels(appLanguage)
+      }.distinctUntilChanged()
+    } else {
+      checkDatabaseAndLoad()
+      recitersDao.loadReciters().map { it.asReciterModels(appLanguage) }.distinctUntilChanged()
+    }
+  }
+
+  override fun addOrRemoveReciterFromFavorites(
+    reciterId: Int, isInMyFavorites: Boolean, result: (Result<Boolean>) -> Unit
+  ) {
+    repositoryCoroutineScope.launch(Dispatchers.Default) {
+      catchOn({
+        recitersDao.updateReciter(!isInMyFavorites, reciterId)
+        result(Result.success(true))
+      }, {
+        result(Result.error(null, it.message ?: ""))
+      })
+    }
+  }
+
+  private fun checkDatabaseAndLoad() {
     catchOn({
       repositoryCoroutineScope.launch {
         val isRecitersTableEmpty = recitersDao.loadRecitersCount() == 0
@@ -79,26 +106,6 @@ class RecitersRepositoryImpl @Inject constructor(
         }
       }
     })
-    return recitersDao.loadReciters().map {
-      it.map { entity -> ReciterModel.mapFromReciterEntity(entity, appLanguage) }
-    }.distinctUntilChanged()
-  }
-
-  override fun loadFavoriteReciters() = recitersDao.loadFavoriteReciters().map {
-    it.map { entity -> ReciterModel.mapFromReciterEntity(entity, appLanguage) }
-  }.distinctUntilChanged()
-
-  override fun addOrRemoveReciterFromFavorites(
-    reciterId: Int, isInMyFavorites: Boolean, result: (Result<Boolean>) -> Unit
-  ) {
-    repositoryCoroutineScope.launch(Dispatchers.Default) {
-      catchOn({
-        recitersDao.updateReciter(!isInMyFavorites, reciterId)
-        result(Result.success(true))
-      }, {
-        result(Result.error(null, it.message ?: ""))
-      })
-    }
   }
   //endregion
 }

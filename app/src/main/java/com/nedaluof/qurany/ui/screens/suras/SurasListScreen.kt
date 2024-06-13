@@ -45,7 +45,7 @@ import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.databinding.PlayerBottomSheetLayoutBinding
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
-import com.nedaluof.qurany.util.isNetworkOk
+import com.nedaluof.qurany.util.isInternetAvailable
 import com.nedaluof.qurany.util.postDelayed
 import kotlinx.coroutines.launch
 
@@ -99,7 +99,7 @@ fun SurasListScreen(
           reciterSuraName.text = suraToPlay?.playerTitle ?: ""
           coroutineScope.launch {
             if (suraToPlay?.isSuraExistInLocalStorage == false) {
-              if (context.isNetworkOk()) {
+              if (context.isInternetAvailable()) {
                 bottomSheetScaffoldState.bottomSheetState.expand()
               } else {
                 bottomSheetScaffoldState.bottomSheetState.partialExpand()

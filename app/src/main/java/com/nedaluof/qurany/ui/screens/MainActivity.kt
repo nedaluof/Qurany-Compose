@@ -13,7 +13,7 @@ import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
       val navBackStackEntry by navController.currentBackStackEntryAsState()
       val context = LocalContext.current
       val scope = rememberCoroutineScope()
-      var isBackPressedCounter by remember { mutableStateOf(0) }
+      var isBackPressedCounter by remember { mutableIntStateOf(0) }
       CompositionLocalProvider(
         androidx.lifecycle.compose.LocalLifecycleOwner provides androidx.compose.ui.platform.LocalLifecycleOwner.current,
       ) {

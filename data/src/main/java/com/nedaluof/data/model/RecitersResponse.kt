@@ -43,6 +43,21 @@ data class ReciterEntity(
   var isInMyFavorites: Boolean = false
 )
 
+fun List<ReciterEntity>.asReciterModels(
+  locale: String
+) = this.map { entity ->
+  ReciterModel().apply {
+    id = entity.reciterId
+    name = if (locale == "en") entity.name?.english ?: "" else entity.name?.arabic ?: ""
+    serverLink = entity.serverLink ?: ""
+    rewaya = if (locale == "en") entity.rewaya?.english ?: "" else entity.rewaya?.arabic ?: ""
+    count = entity.count ?: "0"
+    letter = if (locale == "en") entity.letter?.english ?: "" else entity.letter?.arabic ?: ""
+    suras = entity.suras ?: ""
+    isInMyFavorites = entity.isInMyFavorites
+  }
+}
+
 @JsonClass(generateAdapter = true)
 data class LocalText(
   val arabic: String,
@@ -61,19 +76,6 @@ data class ReciterModel(
   var isInMyFavorites: Boolean = false
 ) : Parcelable {
   companion object {
-    fun mapFromReciterEntity(
-      entity: ReciterEntity, locale: String
-    ) = ReciterModel().apply {
-      id = entity.reciterId
-      name = if (locale == "en") entity.name?.english ?: "" else entity.name?.arabic ?: ""
-      serverLink = entity.serverLink ?: ""
-      rewaya = if (locale == "en") entity.rewaya?.english ?: "" else entity.rewaya?.arabic ?: ""
-      count = entity.count ?: "0"
-      letter = if (locale == "en") entity.letter?.english ?: "" else entity.letter?.arabic ?: ""
-      suras = entity.suras ?: ""
-      isInMyFavorites = entity.isInMyFavorites
-    }
-
     fun mockList() = listOf(ReciterModel().apply {
       id = 1
       name = "Maher Al-Mueqle"

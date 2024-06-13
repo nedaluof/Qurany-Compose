@@ -26,9 +26,6 @@ class MainViewModel @Inject constructor(
   //night mode
   val isNightModeEnabled = mutableStateOf(appRepository.isNightModeEnabled())
 
-  // connectivity status
-  val connected = mutableStateOf(true)
-
   fun changeDayNightMode() {
     val currentMode = appRepository.isNightModeEnabled()
     val newMode = !currentMode
@@ -38,16 +35,5 @@ class MainViewModel @Inject constructor(
 
   fun changeAppLanguage() {
     appRepository.updateCurrentLanguage()
-  }
-
-  private fun observeConnectivity() {
-    /*viewModelScope.launch {
-      appRepository.observeConnectivity().collect { connectionState ->
-        when (connectionState) {
-          ConnectivityStatus.CONNECTED -> connected.value = true
-          ConnectivityStatus.NOT_CONNECTED -> connected.value = false
-        }
-      }
-    }*/
   }
 }

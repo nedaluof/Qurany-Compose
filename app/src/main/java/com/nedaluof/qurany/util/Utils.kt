@@ -7,7 +7,6 @@ import android.graphics.Canvas
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
@@ -15,7 +14,6 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.nedaluof.qurany.R
 import java.io.File
-import java.io.Serializable
 
 /**
  * Created by nedaluof on 12/13/2020.
@@ -23,11 +21,8 @@ import java.io.Serializable
 fun Context.toast(@StringRes msg: Int) =
   Toast.makeText(this, this.getString(msg), Toast.LENGTH_LONG).show()
 
-fun Context.checkIfSuraExist(subPath: String) =
-  File(this.getExternalFilesDir(null).toString() + subPath).exists()
-
-fun Context.getSuraPath(subPath: String): String =
-  File(this.getExternalFilesDir(null).toString() + subPath).absolutePath
+fun Context.getFilePath(path: String): String =
+  File(this.getExternalFilesDir(null).toString() + path).absolutePath
 
 fun Context.getLogoAsBitmap(): Bitmap {
   val width = 200
@@ -40,41 +35,27 @@ fun Context.getLogoAsBitmap(): Bitmap {
   return bitmap
 }
 
-fun Context.isNetworkOk(): Boolean {
+fun Context.isInternetAvailable(): Boolean {
   val connectivityManager =
     this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-  return run {
     val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-    if (capabilities != null) {
+  return if (capabilities != null) {
       when {
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-          true
-        }
-
-        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-          true
-        }
-
+        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+        capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
         else -> capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
       }
     } else {
       false
-    }
   }
 }
 
-@Suppress("DEPRECATION")
 inline fun <reified CLASS> Intent?.parcelable(key: String): CLASS {
   return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
     this?.getParcelableExtra(key, CLASS::class.java)!!
   } else {
-    this?.getParcelableExtra(key)!!
+    @Suppress("DEPRECATION") this?.getParcelableExtra(key)!!
   }
-}
-
-inline fun <reified T : Serializable> Bundle.serializable(key: String): T? = when {
-  Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getSerializable(key, T::class.java)
-  else -> @Suppress("DEPRECATION") getSerializable(key) as? T
 }
 
 fun (() -> Unit).postDelayed(
