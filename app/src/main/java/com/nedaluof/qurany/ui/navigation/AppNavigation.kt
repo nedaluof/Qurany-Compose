@@ -7,12 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nedaluof.data.model.ReciterModel
-import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.ui.screens.MainScreen
 import com.nedaluof.qurany.ui.screens.MainViewModel
 import com.nedaluof.qurany.ui.screens.splash.SplashScreen
@@ -26,11 +24,7 @@ import kotlinx.coroutines.delay
 fun AppNavigation(
   modifier: Modifier = Modifier,
   navController: NavHostController,
-  mainViewModel: MainViewModel,
-  getExoPlayer: () -> ExoPlayer?,
-  onPlayClicked: (SuraModel) -> Unit,
-  onDownloadClicked: (SuraModel) -> Unit,
-  onStopPlaying: () -> Unit
+  mainViewModel: MainViewModel
 ) {
   var isSplashShown by remember { mutableStateOf(false) }
   LaunchedEffect(isSplashShown) {
@@ -59,11 +53,8 @@ fun AppNavigation(
     }
     composable(route = AppNavigationScreens.Suras.route) {
       reciter?.let {
-        SurasListScreen(reciter = it,
-          exoPlayer = getExoPlayer(),
-          onPlayClicked = onPlayClicked,
-          onDownloadClicked = onDownloadClicked,
-          stopPlaying = onStopPlaying,
+        SurasListScreen(
+          reciter = it,
           onBackPressed = {
             navController.popBackStack()
             reciter = null

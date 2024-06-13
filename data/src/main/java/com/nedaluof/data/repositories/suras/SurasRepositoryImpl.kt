@@ -5,6 +5,7 @@ import com.nedaluof.data.datasource.localsource.preferences.PreferencesKeys
 import com.nedaluof.data.datasource.localsource.preferences.PreferencesManager
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.SuraModel
+import com.nedaluof.data.util.catchOn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
@@ -36,6 +37,10 @@ class SurasRepositoryImpl @Inject constructor(
         getEnglishSuraName()[currentSura - 1].name
       }
       val subPath = "/Qurany/${reciter.name}/${getEnglishSuraName()[currentSura - 1].name}.mp3"
+      var suraLocalPath = subPath
+      catchOn({
+        suraLocalPath = File(context.getExternalFilesDir(null).toString() + subPath).absolutePath
+      })
       mappedReciterSuraModels.add(
         SuraModel(
           currentSura,
@@ -44,7 +49,7 @@ class SurasRepositoryImpl @Inject constructor(
           reciter.serverLink + "/" + getSuraIndex(currentSura) + ".mp3",
           reciter.name,
           reciter.name + " | " + suraName,
-          subPath,
+          suraLocalPath,
           checkIfSuraExist(subPath)
         )
       )

@@ -22,5 +22,6 @@ class SurasViewModel @Inject constructor(
 
   //region logic
   fun loadReciterSuras(reciter: ReciterModel) = repository.loadReciterSuras(reciter)
+  fun isSuraExistInLocalStorage(suraPath: String) = repository.checkIfSuraExist(suraPath)
   //endregion
 }

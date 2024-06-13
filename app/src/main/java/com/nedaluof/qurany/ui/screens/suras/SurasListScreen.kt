@@ -1,5 +1,6 @@
 package com.nedaluof.qurany.ui.screens.suras
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -37,16 +38,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.databinding.PlayerBottomSheetLayoutBinding
+import com.nedaluof.qurany.service.QuranyDownloadService
+import com.nedaluof.qurany.ui.components.rememberManagedMediaController
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.isInternetAvailable
-import com.nedaluof.qurany.util.postDelayed
+import com.nedaluof.qurany.util.toast
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -59,21 +64,53 @@ import kotlinx.coroutines.launch
 fun SurasListScreen(
   modifier: Modifier = Modifier,
   reciter: ReciterModel,
-  exoPlayer: ExoPlayer? = null,
   surasViewModel: SurasViewModel = hiltViewModel(),
-  onPlayClicked: (SuraModel) -> Unit,
-  onDownloadClicked: (SuraModel) -> Unit,
-  stopPlaying: () -> Unit,
   onBackPressed: () -> Unit
 ) {
   val context = LocalContext.current
   val coroutineScope = rememberCoroutineScope()
+  val mediaController by rememberManagedMediaController()
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
     bottomSheetState = rememberStandardBottomSheetState(
       initialValue = SheetValue.Expanded
     )
   )
   val suraToPlay by remember { surasViewModel.currentPlayingSura }
+
+  LaunchedEffect(suraToPlay) {
+    suraToPlay?.let { sura ->
+      val isLocal = surasViewModel.isSuraExistInLocalStorage(sura.suraLocalPath)
+      val suraURI = Uri.parse(if (isLocal) sura.suraLocalPath else sura.suraUrl)
+      if (!isLocal) {
+        if (!context.isInternetAvailable()) {
+          context.toast(R.string.alrt_no_internet_msg)
+          return@LaunchedEffect
+        }
+      }
+
+      val mediaItem =
+        MediaItem.Builder().setMediaId("${suraToPlay?.id}").setUri(suraURI).setMediaMetadata(
+          MediaMetadata.Builder().setDisplayTitle(context.getString(R.string.app_name))
+            .setTitle(context.getString(R.string.app_name)).setArtist(suraToPlay?.reciterName)
+            .setTitle(suraToPlay?.playerTitle).build()
+        ).build()
+      mediaController?.run {
+        setMediaItem(mediaItem)
+        prepare()
+        play()
+      }
+      context.toast(
+        if (isLocal) R.string.alrt_sura_playing_locally else R.string.alrt_sura_playing_online
+      )
+    } ?: run {
+      mediaController?.let {
+        if (it.isPlaying || it.isLoading) {
+          it.stop()
+        }
+      }
+    }
+  }
+
   BottomSheetScaffold(
     modifier = modifier,
     sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
@@ -83,22 +120,26 @@ fun SurasListScreen(
     sheetContent = {
       if (suraToPlay != null) {
         AndroidViewBinding(PlayerBottomSheetLayoutBinding::inflate) {
-          playerController.player = exoPlayer
-          exoPlayer?.addListener(object : Player.Listener {
+          playerController.player = mediaController
+          mediaController?.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
               super.onPlaybackStateChanged(playbackState)
               if (playbackState == Player.STATE_ENDED) {
-                { surasViewModel.currentPlayingSura.value = null }.postDelayed(1500)
+                coroutineScope.launch {
+                  delay(1000)
+                  surasViewModel.currentPlayingSura.value = null
+                }
               }
             }
           })
           closeBtn.setOnClickListener {
             surasViewModel.currentPlayingSura.value = null
-            stopPlaying()
           }
           reciterSuraName.text = suraToPlay?.playerTitle ?: ""
           coroutineScope.launch {
-            if (suraToPlay?.isSuraExistInLocalStorage == false) {
+            val isLocalSura =
+              surasViewModel.isSuraExistInLocalStorage(suraToPlay?.suraLocalPath ?: "")
+            if (!isLocalSura) {
               if (context.isInternetAvailable()) {
                 bottomSheetScaffoldState.bottomSheetState.expand()
               } else {
@@ -116,8 +157,11 @@ fun SurasListScreen(
         bottomSheetScaffoldState.bottomSheetState.expand()
       }
       surasViewModel.currentPlayingSura.value = sura
-      onPlayClicked(sura)
-    }, onDownloadClicked = onDownloadClicked, onCloseClicked = onBackPressed, onScrolled = {
+    }, onDownloadClicked = { sura ->
+      with(context) {
+        startService(QuranyDownloadService.getIntent(this, sura))
+      }
+    }, onCloseClicked = onBackPressed, onScrolled = {
       coroutineScope.launch {
         bottomSheetScaffoldState.bottomSheetState.partialExpand()
       }
@@ -139,9 +183,7 @@ fun SurasList(
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
     SurasTopBar(
-      reciterName = reciter.name,
-      scrollBehavior = scrollBehavior,
-      onCloseClicked = onCloseClicked
+      reciterName = reciter.name, scrollBehavior = scrollBehavior, onCloseClicked = onCloseClicked
     )
   }) { paddingValues ->
     val state = rememberLazyListState()

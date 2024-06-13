@@ -12,8 +12,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import com.nedaluof.data.model.SuraModel
+import com.nedaluof.data.util.catchOn
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.util.getFilePath
 import com.nedaluof.qurany.util.isInternetAvailable
 import com.nedaluof.qurany.util.parcelable
 import com.nedaluof.qurany.util.toast
@@ -50,7 +50,7 @@ class QuranyDownloadService : Service() {
   private fun startDownload() {
     if (this::sura.isInitialized) {
       val isSuraFileExist =
-        File(this.getExternalFilesDir(null).toString() + sura.suraSubPath).exists()
+        File(this.getExternalFilesDir(null).toString() + sura.suraLocalPath).exists()
       if (!isSuraFileExist) {
         if (this.isInternetAvailable()) {
           toast(R.string.alrt_download_start_title)
@@ -61,7 +61,7 @@ class QuranyDownloadService : Service() {
           ).setAllowedOverRoaming(false)
             .setTitle(sura.name)
             .setDescription(sura.playerTitle)
-            .setDestinationInExternalFilesDir(this, null, sura.suraSubPath)
+            .setDestinationInExternalFilesDir(this, null, sura.suraLocalPath)
           downloadId = downloadManager.enqueue(request)
         } else {
           toast(R.string.alrt_no_internet_msg)
@@ -88,10 +88,12 @@ class QuranyDownloadService : Service() {
   }
 
   private fun runMediaScanner() {
-    val file = File(this.getFilePath(sura.suraSubPath))
-    MediaScannerConnection.scanFile(
-      this, arrayOf(file.toString()), arrayOf(file.name), null
-    )
+    catchOn({
+      val file = File(sura.suraLocalPath)
+      MediaScannerConnection.scanFile(
+        this, arrayOf(file.toString()), arrayOf(file.name), null
+      )
+    })
   }
 
   override fun onDestroy() {

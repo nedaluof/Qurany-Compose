@@ -14,8 +14,7 @@ data class SuraModel(
   var suraUrl: String = "",
   var reciterName: String = "",
   var playerTitle: String = "",
-  var suraSubPath: String = "",
-  var isSuraExistInLocalStorage: Boolean = false
+  var suraLocalPath: String = ""
 ) : Parcelable {
   companion object {
     fun mockList() = listOf(
