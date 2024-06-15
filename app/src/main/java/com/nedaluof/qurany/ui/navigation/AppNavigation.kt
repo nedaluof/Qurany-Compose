@@ -11,8 +11,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nedaluof.data.model.ReciterModel
-import com.nedaluof.qurany.ui.screens.MainScreen
 import com.nedaluof.qurany.ui.screens.MainViewModel
+import com.nedaluof.qurany.ui.screens.main.MainScreen
 import com.nedaluof.qurany.ui.screens.splash.SplashScreen
 import com.nedaluof.qurany.ui.screens.suras.SurasListScreen
 import kotlinx.coroutines.delay

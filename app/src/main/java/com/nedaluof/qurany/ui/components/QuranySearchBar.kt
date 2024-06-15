@@ -45,10 +45,7 @@ import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuranySearchBar(
-  modifier: Modifier = Modifier,
-  text: String,
-  placeHolder: String,
-  onTextChange: (String) -> Unit
+  modifier: Modifier = Modifier, text: String, placeHolder: String, onTextChange: (String) -> Unit
 ) {
   Box(
     modifier = modifier
@@ -63,9 +60,7 @@ fun QuranySearchBar(
     OutlinedTextField(
       modifier = Modifier.fillMaxWidth(),
       value = text,
-      onValueChange = {
-        onTextChange(it)
-      },
+      onValueChange = onTextChange,
       placeholder = {
         Text(
           text = placeHolder,
@@ -102,16 +97,16 @@ fun QuranySearchBar(
       }),
       singleLine = true,
       textStyle = TextStyle(
-        color = MaterialTheme.colorScheme.onBackground,
+        color = MaterialTheme.colorScheme.primary,
         fontSize = 11.sp,
         fontWeight = FontWeight.Normal,
 
         ),
       colors = TextFieldDefaults.outlinedTextFieldColors(
-        containerColor = MaterialTheme.colorScheme.surface,
+        containerColor = MaterialTheme.colorScheme.background,
         focusedBorderColor = Color.Transparent,
         unfocusedBorderColor = Color.Transparent,
-        cursorColor = MaterialTheme.colorScheme.secondary
+        cursorColor = MaterialTheme.colorScheme.primary
       ),
     )
     SearchBarDivider(
@@ -134,7 +129,7 @@ fun SearchBarDivider(
 @Composable
 @Preview()
 fun SearchPreview() {
-  QuranyComposeTheme {
+  QuranyComposeTheme(true) {
     Box(
       modifier = Modifier
         .background(Color.White)

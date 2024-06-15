@@ -1,9 +1,8 @@
-package com.nedaluof.qurany.ui.screens
+package com.nedaluof.qurany.ui.screens.main
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,9 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,7 +22,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -48,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.ui.navigation.BottomNavigationScreens
+import com.nedaluof.qurany.ui.screens.MainViewModel
 import com.nedaluof.qurany.ui.screens.reciters.RecitersListScreen
 import com.nedaluof.qurany.ui.theme.AppGreen
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
@@ -67,11 +63,7 @@ fun MainScreen(
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Column {
     Toolbar(viewModel = viewModel)
-    Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
-      TopAppBar(
-        navController = navController, onSearchClickedClick = {}, scrollBehavior = scrollBehavior
-      )
-    }, bottomBar = {
+    Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), bottomBar = {
       BottomNavigationBar(navController = navController)
     }) { paddingValues ->
       BottomBarNavigation(
@@ -115,52 +107,6 @@ fun Toolbar(
       )
     }
   }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TopAppBar(
-  navController: NavHostController,
-  onSearchClickedClick: () -> Unit,
-  scrollBehavior: TopAppBarScrollBehavior
-) {
-  val navBackStackEntry by navController.currentBackStackEntryAsState()
-  val currentDestination = navBackStackEntry?.destination?.route ?: "reciters"
-  CenterAlignedTopAppBar(
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primary,
-      scrolledContainerColor = MaterialTheme.colorScheme.primary
-    ),
-    title = {
-      Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-      ) {
-        Text(
-          text = stringResource(id = R.string.app_name),
-          color = Color.White,
-          style = MaterialTheme.typography.bodyLarge
-        )
-      }
-    },
-    modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp)),
-    actions = {
-      if (currentDestination == BottomNavigationScreens.Reciters.route) {
-        IconButton(
-          onClick = onSearchClickedClick,
-        ) {
-          Icon(
-            Icons.Default.Search,
-            contentDescription = stringResource(
-              id = R.string.reciters_search_hint_label
-            ),
-            tint = Color.White
-          )
-        }
-      }
-    },
-    scrollBehavior = scrollBehavior
-  )
 }
 
 @Composable

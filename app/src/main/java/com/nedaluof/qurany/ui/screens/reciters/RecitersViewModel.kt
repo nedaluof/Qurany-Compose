@@ -32,6 +32,9 @@ class RecitersViewModel @Inject constructor(
     MutableStateFlow<RecitersOperationsUiState>(RecitersOperationsUiState.Idl)
   val recitersOperationUiState = _recitersOperationUiState.asStateFlow()
 
+  private val _isSearching = MutableStateFlow(false)
+  val isSearching = _isSearching.asStateFlow()
+
   private val _searchText = MutableStateFlow("")
   val searchText = _searchText.asStateFlow()
 
@@ -83,5 +86,9 @@ class RecitersViewModel @Inject constructor(
 
   fun onSearchTextChange(text: String) {
     _searchText.value = text
+  }
+
+  fun toggleSearching() {
+    _isSearching.value = !_isSearching.value
   }
 }

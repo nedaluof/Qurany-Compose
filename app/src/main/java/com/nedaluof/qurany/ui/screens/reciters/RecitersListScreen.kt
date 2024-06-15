@@ -1,24 +1,38 @@
 package com.nedaluof.qurany.ui.screens.reciters
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -98,6 +112,7 @@ fun RecitersListScreen(
   }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecitersList(
   modifier: Modifier = Modifier,
@@ -106,42 +121,89 @@ fun RecitersList(
   onReciterClicked: (ReciterModel) -> Unit = {},
   onAddToFavoriteClicked: (ReciterModel) -> Unit = {}
 ) {
-  val searchText by viewModel.searchText.collectAsState()
+  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+  val isSearching by viewModel.isSearching.collectAsStateWithLifecycle()
+  val searchText by viewModel.searchText.collectAsStateWithLifecycle()
   val recitersList by viewModel.recitersList.collectAsStateWithLifecycle()
-  Column {
-    QuranySearchBar(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp),
-      text = searchText,
-      onTextChange = viewModel::onSearchTextChange,
-      placeHolder = stringResource(id = R.string.reciters_search_hint_label)
+  Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
+    RecitersTopBar(
+      onSearchClickedClick = viewModel::toggleSearching,
+      scrollBehavior = scrollBehavior
     )
-    if (recitersList.isNotEmpty()) {
-      LazyColumn(
-        modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
-      ) {
-        items(count = recitersList.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
-          val item = recitersList[index]
-          ReciterItem(reciter = item, {
-            onReciterClicked(item)
-          }) {
-            onAddToFavoriteClicked(item)
+  }) { paddingValues ->
+    Column(modifier.padding(paddingValues)) {
+      if (isSearching) {
+        QuranySearchBar(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+          text = searchText,
+          onTextChange = viewModel::onSearchTextChange,
+          placeHolder = stringResource(id = R.string.reciters_search_hint_label)
+        )
+      }
+      if (recitersList.isNotEmpty()) {
+        LazyColumn(
+          modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
+        ) {
+          items(count = recitersList.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
+            val item = recitersList[index]
+            ReciterItem(reciter = item, {
+              onReciterClicked(item)
+            }) {
+              onAddToFavoriteClicked(item)
+            }
           }
         }
-      }
-    } else {
-      Box(modifier = Modifier.fillMaxSize()) {
-        Text(
-          stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
-          modifier = Modifier
-            .align(Alignment.Center)
-            .padding(start = 18.dp, end = 18.dp),
-          textAlign = TextAlign.Center
-        )
+      } else {
+        Box(modifier = Modifier.fillMaxSize()) {
+          Text(
+            stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
+            modifier = Modifier
+              .align(Alignment.Center)
+              .padding(start = 18.dp, end = 18.dp),
+            textAlign = TextAlign.Center
+          )
+        }
       }
     }
   }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RecitersTopBar(
+  onSearchClickedClick: () -> Unit, scrollBehavior: TopAppBarScrollBehavior
+) {
+  CenterAlignedTopAppBar(
+    colors = TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primary,
+      scrolledContainerColor = MaterialTheme.colorScheme.primary
+    ),
+    title = {
+      Row(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+      ) {
+        Text(
+          text = stringResource(id = R.string.app_name),
+          color = Color.White,
+          style = MaterialTheme.typography.bodyLarge
+        )
+      }
+    },
+    modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp)),
+    actions = {
+      IconButton(onClick = onSearchClickedClick) {
+        Icon(
+          Icons.Default.Search, contentDescription = stringResource(
+            id = R.string.reciters_search_hint_label
+          ), tint = Color.White
+        )
+      }
+    },
+    scrollBehavior = scrollBehavior
+  )
 }
 
 @Preview
