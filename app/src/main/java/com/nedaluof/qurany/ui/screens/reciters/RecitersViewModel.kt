@@ -8,7 +8,11 @@ import com.nedaluof.data.repositories.reciters.RecitersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,22 +25,42 @@ class RecitersViewModel @Inject constructor(
 ) : ViewModel() {
 
   //region variables
-  val recitersUiState = MutableStateFlow<RecitersUiState>(RecitersUiState.Loading)
-  val recitersOperationUiState =
+  private val _recitersUiState = MutableStateFlow<RecitersUiState>(RecitersUiState.Loading)
+  val recitersUiState = _recitersUiState.asStateFlow()
+
+  private val _recitersOperationUiState =
     MutableStateFlow<RecitersOperationsUiState>(RecitersOperationsUiState.Idl)
+  val recitersOperationUiState = _recitersOperationUiState.asStateFlow()
+
+  private val _searchText = MutableStateFlow("")
+  val searchText = _searchText.asStateFlow()
+
+  private val _recitersList = MutableStateFlow<List<ReciterModel>>(emptyList())
+  val recitersList = searchText
+    .combine(_recitersList) { text, reciters ->
+      reciters.filter { reciter ->
+        reciter.name.uppercase().contains(text.trim().uppercase())
+      }
+    }.stateIn(
+      scope = viewModelScope,
+      started = SharingStarted.WhileSubscribed(5000),
+      initialValue = _recitersList.value
+    )
+
   var reciterToBeProcessed: ReciterModel? = null
   //endregion
 
   fun loadReciters(
     loadFavoriteReciters: Boolean = false
   ) {
-    recitersUiState.value = RecitersUiState.Success(emptyList())
-    recitersUiState.value = RecitersUiState.Loading
+    _recitersList.value = emptyList()
+    _recitersUiState.value = RecitersUiState.Loading
     viewModelScope.launch(Dispatchers.IO) {
       repository.loadReciters(loadFavoriteReciters).catch { cause ->
-        recitersUiState.value = RecitersUiState.Error(cause.message.toString())
+        _recitersUiState.value = RecitersUiState.Error(cause.message.toString())
       }.collect {
-        recitersUiState.value = RecitersUiState.Success(it)
+        _recitersUiState.value = RecitersUiState.ShowReciter
+        _recitersList.value = it
       }
     }
   }
@@ -47,7 +71,7 @@ class RecitersViewModel @Inject constructor(
         reciter.id,
         reciter.isInMyFavorites
       ) { result ->
-        recitersOperationUiState.value =
+        _recitersOperationUiState.value =
           if (result.status == Status.SUCCESS) RecitersOperationsUiState.Success(reciter.isInMyFavorites)
           else RecitersOperationsUiState.Error(
             result.message ?: ""
@@ -55,5 +79,9 @@ class RecitersViewModel @Inject constructor(
         reciterToBeProcessed = null
       }
     }
+  }
+
+  fun onSearchTextChange(text: String) {
+    _searchText.value = text
   }
 }

@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
             navController = navController,
             mainViewModel = viewModel
           )
-
           BackHandler {
             when (navBackStackEntry?.destination?.route) {
               "main" -> {

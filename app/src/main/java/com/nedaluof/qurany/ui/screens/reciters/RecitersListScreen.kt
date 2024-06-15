@@ -1,8 +1,10 @@
 package com.nedaluof.qurany.ui.screens.reciters
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +29,7 @@ import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.ui.components.LoadingView
 import com.nedaluof.qurany.ui.components.QuranyAlertDialog
+import com.nedaluof.qurany.ui.components.QuranySearchBar
 import com.nedaluof.qurany.ui.components.QuranySnackBar
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 
@@ -48,31 +52,19 @@ fun RecitersListScreen(
   when (uiState) {
     is RecitersUiState.Error -> QuranySnackBar(message = (uiState as RecitersUiState.Error).message)
     is RecitersUiState.Loading -> LoadingView()
-    is RecitersUiState.Success -> {
-      val items = (uiState as RecitersUiState.Success).reciters
-      if (items.isNotEmpty()) {
-        RecitersList(modifier = modifier,
-          items = items,
-          onReciterClicked = onReciterClicked,
-          onAddToFavoriteClicked = { reciter ->
-            viewModel.reciterToBeProcessed = reciter
-            if (reciter.isInMyFavorites) {
-              showDeleteDialog = true
-            } else {
-              viewModel.processAddOrDeleteFromFavorites()
-            }
-          })
-      } else {
-        Box(modifier = Modifier.fillMaxSize()) {
-          Text(
-            stringResource(id = R.string.no_favorite_reciters_label),
-            modifier = Modifier
-              .align(Alignment.Center)
-              .padding(start = 18.dp, end = 18.dp),
-            textAlign = TextAlign.Center
-          )
-        }
-      }
+    is RecitersUiState.ShowReciter -> {
+      RecitersList(modifier = modifier,
+        viewModel = viewModel,
+        isForFavorites = isForFavorites,
+        onReciterClicked = onReciterClicked,
+        onAddToFavoriteClicked = { reciter ->
+          viewModel.reciterToBeProcessed = reciter
+          if (reciter.isInMyFavorites) {
+            showDeleteDialog = true
+          } else {
+            viewModel.processAddOrDeleteFromFavorites()
+          }
+        })
     }
   }
 
@@ -109,19 +101,44 @@ fun RecitersListScreen(
 @Composable
 fun RecitersList(
   modifier: Modifier = Modifier,
-  items: List<ReciterModel>,
+  viewModel: RecitersViewModel,
+  isForFavorites: Boolean = false,
   onReciterClicked: (ReciterModel) -> Unit = {},
   onAddToFavoriteClicked: (ReciterModel) -> Unit = {}
 ) {
-  LazyColumn(
-    modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
-  ) {
-    items(count = items.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
-      val item = items[index]
-      ReciterItem(reciter = item, {
-        onReciterClicked(item)
-      }) {
-        onAddToFavoriteClicked(item)
+  val searchText by viewModel.searchText.collectAsState()
+  val recitersList by viewModel.recitersList.collectAsStateWithLifecycle()
+  Column {
+    QuranySearchBar(
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp),
+      text = searchText,
+      onTextChange = viewModel::onSearchTextChange,
+      placeHolder = stringResource(id = R.string.reciters_search_hint_label)
+    )
+    if (recitersList.isNotEmpty()) {
+      LazyColumn(
+        modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
+      ) {
+        items(count = recitersList.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
+          val item = recitersList[index]
+          ReciterItem(reciter = item, {
+            onReciterClicked(item)
+          }) {
+            onAddToFavoriteClicked(item)
+          }
+        }
+      }
+    } else {
+      Box(modifier = Modifier.fillMaxSize()) {
+        Text(
+          stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
+          modifier = Modifier
+            .align(Alignment.Center)
+            .padding(start = 18.dp, end = 18.dp),
+          textAlign = TextAlign.Center
+        )
       }
     }
   }
@@ -131,6 +148,6 @@ fun RecitersList(
 @Composable
 fun RecitersScreenPreview(modifier: Modifier = Modifier) {
   QuranyComposeTheme {
-    RecitersList(Modifier.fillMaxSize(), ReciterModel.mockList())
+    RecitersList(Modifier.fillMaxSize(), hiltViewModel<RecitersViewModel>())
   }
 }
