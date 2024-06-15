@@ -49,8 +49,7 @@ class SurasRepositoryImpl @Inject constructor(
           reciter.serverLink + "/" + getSuraIndex(currentSura) + ".mp3",
           reciter.name,
           reciter.name + " | " + suraName,
-          suraLocalPath,
-          checkIfSuraExist(subPath)
+          suraLocalPath
         )
       )
     }
