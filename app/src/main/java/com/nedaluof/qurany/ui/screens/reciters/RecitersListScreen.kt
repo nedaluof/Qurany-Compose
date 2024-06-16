@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -127,6 +129,7 @@ fun RecitersList(
   val recitersList by viewModel.recitersList.collectAsStateWithLifecycle()
   Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
     RecitersTopBar(
+      searchIcon = if (isSearching) Icons.Default.Close else Icons.Default.Search,
       onSearchClickedClick = viewModel::toggleSearching,
       scrollBehavior = scrollBehavior
     )
@@ -173,7 +176,9 @@ fun RecitersList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecitersTopBar(
-  onSearchClickedClick: () -> Unit, scrollBehavior: TopAppBarScrollBehavior
+  searchIcon: ImageVector,
+  onSearchClickedClick: () -> Unit,
+  scrollBehavior: TopAppBarScrollBehavior
 ) {
   CenterAlignedTopAppBar(
     colors = TopAppBarDefaults.topAppBarColors(
@@ -196,7 +201,8 @@ private fun RecitersTopBar(
     actions = {
       IconButton(onClick = onSearchClickedClick) {
         Icon(
-          Icons.Default.Search, contentDescription = stringResource(
+          searchIcon,
+          contentDescription = stringResource(
             id = R.string.reciters_search_hint_label
           ), tint = Color.White
         )
