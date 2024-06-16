@@ -39,8 +39,7 @@ class RecitersViewModel @Inject constructor(
   val searchText = _searchText.asStateFlow()
 
   private val _recitersList = MutableStateFlow<List<ReciterModel>>(emptyList())
-  val recitersList = searchText
-    .combine(_recitersList) { text, reciters ->
+  val recitersList = searchText.combine(_recitersList) { text, reciters ->
       reciters.filter { reciter ->
         reciter.name.uppercase().contains(text.trim().uppercase())
       }
@@ -53,6 +52,7 @@ class RecitersViewModel @Inject constructor(
   var reciterToBeProcessed: ReciterModel? = null
   //endregion
 
+  //region logic
   fun loadReciters(
     loadFavoriteReciters: Boolean = false
   ) {
@@ -71,8 +71,7 @@ class RecitersViewModel @Inject constructor(
   fun processAddOrDeleteFromFavorites() {
     reciterToBeProcessed?.let { reciter ->
       repository.addOrRemoveReciterFromFavorites(
-        reciter.id,
-        reciter.isInMyFavorites
+        reciter.id, reciter.isInMyFavorites
       ) { result ->
         _recitersOperationUiState.value =
           if (result.status == Status.SUCCESS) RecitersOperationsUiState.Success(reciter.isInMyFavorites)
@@ -91,4 +90,5 @@ class RecitersViewModel @Inject constructor(
   fun toggleSearching() {
     _isSearching.value = !_isSearching.value
   }
+  //endregion
 }

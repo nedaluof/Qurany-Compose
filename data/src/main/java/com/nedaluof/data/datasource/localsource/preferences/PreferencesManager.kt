@@ -33,12 +33,4 @@ class PreferencesManager @Inject constructor(
   inline fun <reified T> getFromPreferences(key: String, default: T? = null): T? {
     return MiHawk.get(key, default)
   }
-
-  fun removeFromPreferences(key: String) {
-    MiHawk.remove(key) {}
-  }
-
-  fun hasKeyInPreferences(key: String, result: (Boolean) -> Unit) {
-    MiHawk.contains(key, result)
-  }
 }

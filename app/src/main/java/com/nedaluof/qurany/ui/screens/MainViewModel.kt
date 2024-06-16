@@ -15,17 +15,17 @@ class MainViewModel @Inject constructor(
   private val appRepository: AppRepository
 ) : ViewModel() {
 
-  //app language
+  //region variables
   val appLanguageEnglish: MutableState<String>
     get() = mutableStateOf(if (appRepository.isCurrentLanguageEnglish()) "العربية" else "EN")
 
   val isCurrentLanguageEnglish: MutableState<Boolean>
     get() = mutableStateOf(appRepository.isCurrentLanguageEnglish())
 
-
-  //night mode
   val isNightModeEnabled = mutableStateOf(appRepository.isNightModeEnabled())
+  //endregion
 
+  //region logic
   fun changeDayNightMode() {
     val currentMode = appRepository.isNightModeEnabled()
     val newMode = !currentMode
@@ -36,4 +36,5 @@ class MainViewModel @Inject constructor(
   fun changeAppLanguage() {
     appRepository.updateCurrentLanguage()
   }
+  //endregion
 }

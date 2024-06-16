@@ -18,4 +18,3 @@ fun catchOn(
 }
 
 fun String?.loge() = Timber.e("NedaluOf -> $this")
-fun String?.log() = Timber.d("NedaluOf -> $this")

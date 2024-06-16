@@ -4,11 +4,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -36,15 +33,13 @@ import androidx.core.os.LocaleListCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
+import com.nedaluof.qurany.ui.navigation.BottomNavigationHost
 import com.nedaluof.qurany.ui.navigation.BottomNavigationScreens
 import com.nedaluof.qurany.ui.screens.MainViewModel
-import com.nedaluof.qurany.ui.screens.reciters.RecitersListScreen
 import com.nedaluof.qurany.ui.theme.AppGreen
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import java.util.Locale
@@ -66,7 +61,7 @@ fun MainScreen(
     Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), bottomBar = {
       BottomNavigationBar(navController = navController)
     }) { paddingValues ->
-      BottomBarNavigation(
+      BottomNavigationHost(
         navController = navController,
         paddingValues = paddingValues,
         onReciterClicked
@@ -157,25 +152,6 @@ private fun BottomNavigationBar(
             }
           }
         })
-    }
-  }
-}
-
-@Composable
-private fun BottomBarNavigation(
-  navController: NavHostController, paddingValues: PaddingValues,
-  onReciterClicked: (ReciterModel) -> Unit
-) {
-  NavHost(
-    navController = navController,
-    startDestination = BottomNavigationScreens.Reciters.route,
-    modifier = Modifier.padding(paddingValues)
-  ) {
-    composable(BottomNavigationScreens.Reciters.route) {
-      RecitersListScreen(Modifier.fillMaxSize(), onReciterClicked = onReciterClicked)
-    }
-    composable(BottomNavigationScreens.MyReciters.route) {
-      RecitersListScreen(Modifier.fillMaxSize(), true, onReciterClicked = onReciterClicked)
     }
   }
 }

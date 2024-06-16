@@ -25,25 +25,27 @@ import java.io.File
  */
 class QuranyDownloadService : Service() {
 
-
   //region variables
   private var downloadId: Long = 0
   private lateinit var sura: SuraModel
   //endregion
 
+  //region logic
   override fun onBind(intent: Intent?): IBinder? = null
 
   @SuppressLint("UnspecifiedRegisterReceiverFlag")
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-    sura = intent?.parcelable(DOWNLOAD_SURA_KEY)!!
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      registerReceiver(
-        onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), RECEIVER_EXPORTED
-      )
-    } else {
-      registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-    }
-    startDownload()
+    catchOn({
+      sura = intent?.parcelable(DOWNLOAD_SURA_KEY)!!
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        registerReceiver(
+          onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE), RECEIVER_EXPORTED
+        )
+      } else {
+        registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+      }
+      startDownload()
+    })
     return START_NOT_STICKY
   }
 
@@ -100,12 +102,15 @@ class QuranyDownloadService : Service() {
     unregisterReceiver(onComplete)
     super.onDestroy()
   }
+  //endregion
 
   companion object {
     private const val DOWNLOAD_SURA_KEY = "DOWNLOAD_SURA_KEY"
 
     fun getIntent(
       context: Context, suraModel: SuraModel
-    ) = Intent(context, QuranyDownloadService::class.java).putExtra(DOWNLOAD_SURA_KEY, suraModel)
+    ) = Intent(context, QuranyDownloadService::class.java).also {
+      it.putExtra(DOWNLOAD_SURA_KEY, suraModel)
+    }
   }
 }

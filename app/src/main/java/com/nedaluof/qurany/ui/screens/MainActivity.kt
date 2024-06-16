@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.ui.navigation.AppNavigation
+import com.nedaluof.qurany.ui.navigation.AppNavigationHost
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
 import com.nedaluof.qurany.util.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         androidx.lifecycle.compose.LocalLifecycleOwner provides androidx.compose.ui.platform.LocalLifecycleOwner.current,
       ) {
         QuranyComposeTheme(viewModel.isNightModeEnabled.value) {
-          AppNavigation(
+          AppNavigationHost(
             navController = navController,
             mainViewModel = viewModel
           )

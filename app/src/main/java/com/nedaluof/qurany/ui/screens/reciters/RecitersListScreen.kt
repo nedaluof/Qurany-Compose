@@ -41,8 +41,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.ui.components.LoadingView
 import com.nedaluof.qurany.ui.components.QuranyAlertDialog
+import com.nedaluof.qurany.ui.components.QuranyLoadingView
 import com.nedaluof.qurany.ui.components.QuranySearchBar
 import com.nedaluof.qurany.ui.components.QuranySnackBar
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
@@ -65,7 +65,7 @@ fun RecitersListScreen(
   var showDeleteDialog by remember { mutableStateOf(false) }
   when (uiState) {
     is RecitersUiState.Error -> QuranySnackBar(message = (uiState as RecitersUiState.Error).message)
-    is RecitersUiState.Loading -> LoadingView()
+    is RecitersUiState.Loading -> QuranyLoadingView()
     is RecitersUiState.ShowReciter -> {
       RecitersList(modifier = modifier,
         viewModel = viewModel,
@@ -85,7 +85,7 @@ fun RecitersListScreen(
   when (operationsUiState) {
     is RecitersOperationsUiState.Error -> QuranySnackBar(message = (operationsUiState as RecitersOperationsUiState.Error).message)
     is RecitersOperationsUiState.Idl -> {}
-    is RecitersOperationsUiState.Loading -> LoadingView()
+    is RecitersOperationsUiState.Loading -> QuranyLoadingView()
     is RecitersOperationsUiState.Success -> {
       val isDeleted = (operationsUiState as RecitersOperationsUiState.Success).isDeleted
       QuranySnackBar(message = stringResource(id = if (isDeleted) R.string.alrt_delete_success else R.string.alrt_add_success_msg))

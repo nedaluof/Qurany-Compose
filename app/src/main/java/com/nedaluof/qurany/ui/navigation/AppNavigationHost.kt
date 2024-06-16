@@ -21,7 +21,7 @@ import kotlinx.coroutines.delay
  * Created By NedaluOf - 6/8/2024.
  */
 @Composable
-fun AppNavigation(
+fun AppNavigationHost(
   modifier: Modifier = Modifier,
   navController: NavHostController,
   mainViewModel: MainViewModel
@@ -53,13 +53,17 @@ fun AppNavigation(
     }
     composable(route = AppNavigationScreens.Suras.route) {
       reciter?.let {
-        SurasListScreen(
-          reciter = it,
-          onBackPressed = {
-            navController.popBackStack()
-            reciter = null
-          })
+        SurasListScreen(reciter = reciter!!) {
+          reciter = null
+          navController.popBackStack()
+        }
       }
     }
   }
+}
+
+sealed class AppNavigationScreens(val route: String) {
+  data object Splash : AppNavigationScreens("splash")
+  data object Main : AppNavigationScreens("main")
+  data object Suras : AppNavigationScreens("suras")
 }

@@ -12,6 +12,5 @@ import com.nedaluof.data.model.ReciterEntity
 @Database(entities = [ReciterEntity::class], version = 1, exportSchema = false)
 @TypeConverters(LocalTextTypeConverter::class)
 abstract class QuranyDatabase : RoomDatabase() {
-
   abstract val recitersDao: RecitersDao
 }

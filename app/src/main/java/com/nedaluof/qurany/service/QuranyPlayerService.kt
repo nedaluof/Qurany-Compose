@@ -49,4 +49,5 @@ class QuranyPlayerService : MediaSessionService() {
     }
     super.onDestroy()
   }
+  //endregion
 }
