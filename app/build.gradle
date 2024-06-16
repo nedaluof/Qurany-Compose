@@ -1,117 +1,101 @@
 /*
  * Created By nedaluof  6/13/2020.
+ * Updated By nedaluof  6/16/2024.
  */
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
-    id 'kotlin-kapt'
-    id 'kotlin-parcelize'
-    id 'com.google.dagger.hilt.android'
-    id 'com.google.firebase.crashlytics'
-    id 'com.google.gms.google-services'
+  alias(libs.plugins.com.android.application)
+  alias(libs.plugins.org.jetbrains.kotlin.android)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.hilt)
+  alias(libs.plugins.google.services)
+  alias(libs.plugins.firebase.crashlytics.plugin)
+  alias(libs.plugins.org.jetbrains.kotlin.kapt)
+  alias(libs.plugins.kotlin.parcelize)
 }
 
-apply from: "$rootDir/versions.gradle"
-
 android {
-    bundle {
-        language {
-            enableSplit = false
-        }
+  bundle {
+    language {
+      enableSplit = false
     }
-    namespace 'com.nedaluof.qurany'
-    compileSdk versions.compileSdk
+  }
+  namespace "com.nedaluof.qurany"
+  compileSdk libs.versions.compile.sdk.get().toInteger()
 
-    defaultConfig {
-        applicationId "com.nedaluof.qurany"
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.compileSdk
-        versionCode versions.versionCode
-        versionName versions.versionName
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
+  defaultConfig {
+    applicationId "com.nedaluof.qurany"
+    minSdkVersion libs.versions.min.sdk.get().toInteger()
+    targetSdkVersion libs.versions.compile.sdk.get().toInteger()
+    versionCode libs.versions.version.code.get().toInteger()
+    versionName libs.versions.version.name.get()
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
-        }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.debug
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-    kapt { correctErrorTypes = true }
-    buildFeatures {
-        compose true
-    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  kotlinOptions {
+    jvmTarget = "17"
+  }
+  kapt { correctErrorTypes = true }
+  buildFeatures {
+    compose true
+  }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
-    }
-    buildFeatures.dataBinding = true
+  composeOptions {
+    kotlinCompilerExtensionVersion = "1.5.14"
+  }
+  buildFeatures.dataBinding = true
 }
 
 dependencies {
-    /** app **/
-    //activity ktx
-    implementation "androidx.activity:activity-ktx:$versions.activityKtx"
-    //app compat
-    implementation "androidx.appcompat:appcompat:$versions.appCompat"
-    //core extensions
-    implementation "androidx.core:core-ktx:$versions.coreKtx"
-    //MDC
-    implementation "com.google.android.material:material:1.12.0"
-    /*Compose*/
-    def composeBom = platform("androidx.compose:compose-bom:$versions.compose_bom")
-    implementation composeBom
-    androidTestImplementation composeBom
-    implementation 'androidx.compose.material3:material3'
-    implementation 'androidx.compose.ui:ui-viewbinding'
-    implementation 'androidx.compose.foundation:foundation'
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
-    debugImplementation 'androidx.compose.ui:ui-test-manifest'
-    //hilt navigation compose
-    implementation "androidx.hilt:hilt-navigation-compose:$versions.hilt_navigation_compose"
-    //compose activity
-    implementation "androidx.activity:activity-compose:$versions.compose_activity"
-    //compose nav component
-    implementation "androidx.navigation:navigation-compose:$versions.compose_navigation"
-    //media3
-    implementation "androidx.media3:media3-exoplayer:$versions.media3"
-    implementation "androidx.media3:media3-ui:$versions.media3"
-  implementation "androidx.media3:media3-session:$versions.media3"
-    /**jet-pack Components**/
-    //lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$versions.compose_lifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:$versions.compose_lifecycle"
-    //hilt dependencies injection
-    implementation "com.google.dagger:hilt-android:$versions.hilt"
-    ksp "com.google.dagger:hilt-android-compiler:$versions.hilt"
-    //startup
-    implementation "androidx.startup:startup-runtime:$versions.startup"
-    /**Firebase**/
-    implementation platform("com.google.firebase:firebase-bom:$versions.firebase_bom")
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-inappmessaging-display-ktx'
-    /*data*/
-    api project(":data")
-    //Test libs
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test:runner:1.5.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
-    androidTestImplementation 'androidx.test:rules:1.5.0'
-    testImplementation 'org.mockito:mockito-core:5.11.0'
-    testImplementation 'org.mockito:mockito-inline:3.9.0'
+  /** app **/
+  //activity ktx
+  implementation libs.activity.ktx
+  //compose activity
+  implementation libs.compose.activity
+  //app compat
+  implementation libs.androidx.appcompat
+  //core extensions
+  implementation libs.core.ktx
+  //MDC
+  implementation libs.xml.material
+  //Compose
+  def composeBom = platform(libs.compose.bom)
+  implementation composeBom
+  androidTestImplementation composeBom
+  implementation libs.bundles.compose
+
+  debugImplementation libs.compose.ui.tooling.preview
+  androidTestImplementation libs.compose.ui.test.junit4
+  debugImplementation libs.compose.ui.test.manifest
+  //hilt navigation compose
+  implementation libs.hilt.navigation.compose
+  //compose nav component
+  implementation libs.compose.navigation
+  //media3
+  implementation libs.bundles.media3
+  /**jet-pack Components**/
+  //lifecycle
+  implementation libs.bundles.compose.lifecycle
+  //hilt dependencies injection
+  implementation libs.hilt
+  ksp libs.hilt.compiler
+  /**Firebase**/
+  implementation platform(libs.firebase.bom)
+  implementation libs.bundles.firebase
+  /*data*/
+  api project(":data")
+  //Test libs
+  testImplementation libs.junit
+  androidTestImplementation libs.bundles.test
+  testImplementation libs.bundles.mockito
 }

@@ -50,17 +50,5 @@
         <service
             android:name=".service.QuranyDownloadService"
             android:exported="false" />
-
-        <!-- provider -->
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.nedaluof.qurany.androidx-startup"
-            android:exported="false"
-            tools:node="merge">
-            <meta-data
-                android:name="com.nedaluof.qurany.util.timber.TimberInitializer"
-                android:value="androidx.startup" />
-        </provider>
     </application>
-
 </manifest>

@@ -1,19 +1,17 @@
 plugins {
-  id 'com.android.library'
-  id 'org.jetbrains.kotlin.android'
-  id 'com.google.devtools.ksp'
-  id 'kotlin-parcelize'
-  id 'com.google.dagger.hilt.android'
+  alias(libs.plugins.com.android.library)
+  alias(libs.plugins.org.jetbrains.kotlin.android)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.kotlin.parcelize)
+  alias(libs.plugins.hilt)
 }
-
-apply from: "$rootDir/versions.gradle"
 
 android {
   namespace 'com.nedaluof.data'
-  compileSdk versions.compileSdk
+  compileSdk libs.versions.compile.sdk.get().toInteger()
 
   defaultConfig {
-    minSdk versions.minSdk
+    minSdk libs.versions.min.sdk.get().toInteger()
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles "consumer-rules.pro"
   }
@@ -35,29 +33,25 @@ android {
 
 dependencies {
   //room database
-  implementation "androidx.room:room-runtime:$versions.room"
-  implementation "androidx.room:room-ktx:$versions.room"
-  ksp "androidx.room:room-compiler:$versions.room_compiler"
+  implementation libs.bundles.room
+  ksp libs.room.compiler
   //hilt dependencies injection
-  implementation "com.google.dagger:hilt-android:$versions.hilt"
-  ksp "com.google.dagger:hilt-android-compiler:$versions.hilt"
+  implementation libs.hilt
+  ksp libs.hilt.compiler
   //MiHawk DataStore
-  implementation "com.github.nedaluof:MiHawk:$versions.mihawk"
+  implementation libs.mihawk
   /** remote **/
-  implementation("com.squareup.retrofit2:retrofit:$versions.retrofit") { exclude module: 'okhttp' }
-  implementation "com.squareup.okhttp3:logging-interceptor:$versions.interceptor"
-  implementation "com.squareup.retrofit2:converter-moshi:$versions.converter"
-  implementation "com.squareup.moshi:moshi:$versions.moshi"
-  ksp "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
+  implementation(libs.retrofit) { exclude module: 'okhttp' }
+  implementation libs.retrofit.moshi.converter
+  implementation libs.logging.interceptor
+  implementation libs.moshi
+  ksp libs.moshi.kotlin.codegen
   /** kotlin **/
   //Coroutines
-  implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
-  //kotlin reflect
-  implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.reflect"
+  implementation libs.coroutines
   // debugging
-  api "com.jakewharton.timber:timber:$versions.timber"
+  api libs.timber
   //testing
-  testImplementation 'junit:junit:4.13.2'
-  androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-  androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+  testImplementation libs.junit
+  androidTestImplementation libs.junit.ext
 }
