@@ -24,10 +24,10 @@ class SurasRepositoryImpl @Inject constructor(
   override fun loadReciterSuras(
     reciter: ReciterModel
   ): List<SuraModel> {
+    val appLanguage = preferences.getFromPreferences(PreferencesKeys.LANGUAGE_KEY, "ar") ?: "ar"
     val currentReciterSuras = listOf(
       *reciter.suras.split(regex = "\\s*,\\s*".toRegex()).toTypedArray()
     )
-    val appLanguage = preferences.getFromPreferences<String?>(PreferencesKeys.LANGUAGE_KEY) ?: "ar"
     val mappedReciterSuraModels = ArrayList<SuraModel>()
     for (i in currentReciterSuras.indices) {
       val currentSura = currentReciterSuras[i].toInt()

@@ -33,10 +33,6 @@ class RecitersRepositoryImpl @Inject constructor(
 ) : RecitersRepository {
 
   //region variables
-  private val appLanguage by lazy {
-    preferences.getFromPreferences(PreferencesKeys.LANGUAGE_KEY, "ar") ?: "ar"
-  }
-
   private val repositoryCoroutineScope by lazy {
     CoroutineScope(Dispatchers.Default + SupervisorJob())
   }
@@ -46,6 +42,7 @@ class RecitersRepositoryImpl @Inject constructor(
   override fun loadReciters(
     loadFavoriteReciters: Boolean
   ): Flow<List<ReciterModel>> {
+    val appLanguage = preferences.getFromPreferences(PreferencesKeys.LANGUAGE_KEY, "ar") ?: "ar"
     return if (loadFavoriteReciters) {
       recitersDao.loadFavoriteReciters().map {
         it.asReciterModels(appLanguage)

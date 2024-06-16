@@ -1,10 +1,10 @@
 package com.nedaluof.qurany.ui.screens
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nedaluof.qurany.R
@@ -23,7 +24,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
   //region variables
   private val viewModel by viewModels<MainViewModel>()
@@ -41,7 +42,8 @@ class MainActivity : ComponentActivity() {
       CompositionLocalProvider(
         androidx.lifecycle.compose.LocalLifecycleOwner provides androidx.compose.ui.platform.LocalLifecycleOwner.current,
       ) {
-        QuranyComposeTheme(viewModel.isNightModeEnabled.value) {
+        val isNightMode by viewModel.isNightModeEnabled.collectAsStateWithLifecycle()
+        QuranyComposeTheme(isNightMode) {
           AppNavigationHost(
             navController = navController,
             mainViewModel = viewModel

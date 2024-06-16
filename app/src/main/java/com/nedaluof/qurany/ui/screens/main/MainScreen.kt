@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,19 +17,19 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -42,12 +41,10 @@ import com.nedaluof.qurany.ui.navigation.BottomNavigationScreens
 import com.nedaluof.qurany.ui.screens.MainViewModel
 import com.nedaluof.qurany.ui.theme.AppGreen
 import com.nedaluof.qurany.ui.theme.QuranyComposeTheme
-import java.util.Locale
 
 /**
  * Created By NedaluOf - 5/31/2024.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
   modifier: Modifier = Modifier,
@@ -55,16 +52,16 @@ fun MainScreen(
   onReciterClicked: (ReciterModel) -> Unit = {}
 ) {
   val navController = rememberNavController()
-  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   Column {
     Toolbar(viewModel = viewModel)
-    Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), bottomBar = {
-      BottomNavigationBar(navController = navController)
-    }) { paddingValues ->
+    Scaffold(
+      modifier = modifier, bottomBar = {
+        BottomNavigationBar(navController = navController)
+      }) { paddingValues ->
       BottomNavigationHost(
         navController = navController,
         paddingValues = paddingValues,
-        onReciterClicked
+        onReciterClicked = onReciterClicked
       )
     }
   }
@@ -75,22 +72,25 @@ fun Toolbar(
   modifier: Modifier = Modifier,
   viewModel: MainViewModel
 ) {
+  val isCurrentLanguageEnglish by viewModel.isCurrentLanguageEnglish.collectAsStateWithLifecycle()
+  LaunchedEffect(isCurrentLanguageEnglish) {
+    AppCompatDelegate.setApplicationLocales(
+      LocaleListCompat.forLanguageTags(
+        if (isCurrentLanguageEnglish) "en" else "ar"
+      )
+    )
+  }
   Row(
     modifier
       .fillMaxWidth()
       .background(AppGreen)
   ) {
     TextButton(
-      onClick = {
-        AppCompatDelegate.setApplicationLocales(
-          LocaleListCompat.create(
-            Locale(if (viewModel.isCurrentLanguageEnglish.value) "ar" else "en")
-          )
-        )
-        viewModel.changeAppLanguage()
-      }
+      onClick = viewModel::changeAppLanguage
     ) {
-      Text(viewModel.appLanguageEnglish.value, color = Color.White)
+      Text(
+        if (isCurrentLanguageEnglish) "العربية" else "EN", color = Color.White
+      )
     }
     IconButton(
       onClick = viewModel::changeDayNightMode,
