@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.model.Status
 import com.nedaluof.data.repositories.reciters.RecitersRepository
+import com.nedaluof.qurany.util.set
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,14 +41,14 @@ class RecitersViewModel @Inject constructor(
 
   private val _recitersList = MutableStateFlow<List<ReciterModel>>(emptyList())
   val recitersList = searchText.combine(_recitersList) { text, reciters ->
-      reciters.filter { reciter ->
-        reciter.name.uppercase().contains(text.trim().uppercase())
-      }
-    }.stateIn(
-      scope = viewModelScope,
-      started = SharingStarted.WhileSubscribed(5000),
-      initialValue = _recitersList.value
-    )
+    reciters.filter { reciter ->
+      reciter.name.uppercase().contains(text.trim().uppercase())
+    }
+  }.stateIn(
+    scope = viewModelScope,
+    started = SharingStarted.WhileSubscribed(5000),
+    initialValue = _recitersList.value
+  )
 
   var reciterToBeProcessed: ReciterModel? = null
   //endregion
@@ -74,15 +74,12 @@ class RecitersViewModel @Inject constructor(
       repository.addOrRemoveReciterFromFavorites(
         reciter.id, reciter.isInMyFavorites
       ) { result ->
-        _recitersOperationUiState.value =
+        _recitersOperationUiState.set(
           if (result.status == Status.SUCCESS) RecitersOperationsUiState.Success(reciter.isInMyFavorites)
           else RecitersOperationsUiState.Error(
             result.message ?: ""
-          )
-        viewModelScope.launch {
-          delay(1500)
-          _recitersOperationUiState.value = RecitersOperationsUiState.Idl
-        }
+          ), RecitersOperationsUiState.Idl
+        )
         reciterToBeProcessed = null
       }
     }

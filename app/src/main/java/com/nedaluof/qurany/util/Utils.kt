@@ -5,8 +5,11 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import androidx.annotation.StringRes
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * Created by nedaluof on 12/13/2020.
@@ -35,4 +38,15 @@ inline fun <reified CLASS> Intent?.parcelable(key: String): CLASS {
   } else {
     @Suppress("DEPRECATION") this?.getParcelableExtra(key)!!
   }
+}
+
+fun <T> MutableStateFlow<T>.set(
+  value: T,
+  idleValue: T,
+  duration: Long = 2000
+) {
+  this.value = value
+  Handler(Looper.getMainLooper()).postDelayed({
+    this.value = idleValue
+  }, duration)
 }
