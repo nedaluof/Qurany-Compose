@@ -4,13 +4,13 @@ import com.nedaluof.data.datasource.localsource.preferences.PreferencesKeys
 import com.nedaluof.data.datasource.localsource.preferences.PreferencesManager
 import com.nedaluof.data.datasource.localsource.room.RecitersDao
 import com.nedaluof.data.datasource.remotesource.api.ApiService
+import com.nedaluof.data.model.DataResult
 import com.nedaluof.data.model.LocalText
 import com.nedaluof.data.model.ReciterDto
 import com.nedaluof.data.model.ReciterEntity
 import com.nedaluof.data.model.ReciterModel
-import com.nedaluof.data.model.Result
 import com.nedaluof.data.model.asReciterModels
-import com.nedaluof.data.util.catchOn
+import com.nedaluof.data.util.catchOnSuspend
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -38,7 +38,7 @@ class RecitersRepositoryImpl @Inject constructor(
 
   //region logic
   override fun loadReciters(
-    loadFavoriteReciters: Boolean
+    loadFavoriteReciters: Boolean, onError: (String?) -> Unit
   ): Flow<List<ReciterModel>> {
     val appLanguage = preferences.getFromPreferences(PreferencesKeys.LANGUAGE_KEY, "ar") ?: "ar"
     return if (loadFavoriteReciters) {
@@ -46,61 +46,71 @@ class RecitersRepositoryImpl @Inject constructor(
         it.asReciterModels(appLanguage)
       }.distinctUntilChanged()
     } else {
-      checkDatabaseAndLoad()
-      recitersDao.loadReciters().map { it.asReciterModels(appLanguage) }.distinctUntilChanged()
+      checkDatabaseAndLoad(onError)
+      recitersDao.loadReciters().map {
+        it.asReciterModels(appLanguage)
+      }.distinctUntilChanged()
     }
   }
 
   override fun addOrRemoveReciterFromFavorites(
-    reciterId: Int, isInMyFavorites: Boolean, result: (Result<Boolean>) -> Unit
+    reciterId: Int, isInMyFavorites: Boolean, result: (DataResult<Boolean>) -> Unit
   ) {
-    repositoryCoroutineScope.launch(Dispatchers.Default) {
-      catchOn({
+    repositoryCoroutineScope.launch {
+      catchOnSuspend({
         recitersDao.updateReciter(!isInMyFavorites, reciterId)
-        result(Result.success(true))
+        result(DataResult.Success(true))
       }, {
-        result(Result.error(null, it.message ?: ""))
+        result(DataResult.Error(it.message ?: ""))
       })
     }
   }
 
-  private fun checkDatabaseAndLoad() {
-    catchOn({
-      repositoryCoroutineScope.launch {
-        val isRecitersTableEmpty = recitersDao.loadRecitersCount() == 0
-        if (isRecitersTableEmpty) {
+  private fun checkDatabaseAndLoad(
+    onError: (String?) -> Unit
+  ) {
+    repositoryCoroutineScope.launch {
+      catchOnSuspend({
+        if (recitersDao.loadRecitersCount() == 0) {
           val arabicRecitersVersion = ArrayList<ReciterDto>()
           val englishRecitersVersion = ArrayList<ReciterDto>()
           val finalRecitersVersion = ArrayList<ReciterEntity>()
           val arabicResponse = async { apiService.getReciters("_arabic") }.await()
           val englishResponse = async { apiService.getReciters("_english") }.await()
-          arabicRecitersVersion.addAll(arabicResponse.body()?.reciters ?: emptyList())
-          englishRecitersVersion.addAll(englishResponse.body()?.reciters ?: emptyList())
-
-          if (arabicRecitersVersion.isNotEmpty() && englishRecitersVersion.isNotEmpty()) {
-            if (arabicRecitersVersion.size == englishRecitersVersion.size) {
-              for (index in arabicRecitersVersion.indices) {
-                finalRecitersVersion.add(
-                  ReciterEntity(
-                    id = arabicRecitersVersion[index].id, name = LocalText(
-                      arabicRecitersVersion[index].name ?: "",
-                      englishRecitersVersion[index].name ?: ""
-                    ), serverLink = arabicRecitersVersion[index].server, rewaya = LocalText(
-                      arabicRecitersVersion[index].rewaya ?: "",
-                      englishRecitersVersion[index].rewaya ?: ""
-                    ), count = arabicRecitersVersion[index].count, letter = LocalText(
-                      arabicRecitersVersion[index].letter ?: "",
-                      englishRecitersVersion[index].letter ?: ""
-                    ), suras = arabicRecitersVersion[index].suras ?: ""
-                  )
-                )
+          if (arabicResponse.isSuccessful) {
+            if (englishResponse.isSuccessful) {
+              arabicRecitersVersion.addAll(arabicResponse.body()?.reciters ?: emptyList())
+              englishRecitersVersion.addAll(englishResponse.body()?.reciters ?: emptyList())
+              if (arabicRecitersVersion.isNotEmpty() && englishRecitersVersion.isNotEmpty()) {
+                if (arabicRecitersVersion.size == englishRecitersVersion.size) {
+                  for (index in arabicRecitersVersion.indices) {
+                    finalRecitersVersion.add(
+                      ReciterEntity(
+                        id = arabicRecitersVersion[index].id, name = LocalText(
+                          arabicRecitersVersion[index].name ?: "",
+                          englishRecitersVersion[index].name ?: ""
+                        ), serverLink = arabicRecitersVersion[index].server, rewaya = LocalText(
+                          arabicRecitersVersion[index].rewaya ?: "",
+                          englishRecitersVersion[index].rewaya ?: ""
+                        ), count = arabicRecitersVersion[index].count, letter = LocalText(
+                          arabicRecitersVersion[index].letter ?: "",
+                          englishRecitersVersion[index].letter ?: ""
+                        ), suras = arabicRecitersVersion[index].suras ?: ""
+                      )
+                    )
+                  }
+                  recitersDao.insertReciters(finalRecitersVersion)
+                }
               }
-              recitersDao.insertReciters(finalRecitersVersion)
+            } else {
+              onError(englishResponse.errorBody().toString())
             }
+          } else {
+            onError(arabicResponse.errorBody().toString())
           }
         }
-      }
-    })
+      }, { onError(it.message) })
+    }
   }
   //endregion
 }

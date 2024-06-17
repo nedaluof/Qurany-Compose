@@ -1,7 +1,7 @@
 package com.nedaluof.data.repositories.reciters
 
+import com.nedaluof.data.model.DataResult
 import com.nedaluof.data.model.ReciterModel
-import com.nedaluof.data.model.Result
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -10,12 +10,13 @@ import kotlinx.coroutines.flow.Flow
 interface RecitersRepository {
 
   fun loadReciters(
-    loadFavoriteReciters: Boolean = false
+    loadFavoriteReciters: Boolean = false,
+    onError: (String?) -> Unit
   ): Flow<List<ReciterModel>>
 
   fun addOrRemoveReciterFromFavorites(
     reciterId: Int,
     isInMyFavorites: Boolean,
-    result: (Result<Boolean>) -> Unit
+    result: (DataResult<Boolean>) -> Unit
   )
 }

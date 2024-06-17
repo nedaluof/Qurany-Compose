@@ -2,8 +2,8 @@ package com.nedaluof.qurany.ui.screens.reciters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nedaluof.data.model.DataResult
 import com.nedaluof.data.model.ReciterModel
-import com.nedaluof.data.model.Status
 import com.nedaluof.data.repositories.reciters.RecitersRepository
 import com.nedaluof.qurany.util.set
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,9 +40,9 @@ class RecitersViewModel @Inject constructor(
   private val _searchText = MutableStateFlow("")
   val searchText = _searchText.asStateFlow()
 
-  private val _recitersList = MutableStateFlow<List<ReciterModel>>(emptyList())
+  private val _recitersList = MutableStateFlow<List<ReciterModel>?>(null)
   val recitersList = searchText.combine(_recitersList) { text, reciters ->
-    reciters.filter { reciter ->
+    reciters?.filter { reciter ->
       reciter.name.uppercase().contains(text.trim().uppercase())
     }
   }.stateIn(
@@ -60,9 +61,11 @@ class RecitersViewModel @Inject constructor(
     _recitersList.value = emptyList()
     _recitersUiState.value = RecitersUiState.Loading
     viewModelScope.launch(Dispatchers.IO) {
-      repository.loadReciters(loadFavoriteReciters).catch { cause ->
+      repository.loadReciters(loadFavoriteReciters) { errorMessage ->
+        _recitersUiState.value = RecitersUiState.Error(errorMessage)
+      }.catch { cause ->
         _recitersUiState.value = RecitersUiState.Error(cause.message.toString())
-      }.collect {
+      }.collectLatest {
         _recitersUiState.value = RecitersUiState.ShowReciter
         _recitersList.value = it
       }
@@ -75,10 +78,9 @@ class RecitersViewModel @Inject constructor(
         reciter.id, reciter.isInMyFavorites
       ) { result ->
         _recitersOperationUiState.set(
-          if (result.status == Status.SUCCESS) RecitersOperationsUiState.Success(reciter.isInMyFavorites)
-          else RecitersOperationsUiState.Error(
-            result.message ?: ""
-          ), RecitersOperationsUiState.Idl
+          if (result is DataResult.Success) RecitersOperationsUiState.Success(reciter.isInMyFavorites)
+          else RecitersOperationsUiState.Error(result.error),
+          RecitersOperationsUiState.Idl
         )
         reciterToBeProcessed = null
       }

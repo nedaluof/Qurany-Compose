@@ -17,4 +17,16 @@ fun catchOn(
   }
 }
 
+suspend fun catchOnSuspend(
+  tryBlock: suspend () -> Unit,
+  exceptionBlock: (Exception) -> Unit = {}
+) {
+  try {
+    tryBlock()
+  } catch (e: Exception) {
+    e.message.loge()
+    exceptionBlock(e)
+  }
+}
+
 fun String?.loge() = Timber.e("NedaluOf -> $this")

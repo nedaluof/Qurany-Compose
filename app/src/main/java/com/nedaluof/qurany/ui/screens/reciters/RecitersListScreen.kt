@@ -145,28 +145,32 @@ fun RecitersList(
           placeHolder = stringResource(id = R.string.reciters_search_hint_label)
         )
       }
-      if (recitersList.isNotEmpty()) {
-        LazyColumn(
-          modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
-        ) {
-          items(count = recitersList.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
-            val item = recitersList[index]
-            ReciterItem(reciter = item, {
-              onReciterClicked(item)
-            }) {
-              onAddToFavoriteClicked(item)
+      recitersList?.let { list ->
+        if (list.isNotEmpty()) {
+          LazyColumn(
+            modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
+          ) {
+            items(count = list.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
+              val item = list[index]
+              ReciterItem(reciter = item, {
+                onReciterClicked(item)
+              }) {
+                onAddToFavoriteClicked(item)
+              }
             }
           }
-        }
-      } else {
-        Box(modifier = Modifier.fillMaxSize()) {
-          Text(
-            stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
-            modifier = Modifier
-              .align(Alignment.Center)
-              .padding(start = 18.dp, end = 18.dp),
-            textAlign = TextAlign.Center
-          )
+        } else {
+          if (isForFavorites || isSearching) {
+            Box(modifier = Modifier.fillMaxSize()) {
+              Text(
+                stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
+                modifier = Modifier
+                  .align(Alignment.Center)
+                  .padding(start = 18.dp, end = 18.dp),
+                textAlign = TextAlign.Center
+              )
+            }
+          }
         }
       }
     }
