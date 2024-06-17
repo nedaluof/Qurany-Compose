@@ -78,7 +78,7 @@ fun SurasListScreen(
 
   LaunchedEffect(suraToPlay) {
     suraToPlay?.let { sura ->
-      val isLocal = surasViewModel.isSuraExistInLocalStorage(sura.suraLocalPath)
+      val isLocal = surasViewModel.isSuraExistInLocalStorage(sura.suraSubPath)
       val suraURI = Uri.parse(if (isLocal) sura.suraLocalPath else sura.suraUrl)
       if (!isLocal) {
         if (!context.isInternetAvailable()) {
@@ -137,7 +137,7 @@ fun SurasListScreen(
           reciterSuraName.text = suraToPlay?.playerTitle ?: ""
           coroutineScope.launch {
             val isLocalSura =
-              surasViewModel.isSuraExistInLocalStorage(suraToPlay?.suraLocalPath ?: "")
+              surasViewModel.isSuraExistInLocalStorage(suraToPlay?.suraSubPath ?: "")
             if (!isLocalSura) {
               if (context.isInternetAvailable()) {
                 bottomSheetScaffoldState.bottomSheetState.expand()

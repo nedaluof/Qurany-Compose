@@ -14,6 +14,7 @@ data class SuraModel(
   var suraUrl: String = "",
   var reciterName: String = "",
   var playerTitle: String = "",
+  var suraSubPath: String = "",
   var suraLocalPath: String = ""
 ) : Parcelable {
   companion object {

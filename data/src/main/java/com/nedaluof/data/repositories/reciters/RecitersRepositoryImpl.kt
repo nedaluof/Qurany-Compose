@@ -13,7 +13,6 @@ import com.nedaluof.data.model.asReciterModels
 import com.nedaluof.data.util.catchOn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -25,7 +24,6 @@ import javax.inject.Inject
 /**
  * Created by nedaluof on 12/11/2020.
  */
-@ExperimentalCoroutinesApi
 class RecitersRepositoryImpl @Inject constructor(
   private val apiService: ApiService,
   private val preferences: PreferencesManager,

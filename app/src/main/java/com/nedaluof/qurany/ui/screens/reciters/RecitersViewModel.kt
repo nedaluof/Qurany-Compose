@@ -7,6 +7,7 @@ import com.nedaluof.data.model.Status
 import com.nedaluof.data.repositories.reciters.RecitersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -78,6 +79,10 @@ class RecitersViewModel @Inject constructor(
           else RecitersOperationsUiState.Error(
             result.message ?: ""
           )
+        viewModelScope.launch {
+          delay(1500)
+          _recitersOperationUiState.value = RecitersOperationsUiState.Idl
+        }
         reciterToBeProcessed = null
       }
     }

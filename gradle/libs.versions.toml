@@ -1,8 +1,8 @@
 [versions]
 min-sdk = "26"
 compile-sdk = "34"
-version-code = "7"
-version-name = "1.7.13"
+version-code = "8"
+version-name = "2.0.0"
 
 core-ktx = "1.13.1"
 activity-ktx = "1.9.0"

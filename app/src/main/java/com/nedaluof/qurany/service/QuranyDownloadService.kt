@@ -12,22 +12,29 @@ import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import com.nedaluof.data.model.SuraModel
+import com.nedaluof.data.repositories.suras.SurasRepository
 import com.nedaluof.data.util.catchOn
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.util.isInternetAvailable
 import com.nedaluof.qurany.util.parcelable
 import com.nedaluof.qurany.util.toast
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import java.io.File
+import javax.inject.Inject
 
 /**
  * Created by nedaluof on 12/29/2020.
  */
+@AndroidEntryPoint
 class QuranyDownloadService : Service() {
 
   //region variables
   private var downloadId: Long = 0
   private lateinit var sura: SuraModel
+
+  @Inject
+  lateinit var surasRepository: SurasRepository
   //endregion
 
   //region logic
@@ -51,8 +58,7 @@ class QuranyDownloadService : Service() {
 
   private fun startDownload() {
     if (this::sura.isInitialized) {
-      val isSuraFileExist =
-        File(this.getExternalFilesDir(null).toString() + sura.suraLocalPath).exists()
+      val isSuraFileExist = surasRepository.checkIfSuraExist(sura.suraSubPath)
       if (!isSuraFileExist) {
         if (this.isInternetAvailable()) {
           toast(R.string.alrt_download_start_title)
@@ -63,7 +69,7 @@ class QuranyDownloadService : Service() {
           ).setAllowedOverRoaming(false)
             .setTitle(sura.name)
             .setDescription(sura.playerTitle)
-            .setDestinationInExternalFilesDir(this, null, sura.suraLocalPath)
+            .setDestinationInExternalFilesDir(this, null, sura.suraSubPath)
           downloadId = downloadManager.enqueue(request)
         } else {
           toast(R.string.alrt_no_internet_msg)
@@ -91,7 +97,7 @@ class QuranyDownloadService : Service() {
 
   private fun runMediaScanner() {
     catchOn({
-      val file = File(sura.suraLocalPath)
+      val file = File(sura.suraSubPath)
       MediaScannerConnection.scanFile(
         this, arrayOf(file.toString()), arrayOf(file.name), null
       )
