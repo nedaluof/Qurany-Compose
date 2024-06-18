@@ -140,7 +140,7 @@ fun RecitersList(
           modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-          text = searchText,
+          searchQuery = searchText,
           onTextChange = viewModel::onSearchTextChange,
           placeHolder = stringResource(id = R.string.reciters_search_hint_label)
         )

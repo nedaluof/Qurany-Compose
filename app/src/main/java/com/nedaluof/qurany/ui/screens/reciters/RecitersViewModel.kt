@@ -93,6 +93,7 @@ class RecitersViewModel @Inject constructor(
 
   fun toggleSearching() {
     _isSearching.value = !_isSearching.value
+    _searchText.value = ""
   }
   //endregion
 }
