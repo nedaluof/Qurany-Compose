@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">قُراّني</string>
+    <string name="app_version">الإصدار : </string>
+    <string name="reciters_nav_label">القُراء</string>
+    <string name="favorites_nav_label">المفضلة</string>
+
+    <string name="rewaya_label">رواية :</string>
+    <string name="reciters_search_hint_label">إبحث في قائمة القراء</string>
+    <string name="no_reciters_label">لا يوجد قراء</string>
+    <string name="no_reciters_search_label">لا يوجد قارئ يتطابق مع نص البحث.</string>
+    <string name="no_favorite_reciters_label">لم تقم بإضافة أي قارئ لقائمتك المفضلة ,إذهب الى قائمة القرائ وأضف واحدا عن طريق الضغط علة زر القلب لتراه هنا</string>
+    <string name="sura_count_more_label">هنالك %d سورة</string>
+    <string name="sura_count_one_label">هنالك سورة واحدة فقط</string>
+    <string name="sura_number_label">رقم السورة : %d</string>
+    <string name="alrt_add_success_msg">تم إضافة القارئ بنجاح لقائمة القرائ المفضلين</string>
+    <string name="alrt_delete_title">حذف القارئ من قائمة قرائي</string>
+    <string name="alrt_delete_msg">هل أنت متأكد من حذف ( %s ) من قائمتك</string>
+    <string name="delete_label">حذف</string>
+    <string name="cancel_label">إلغاء</string>
+    <string name="alrt_delete_success">تم بنجاح</string>
+    <string name="alrt_delete_fail">لم يتم الحذف هنالك خطأ</string>
+    <string name="alrt_download_completed_msg">الأن يمكنك الإستماع للسورة بدون إنترنت</string>
+    <string name="alrt_download_start_title">بدء التحميل الرجاء الإنتظار</string>
+    <string name="alrt_no_internet_title">لايوجد إتصال بالإنترنت</string>
+    <string name="alrt_no_internet_msg">تأكد من أنك تملك إتصال بالشبكة</string>
+    <string name="alrt_sura_exist_message">السورة محملة مسبقا , يمكنك الإستماع لها مباشرة عند الضغط على زر التشغيل</string>
+    <string name="alrt_sura_playing_locally">تم الأن تشغيل السورة من ذاكرة الجهاز</string>
+    <string name="alrt_sura_playing_online">تم الأن تشغيل السورة عبر الإنترنت</string>
+    <string name="controller_ffwd">تقديم السورة إلى الأمام</string>
+    <string name="controller_rew">إرجاع السورة إلى الخلف</string>
+    <string name="controller_play">تشغيل السورة</string>
+    <string name="controller_pause">إيقاف السورة</string>
+    <string name="alrt_exit_app_msg">للخروج الرجاء الضغط على زر الرجوع مرة أخرى</string>
+
+</resources>

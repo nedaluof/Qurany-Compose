@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Qurany</string>
+    <string name="app_powered_by" translatable="false">Qurany Powered By 8K-Developers</string>
+    <string name="app_version">version : </string>
+    <string name="notification_channel_des" translatable="false">This is Qurany App Notification Channel</string>
+    <string name="notification_id" translatable="false">Qurany App</string>
+
+    <string name="reciters_nav_label">Reciters</string>
+    <string name="favorites_nav_label">Favorites</string>
+    <string name="rewaya_label">Rewaya:</string>
+    <string name="reciters_search_hint_label">Search in reciters</string>
+    <string name="no_reciters_label">No reciters</string>
+    <string name="no_reciters_search_label">No reciters match typed text.</string>
+    <string name="no_favorite_reciters_label">You not added any reciters to your favorites list , try to add one by viewing the reciters list then click on heart button to add it.</string>
+    <string name="sura_count_more_label">There %d Suras</string>
+    <string name="sura_count_one_label">There is only one sura</string>
+    <string name="sura_number_label">Sura No : %d</string>
+    <string name="alrt_add_success_msg">The Reciter Added Successfully to your Reciters List</string>
+    <string name="alrt_delete_title">Delete Reciter</string>
+    <string name="alrt_delete_msg">Are you sure to delete ( %s ) from your reciters list</string>
+    <string name="delete_label">Delete</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="alrt_delete_success">Deleted Successfully</string>
+    <string name="alrt_delete_fail">Deletion Fail</string>
+    <string name="alrt_download_completed_msg">Download Completed , Now you can play the sura in offline mode</string>
+    <string name="alrt_download_start_title">Download Started Please Wait</string>
+    <string name="alrt_no_internet_title">No Internet Connection</string>
+    <string name="alrt_no_internet_msg">Make sure you are connected to the internet</string>.
+    <string name="alrt_sura_exist_message">The sura is already downloaded , you can run it by hit play button.</string>
+    <string name="alrt_sura_playing_locally">The sura playing now locally from the device storage</string>
+    <string name="alrt_sura_playing_online">The sura playing now online</string>
+    <string name="controller_ffwd">player forward</string>
+    <string name="controller_rew">player rewind</string>
+    <string name="controller_play">player play</string>
+    <string name="controller_pause">player pause</string>
+    <string name="alrt_exit_app_msg">Please press back again to exit</string>
+
+</resources>

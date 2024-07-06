@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created By nedaluof  2020.
+  -->
+<resources>
+    <color name="gray_light">#B2B1B9</color>
+    <color name="green_200">#1b948e</color>
+    <color name="white">@android:color/white</color>
+    <color name="light_black">#313131</color>
+</resources>
