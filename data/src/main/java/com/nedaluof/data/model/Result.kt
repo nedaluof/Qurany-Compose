@@ -5,10 +5,8 @@ package com.nedaluof.data.model
  */
 sealed class DataResult<out T>(
   val data: T? = null,
-  val error: String? = null,
-  val loading: Boolean = false
+  val error: String? = null
 ) {
-  class Loading<T>(loading: Boolean) : DataResult<T>(loading = loading)
   class Success<T>(data: T? = null) : DataResult<T>(data)
   class Error<T>(error: String? = null) : DataResult<T>(error = error)
 }

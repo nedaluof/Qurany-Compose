@@ -4,7 +4,6 @@ import com.nedaluof.data.datasource.localsource.preferences.PreferencesKeys
 import com.nedaluof.data.datasource.localsource.preferences.PreferencesManager
 import com.nedaluof.data.datasource.localsource.room.RecitersDao
 import com.nedaluof.data.datasource.remotesource.api.ApiService
-import com.nedaluof.data.model.DataResult
 import com.nedaluof.data.model.LocalText
 import com.nedaluof.data.model.ReciterDto
 import com.nedaluof.data.model.ReciterEntity
@@ -17,6 +16,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -54,16 +54,15 @@ class RecitersRepositoryImpl @Inject constructor(
   }
 
   override fun addOrRemoveReciterFromFavorites(
-    reciterId: Int, isInMyFavorites: Boolean, result: (DataResult<Boolean>) -> Unit
-  ) {
-    repositoryCoroutineScope.launch {
-      catchOnSuspend({
-        recitersDao.updateReciter(!isInMyFavorites, reciterId)
-        result(DataResult.Success(true))
-      }, {
-        result(DataResult.Error(it.message ?: ""))
-      })
-    }
+    reciterId: Int
+  ): Flow<Result<Boolean>> = flow {
+    catchOnSuspend({
+      val reciter = recitersDao.getReciterById(reciterId)
+      recitersDao.updateReciter(!reciter.isInMyFavorites, reciterId)
+      emit(Result.success(true))
+    }, {
+      emit(Result.failure(Exception(it.message ?: "")))
+    })
   }
 
   private fun checkDatabaseAndLoad(

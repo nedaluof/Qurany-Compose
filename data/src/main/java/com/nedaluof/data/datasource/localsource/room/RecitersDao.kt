@@ -22,6 +22,9 @@ interface RecitersDao {
   @Query("select * from reciters_table where isInMyFavorites order by name")
   fun loadFavoriteReciters(): Flow<List<ReciterEntity>>
 
+  @Query("SELECT * FROM reciters_table WHERE reciterId = :reciterId")
+  suspend fun getReciterById(reciterId: Int): ReciterEntity
+
   @Query("UPDATE reciters_table SET isInMyFavorites=:isInMyFavorites WHERE reciterId = :reciterId")
   suspend fun updateReciter(isInMyFavorites: Boolean, reciterId: Int)
 

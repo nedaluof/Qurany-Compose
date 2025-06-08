@@ -19,7 +19,7 @@ fun catchOn(
 
 suspend fun catchOnSuspend(
   tryBlock: suspend () -> Unit,
-  exceptionBlock: (Exception) -> Unit = {}
+  exceptionBlock: suspend (Exception) -> Unit = {}
 ) {
   try {
     tryBlock()

@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.ui.features.reciters.RecitersListScreen
+import com.nedaluof.qurany.ui.features.reciters.RecitersScreen
 
 /**
  * Created By NedaluOf - 6/16/2024.
@@ -23,10 +23,10 @@ fun HomeBottomNavHost(
     startDestination = HomeBottomNavScreens.Reciters.route,
   ) {
     composable(HomeBottomNavScreens.Reciters.route) {
-      RecitersListScreen(onReciterClicked = onReciterClicked)
+      RecitersScreen(onReciterClicked = onReciterClicked)
     }
     composable(HomeBottomNavScreens.MyReciters.route) {
-      RecitersListScreen(isForFavorites = true, onReciterClicked = onReciterClicked)
+      RecitersScreen(isForFavorites = true, onReciterClicked = onReciterClicked)
     }
   }
 }

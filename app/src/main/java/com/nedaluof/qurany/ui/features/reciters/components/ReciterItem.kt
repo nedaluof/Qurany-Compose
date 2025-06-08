@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.features.reciters
+package com.nedaluof.qurany.ui.features.reciters.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

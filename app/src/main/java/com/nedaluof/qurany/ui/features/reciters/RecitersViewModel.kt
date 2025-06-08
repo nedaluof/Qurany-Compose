@@ -2,19 +2,15 @@ package com.nedaluof.qurany.ui.features.reciters
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nedaluof.data.model.DataResult
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.data.repositories.reciters.RecitersRepository
-import com.nedaluof.qurany.util.set
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,73 +23,90 @@ class RecitersViewModel @Inject constructor(
 ) : ViewModel() {
 
   //region variables
-  private val _recitersUiState = MutableStateFlow<RecitersUiState>(RecitersUiState.Loading)
-  val recitersUiState = _recitersUiState.asStateFlow()
+  private val _uiState = MutableStateFlow(RecitersUiState())
+  val uiState = _uiState.asStateFlow()
 
-  private val _recitersOperationUiState =
-    MutableStateFlow<RecitersOperationsUiState>(RecitersOperationsUiState.Idl)
-  val recitersOperationUiState = _recitersOperationUiState.asStateFlow()
-
-  private val _isSearching = MutableStateFlow(false)
-  val isSearching = _isSearching.asStateFlow()
-
-  private val _searchText = MutableStateFlow("")
-  val searchText = _searchText.asStateFlow()
-
-  private val _recitersList = MutableStateFlow<List<ReciterModel>?>(null)
-  val recitersList = searchText.combine(_recitersList) { text, reciters ->
-    reciters?.filter { reciter ->
-      reciter.name.uppercase().contains(text.trim().uppercase())
-    }
-  }.stateIn(
-    scope = viewModelScope,
-    started = SharingStarted.WhileSubscribed(5000),
-    initialValue = _recitersList.value
-  )
-
-  var reciterToBeProcessed: ReciterModel? = null
+  private var isForFavoritesReciters = false
   //endregion
 
   //region logic
-  fun loadReciters(
-    loadFavoriteReciters: Boolean = false
-  ) {
-    _recitersList.value = emptyList()
-    _recitersUiState.value = RecitersUiState.Loading
+  fun loadReciters(loadFavoriteReciters: Boolean = false) {
+    isForFavoritesReciters = loadFavoriteReciters
+    _uiState.update {
+      it.copy(
+        reciters = emptyList(),
+        showLoading = true
+      )
+    }
     viewModelScope.launch(Dispatchers.IO) {
       repository.loadReciters(loadFavoriteReciters) { errorMessage ->
-        _recitersUiState.value = RecitersUiState.Error(errorMessage)
-      }.catch { cause ->
-        _recitersUiState.value = RecitersUiState.Error(cause.message.toString())
-      }.collectLatest {
-        _recitersUiState.value = RecitersUiState.ShowReciter
-        _recitersList.value = it
+        _uiState.update {
+          it.copy(
+            errorMessage = errorMessage,
+            showLoading = false
+          )
+        }
+      }.collectLatest { recitersList ->
+        _uiState.update { state ->
+          state.copy(
+            errorMessage = null,
+            showLoading = false,
+            reciters = if (state.searchQuery.isNotEmpty() && state.searchQuery.isNotBlank()) {
+              recitersList.filter { reciter ->
+                reciter.name.uppercase().contains(state.searchQuery.trim().uppercase())
+              }
+            } else recitersList
+          )
+        }
       }
     }
   }
 
-  fun processAddOrDeleteFromFavorites() {
-    reciterToBeProcessed?.let { reciter ->
-      repository.addOrRemoveReciterFromFavorites(
-        reciter.id, reciter.isInMyFavorites
-      ) { result ->
-        _recitersOperationUiState.set(
-          if (result is DataResult.Success) RecitersOperationsUiState.Success(reciter.isInMyFavorites)
-          else RecitersOperationsUiState.Error(result.error),
-          RecitersOperationsUiState.Idl
-        )
-        reciterToBeProcessed = null
-      }
+  fun addReciterToFavorites(reciterModel: ReciterModel) {
+    processAddOrDeleteFromFavorites(reciterModel)
+  }
+
+  fun deleteReciterFromFavorites(reciterModel: ReciterModel) {
+    processAddOrDeleteFromFavorites(reciterModel)
+  }
+
+  private fun processAddOrDeleteFromFavorites(
+    reciterModel: ReciterModel
+  ) {
+    viewModelScope.launch {
+      repository.addOrRemoveReciterFromFavorites(reciterModel.id)
+        .collect { result ->
+          _uiState.update {
+            it.copy(
+              errorMessage = result.exceptionOrNull()?.message,
+              isAddedToFavorites = if (result.isSuccess) !reciterModel.isInMyFavorites else false,
+              isDeletedFromFavorites = if (result.isSuccess) reciterModel.isInMyFavorites else false
+            )
+          }
+          delay(1500)
+          _uiState.update {
+            it.copy(
+              errorMessage = null,
+              isAddedToFavorites = false,
+              isDeletedFromFavorites = false
+            )
+          }
+        }
     }
   }
 
   fun onSearchTextChange(text: String) {
-    _searchText.value = text
+    _uiState.update { it.copy(searchQuery = text) }
+    loadReciters(isForFavoritesReciters)
   }
 
   fun toggleSearching() {
-    _isSearching.value = !_isSearching.value
-    _searchText.value = ""
+    _uiState.update {
+      it.copy(
+        isSearching = !it.isSearching,
+        searchQuery = ""
+      )
+    }
   }
   //endregion
 }

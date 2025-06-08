@@ -46,13 +46,14 @@ import com.nedaluof.qurany.ui.common.QuranyAlertDialog
 import com.nedaluof.qurany.ui.common.QuranyLoadingView
 import com.nedaluof.qurany.ui.common.QuranySearchBar
 import com.nedaluof.qurany.ui.features.reciters.components.QuranySnackBar
+import com.nedaluof.qurany.ui.features.reciters.components.ReciterItem
 import com.nedaluof.qurany.ui.theme.QuranyTheme
 
 /**
  * Created By NedaluOf - 5/31/2024.
  */
 @Composable
-fun RecitersListScreen(
+fun RecitersScreen(
   modifier: Modifier = Modifier,
   isForFavorites: Boolean = false,
   viewModel: RecitersViewModel = hiltViewModel(),
@@ -61,52 +62,54 @@ fun RecitersListScreen(
   LaunchedEffect(isForFavorites) {
     viewModel.loadReciters(isForFavorites)
   }
-  val uiState by viewModel.recitersUiState.collectAsStateWithLifecycle()
-  val operationsUiState by viewModel.recitersOperationUiState.collectAsStateWithLifecycle()
-  var showDeleteDialog by remember { mutableStateOf(false) }
-  when (uiState) {
-    is RecitersUiState.Error -> QuranySnackBar(message = (uiState as RecitersUiState.Error).message)
-    is RecitersUiState.Loading -> QuranyLoadingView()
-    is RecitersUiState.ShowReciter -> {
-      RecitersList(
-        modifier = modifier,
-        viewModel = viewModel,
-        isForFavorites = isForFavorites,
-        onReciterClicked = onReciterClicked,
-        onAddToFavoriteClicked = { reciter ->
-          viewModel.reciterToBeProcessed = reciter
-          if (reciter.isInMyFavorites) {
-            showDeleteDialog = true
-          } else {
-            viewModel.processAddOrDeleteFromFavorites()
-          }
-        })
-    }
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  var reciterSelectedToDelete by remember { mutableStateOf<ReciterModel?>(null) }
+
+  uiState.errorMessage?.let { message ->
+    QuranySnackBar(message = message)
   }
 
-  when (operationsUiState) {
-    is RecitersOperationsUiState.Error -> QuranySnackBar(message = (operationsUiState as RecitersOperationsUiState.Error).message)
-    is RecitersOperationsUiState.Idl -> {}
-    is RecitersOperationsUiState.Loading -> QuranyLoadingView()
-    is RecitersOperationsUiState.Success -> {
-      val isDeleted = (operationsUiState as RecitersOperationsUiState.Success).isDeleted
-      QuranySnackBar(message = stringResource(id = if (isDeleted) R.string.alrt_delete_success else R.string.alrt_add_success_msg))
-    }
+  if (uiState.showLoading) {
+    QuranyLoadingView()
   }
 
-  if (showDeleteDialog) {
+  uiState.reciters?.let { reciters ->
+    RecitersList(
+      modifier = modifier,
+      recitersList = reciters,
+      searchText = uiState.searchQuery,
+      isSearching = uiState.isSearching,
+      isForFavorites = isForFavorites,
+      onReciterClicked = onReciterClicked,
+      onSearchTextChange = viewModel::onSearchTextChange,
+      onToggleSearchingBarRequested = viewModel::toggleSearching,
+      onAddToFavoriteClicked = { reciter ->
+        if (reciter.isInMyFavorites) {
+          reciterSelectedToDelete = reciter
+        } else {
+          viewModel.addReciterToFavorites(reciter)
+        }
+      }
+    )
+  }
+
+  if (uiState.isDeletedFromFavorites == true || uiState.isAddedToFavorites == true) {
+    val isDeleted = uiState.isDeletedFromFavorites == true
+    QuranySnackBar(message = stringResource(id = if (isDeleted) R.string.alrt_delete_success else R.string.alrt_add_success_msg))
+  }
+
+  reciterSelectedToDelete?.let {
     QuranyAlertDialog(
       onDismissRequest = {
-        viewModel.reciterToBeProcessed = null
-        showDeleteDialog = false
+        reciterSelectedToDelete = null
       },
       onConfirmation = {
-        showDeleteDialog = false
-        viewModel.processAddOrDeleteFromFavorites()
+        reciterSelectedToDelete?.let(viewModel::deleteReciterFromFavorites)
+        reciterSelectedToDelete = null
       },
       title = stringResource(id = R.string.alrt_delete_title),
       description = stringResource(
-        id = R.string.alrt_delete_msg, viewModel.reciterToBeProcessed?.name ?: ""
+        id = R.string.alrt_delete_msg, reciterSelectedToDelete?.name ?: ""
       ),
       confirmationButtonTitle = stringResource(id = R.string.delete_label),
       dismissButtonTitle = stringResource(id = R.string.cancel_label),
@@ -118,22 +121,23 @@ fun RecitersListScreen(
 @Composable
 fun RecitersList(
   modifier: Modifier = Modifier,
-  viewModel: RecitersViewModel,
+  isSearching: Boolean = false,
   isForFavorites: Boolean = false,
+  searchText: String = "",
+  recitersList: List<ReciterModel> = emptyList(),
+  onToggleSearchingBarRequested: () -> Unit = {},
   onReciterClicked: (ReciterModel) -> Unit = {},
+  onSearchTextChange: (String) -> Unit = {},
   onAddToFavoriteClicked: (ReciterModel) -> Unit = {}
 ) {
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-  val isSearching by viewModel.isSearching.collectAsStateWithLifecycle()
-  val searchText by viewModel.searchText.collectAsStateWithLifecycle()
-  val recitersList by viewModel.recitersList.collectAsStateWithLifecycle()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     topBar = {
       RecitersTopBar(
         searchIcon = if (isSearching) Icons.Default.Close else Icons.Default.Search,
-        onSearchClickedClick = viewModel::toggleSearching,
+        onSearchClickedClick = onToggleSearchingBarRequested,
         scrollBehavior = scrollBehavior
       )
     }) { paddingValues ->
@@ -144,36 +148,34 @@ fun RecitersList(
             .fillMaxWidth()
             .padding(8.dp),
           searchQuery = searchText,
-          onTextChange = viewModel::onSearchTextChange,
+          onTextChange = onSearchTextChange,
           placeHolder = stringResource(id = R.string.reciters_search_hint_label)
         )
       }
-      recitersList?.let { list ->
-        if (list.isNotEmpty()) {
-          LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
-          ) {
-            items(count = list.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
-              val item = list[index]
-              ReciterItem(reciter = item, {
-                onReciterClicked(item)
-              }) {
-                onAddToFavoriteClicked(item)
-              }
+      if (recitersList.isNotEmpty()) {
+        LazyColumn(
+          modifier = Modifier.fillMaxSize(),
+          contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
+        ) {
+          items(count = recitersList.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
+            val item = recitersList[index]
+            ReciterItem(reciter = item, {
+              onReciterClicked(item)
+            }) {
+              onAddToFavoriteClicked(item)
             }
           }
-        } else {
-          if (isForFavorites || isSearching) {
-            Box(modifier = Modifier.fillMaxSize()) {
-              Text(
-                stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
-                modifier = Modifier
-                  .align(Alignment.Center)
-                  .padding(start = 18.dp, end = 18.dp),
-                textAlign = TextAlign.Center
-              )
-            }
+        }
+      } else {
+        if (isForFavorites || isSearching) {
+          Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+              stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
+              modifier = Modifier
+                .align(Alignment.Center)
+                .padding(start = 18.dp, end = 18.dp),
+              textAlign = TextAlign.Center
+            )
           }
         }
       }
@@ -222,7 +224,5 @@ private fun RecitersTopBar(
 @Preview
 @Composable
 fun RecitersScreenPreview() {
-  QuranyTheme {
-    RecitersList(viewModel = hiltViewModel())
-  }
+  QuranyTheme { RecitersList() }
 }

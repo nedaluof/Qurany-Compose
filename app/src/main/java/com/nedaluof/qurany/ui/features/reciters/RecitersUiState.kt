@@ -1,21 +1,18 @@
 package com.nedaluof.qurany.ui.features.reciters
 
 import androidx.compose.runtime.Stable
+import com.nedaluof.data.model.ReciterModel
 
 /**
  * Created By NedaluOf - 6/1/2024.
  */
 @Stable
-sealed interface RecitersUiState {
-  data object ShowReciter : RecitersUiState
-  data class Error(val message: String?) : RecitersUiState
-  data object Loading : RecitersUiState
-}
-
-@Stable
-sealed interface RecitersOperationsUiState {
-  data class Success(val isDeleted: Boolean) : RecitersOperationsUiState
-  data class Error(val message: String?) : RecitersOperationsUiState
-  data object Loading : RecitersOperationsUiState
-  data object Idl : RecitersOperationsUiState
-}
+data class RecitersUiState(
+  val showLoading: Boolean = false,
+  val errorMessage: String? = null,
+  val reciters: List<ReciterModel>? = null,
+  val isDeletedFromFavorites: Boolean? = null,
+  val isAddedToFavorites: Boolean? = null,
+  val isSearching: Boolean = false,
+  val searchQuery: String = ""
+)
