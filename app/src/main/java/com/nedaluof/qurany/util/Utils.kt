@@ -1,6 +1,7 @@
 package com.nedaluof.qurany.util
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -8,6 +9,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.annotation.StringRes
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -16,6 +18,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
  */
 fun Context.toast(@StringRes msg: Int) =
   Toast.makeText(this, this.getString(msg), Toast.LENGTH_LONG).show()
+
+fun Context.appVersionName(): String =
+  this.packageManager.getPackageInfo(this.packageName, 0).versionName ?: "2.0.0"
 
 fun Context.isInternetAvailable(): Boolean {
   val connectivityManager =
@@ -38,6 +43,12 @@ inline fun <reified CLASS> Intent?.parcelable(key: String): CLASS {
   } else {
     @Suppress("DEPRECATION") this?.getParcelableExtra(key)!!
   }
+}
+
+fun Context.getActivity(): ComponentActivity? = when (this) {
+  is ComponentActivity -> this
+  is ContextWrapper -> baseContext.getActivity()
+  else -> null
 }
 
 fun <T> MutableStateFlow<T>.set(

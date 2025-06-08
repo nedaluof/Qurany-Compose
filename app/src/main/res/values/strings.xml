@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Qurany</string>
     <string name="app_powered_by" translatable="false">Qurany Powered By 8K-Developers</string>
-    <string name="app_version">version : </string>
+    <string name="app_version">version : %1$s</string>
     <string name="notification_channel_des" translatable="false">This is Qurany App Notification Channel</string>
     <string name="notification_id" translatable="false">Qurany App</string>
 

@@ -1,39 +1,42 @@
 [versions]
+
+agp = "8.10.1"
+kotlin = "2.1.21"
+ksp = "2.1.21-2.0.1"
+
 min-sdk = "26"
-compile-sdk = "34"
+compile-sdk = "35"
 version-code = "8"
 version-name = "2.0.0"
 
-core-ktx = "1.13.1"
-activity-ktx = "1.9.0"
-app-compat = "1.7.0"
+core-ktx = "1.16.0"
+activity-ktx = "1.10.1"
+app-compat = "1.7.1"
 xml-material = "1.12.0"
-compose-bom = "2024.05.00"
+compose-bom = "2025.06.00"
 hilt-navigation-compose = "1.2.0"
-compose-activity = "1.9.0"
-compose-lifecycle = "2.8.1"
-compose-navigation = "2.7.7"
-media3 = "1.3.1"
-firebase_bom = "31.0.2"
-hilt = "2.51.1"
-room = "2.6.1"
-mihawk = "1.2.2"
+compose-activity = "1.10.1"
+compose-lifecycle = "2.9.1"
+compose-navigation = "2.9.0"
+splash-api = "1.0.1"
+material-icons-extended = "1.7.8"
+media3 = "1.7.1"
+firebase_bom = "33.15.0"
+hilt = "2.56.2"
+room = "2.7.1"
+mihawk = "1.3.0"
 timber = "5.0.1"
-coroutines = "1.8.1"
+coroutines = "1.10.2"
 retrofit = "2.11.0"
-interceptor = "5.0.0-alpha.3"
+interceptor = "5.0.0-alpha.10"
 moshi = "1.15.1"
-agp = "8.4.1"
-kotlin-android = "1.9.24"
-ksp = "1.9.24-1.0.20"
-google-services = "4.3.15"
-firebase-crashlytics-plugin = "2.9.9"
+google-services = "4.4.2"
+firebase-crashlytics-plugin = "3.0.4"
 junit = "4.13.2"
-junit-ext = "1.1.5"
-test-runner = "1.5.2"
-test-rules = "1.5.0"
-espresso = "3.5.1"
-mockito-core = "5.11.0"
+junit-ext = "1.2.1"
+test-runner = "1.6.2"
+test-rules = "1.6.1"
+mockito-core = "5.12.0"
 mockito-inline = "3.9.0"
 
 [libraries]
@@ -52,6 +55,10 @@ compose-foundation = { group = "androidx.compose.foundation", name = "foundation
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
+splash-api = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-api" }
+
+
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 compose-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
 compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
@@ -80,18 +87,17 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "junit-ext" }
 test-runner = { group = "androidx.test", name = "runner", version.ref = "test-runner" }
 test-rules = { group = "androidx.test", name = "rules", version.ref = "test-rules" }
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espresso" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito-core" }
 mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockito-inline" }
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
 com-android-library = { id = "com.android.library", version.ref = "agp" }
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
-org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-android" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+org-jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin-android" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics-plugin = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }
@@ -102,5 +108,5 @@ media3 = ["media3-exoplayer", "media3-session", "media3-ui"]
 compose-lifecycle = ["compose-lifecycle-runtime", "compose-lifecycle-viewmodel"]
 firebase = ["firebase-crashlytics-ktx", "firebase-analytics-ktx", "firebase-inappmessaging-display-ktx"]
 room = ["room-database", "room-ktx"]
-test = ["junit-ext", "test-runner", "espresso-core", "espresso-contrib", "test-rules"]
+test = ["junit-ext", "test-runner", "test-rules"]
 mockito = ["mockito-core", "mockito-inline"]

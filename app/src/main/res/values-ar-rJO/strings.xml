@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">قُراّني</string>
-    <string name="app_version">الإصدار : </string>
+    <string name="app_version">الإصدار : %1$s</string>
     <string name="reciters_nav_label">القُراء</string>
     <string name="favorites_nav_label">المفضلة</string>
 

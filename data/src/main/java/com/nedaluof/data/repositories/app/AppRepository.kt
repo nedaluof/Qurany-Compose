@@ -1,12 +1,13 @@
 package com.nedaluof.data.repositories.app
 
+import kotlinx.coroutines.flow.Flow
+
 /**
  * Created by NedaluOf on 12/9/2022.
  */
 interface AppRepository {
-  fun isNightModeEnabled(): Boolean
+  fun isNightModeEnabled(): Flow<Boolean>
   fun isCurrentLanguageEnglish(): Boolean
-
-  fun updateNightMode(isEnabled: Boolean)
+  fun flipNightMode()
   fun updateCurrentLanguage()
 }

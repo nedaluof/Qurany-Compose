@@ -10,6 +10,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  * Created by NedaluOf on 8/16/2021.
@@ -17,6 +18,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class RepositoriesModule {
+
+  @Singleton
   @Binds
   abstract fun bindAppRepository(
     impl: AppRepositoryImpl
