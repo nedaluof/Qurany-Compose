@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -25,18 +24,13 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     //enableEdgeToEdge()
     setContent {
-      QuranyApp()
-    }
-  }
-
-  @Composable
-  private fun QuranyApp() {
-    CompositionLocalProvider(
-      LocalLifecycleOwner provides LocalLifecycleOwner.current,
-    ) {
-      val isNightMode by viewModel.isNightModeEnabled.collectAsStateWithLifecycle()
-      QuranyTheme(isNightMode) {
-        QuranyNavHost()
+      CompositionLocalProvider(
+        LocalLifecycleOwner provides LocalLifecycleOwner.current,
+      ) {
+        val isNightMode by viewModel.isNightModeEnabled.collectAsStateWithLifecycle()
+        QuranyTheme(isNightMode) {
+          QuranyNavHost()
+        }
       }
     }
   }

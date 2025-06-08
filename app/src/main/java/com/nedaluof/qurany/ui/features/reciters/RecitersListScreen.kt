@@ -1,10 +1,9 @@
 package com.nedaluof.qurany.ui.features.reciters
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -130,6 +129,7 @@ fun RecitersList(
   val recitersList by viewModel.recitersList.collectAsStateWithLifecycle()
   Scaffold(
     modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     topBar = {
       RecitersTopBar(
         searchIcon = if (isSearching) Icons.Default.Close else Icons.Default.Search,
@@ -151,7 +151,8 @@ fun RecitersList(
       recitersList?.let { list ->
         if (list.isNotEmpty()) {
           LazyColumn(
-            modifier, contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
+            modifier = Modifier,
+            contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
           ) {
             items(count = list.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
               val item = list[index]
@@ -188,23 +189,19 @@ private fun RecitersTopBar(
   scrollBehavior: TopAppBarScrollBehavior
 ) {
   CenterAlignedTopAppBar(
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primary,
-      scrolledContainerColor = MaterialTheme.colorScheme.primary
-    ),
+    modifier = Modifier
+      .clip(RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp)),
+    scrollBehavior = scrollBehavior,
+    windowInsets = WindowInsets(0),
     title = {
-      Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-      ) {
-        Text(
-          text = stringResource(id = R.string.app_name),
-          color = Color.White,
-          style = MaterialTheme.typography.bodyLarge
-        )
-      }
+      Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = stringResource(id = R.string.app_name),
+        color = Color.White,
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.bodyLarge
+      )
     },
-    modifier = Modifier.clip(RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp)),
     actions = {
       IconButton(onClick = onSearchClickedClick) {
         Icon(
@@ -215,7 +212,10 @@ private fun RecitersTopBar(
         )
       }
     },
-    scrollBehavior = scrollBehavior
+    colors = TopAppBarDefaults.topAppBarColors(
+      containerColor = MaterialTheme.colorScheme.primary,
+      scrolledContainerColor = MaterialTheme.colorScheme.primary
+    )
   )
 }
 

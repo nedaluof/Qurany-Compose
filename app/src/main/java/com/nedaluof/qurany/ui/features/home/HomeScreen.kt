@@ -4,28 +4,29 @@ import android.app.LocaleManager
 import android.os.Build
 import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.exclude
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -45,7 +46,6 @@ import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.ui.navigation.HomeBottomNavHost
 import com.nedaluof.qurany.ui.navigation.HomeBottomNavScreens
-import com.nedaluof.qurany.ui.theme.AppGreen
 import com.nedaluof.qurany.ui.theme.QuranyTheme
 
 /**
@@ -60,34 +60,31 @@ fun HomeScreen(
   val navController = rememberNavController()
   val isCurrentLanguageEnglish by viewModel.isCurrentLanguageEnglish.collectAsStateWithLifecycle()
   val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsStateWithLifecycle()
-
-  //Column(modifier = modifier.fillMaxSize()) {
-    Scaffold(
-      modifier = modifier.fillMaxSize(),
-      contentWindowInsets = ScaffoldDefaults.contentWindowInsets.exclude(NavigationBarDefaults.windowInsets),
-      topBar = {
-        QuranyTobBar(
-          modifier = Modifier,
-          isNightModeEnabled = isNightModeEnabled,
-          isCurrentLanguageEnglish = isCurrentLanguageEnglish,
-          onChangeDayNightMode = viewModel::changeDayNightMode,
-          onChangeAppLanguage = viewModel::changeAppLanguage
-        )
-      },
-      bottomBar = {
-        BottomNavigationBar(navController = navController)
-      }
-    ) { paddingValues ->
-
+  Scaffold(
+    modifier = modifier
+      .navigationBarsPadding()
+      .fillMaxSize(),
+    topBar = {
+      QuranyTobBar(
+        isNightModeEnabled = isNightModeEnabled,
+        isCurrentLanguageEnglish = isCurrentLanguageEnglish,
+        onChangeDayNightMode = viewModel::changeDayNightMode,
+        onChangeAppLanguage = viewModel::changeAppLanguage
+      )
+    },
+    bottomBar = {
+      BottomNavigationBar(navController = navController)
+    }
+  ) { paddingValues ->
+    Box(modifier = Modifier.padding(paddingValues)) {
       HomeBottomNavHost(
         navController = navController,
         onReciterClicked = onReciterClicked
       )
     }
-  //}
+  }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuranyTobBar(
   modifier: Modifier = Modifier,
@@ -97,13 +94,16 @@ fun QuranyTobBar(
   onChangeAppLanguage: () -> Unit = {},
 ) {
   val context = LocalContext.current
-
-  TopAppBar(
+  Box(
     modifier = modifier
-      .fillMaxWidth(),
-    colors = TopAppBarDefaults.topAppBarColors().copy(containerColor = AppGreen),
-    title = {},
-    actions = {
+      .background(MaterialTheme.colorScheme.primary)
+  ) {
+    Row(
+      modifier = Modifier
+        .displayCutoutPadding()
+        .fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
       TextButton(
         onClick = {
           val languageCode = if (isCurrentLanguageEnglish) "ar" else "en"
@@ -132,43 +132,7 @@ fun QuranyTobBar(
         )
       }
     }
-  )
-
-  /*Row(
-    modifier = modifier
-      .fillMaxWidth()
-      .height(100.dp)
-      .background(AppGreen),
-    verticalAlignment = Alignment.CenterVertically
-  ) {
-    TextButton(
-      onClick = {
-        val languageCode = if (isCurrentLanguageEnglish) "ar" else "en"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-          context.getSystemService(LocaleManager::class.java)
-            .applicationLocales = LocaleList.forLanguageTags(languageCode)
-        } else {
-          AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.forLanguageTags(languageCode)
-          )
-        }
-        onChangeAppLanguage()
-      }
-    ) {
-      Text(
-        if (isCurrentLanguageEnglish) "العربية" else "EN", color = Color.White
-      )
-    }
-    IconButton(
-      onClick = onChangeDayNightMode,
-    ) {
-      Icon(
-        painter = painterResource(id = if (isNightModeEnabled) R.drawable.ic_light_mode else R.drawable.ic_night_mode),
-        contentDescription = "change app theme between light and night",
-        tint = Color.Unspecified
-      )
-    }
-  }*/
+  }
 }
 
 @Composable
