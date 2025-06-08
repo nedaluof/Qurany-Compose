@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -69,7 +70,8 @@ fun SplashScreen(
           .padding(end = 20.dp)
           .clip(RoundedCornerShape(topEnd = 50.dp))
           .background(color = MaterialTheme.colorScheme.primary)
-          .align(Alignment.BottomCenter),
+          .align(Alignment.BottomCenter)
+          .navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Text(

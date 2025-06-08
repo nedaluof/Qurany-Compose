@@ -62,7 +62,6 @@ fun HomeScreen(
   val isNightModeEnabled by viewModel.isNightModeEnabled.collectAsStateWithLifecycle()
   Scaffold(
     modifier = modifier
-      .navigationBarsPadding()
       .fillMaxSize(),
     topBar = {
       QuranyTobBar(
@@ -149,7 +148,8 @@ private fun BottomNavigationBar(
         width = 1.5.dp,
         color = MaterialTheme.colorScheme.primary,
         shape = RoundedCornerShape(topEnd = 20.dp, topStart = 20.dp)
-      ),
+      )
+      .navigationBarsPadding(),
     containerColor = MaterialTheme.colorScheme.background
   ) {
     listOf(

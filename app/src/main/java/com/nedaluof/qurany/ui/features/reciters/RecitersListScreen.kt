@@ -137,7 +137,7 @@ fun RecitersList(
         scrollBehavior = scrollBehavior
       )
     }) { paddingValues ->
-    Column(modifier.padding(paddingValues)) {
+    Column(Modifier.padding(paddingValues)) {
       if (isSearching) {
         QuranySearchBar(
           modifier = Modifier
@@ -151,7 +151,7 @@ fun RecitersList(
       recitersList?.let { list ->
         if (list.isNotEmpty()) {
           LazyColumn(
-            modifier = Modifier,
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(top = 10.dp, bottom = 30.dp)
           ) {
             items(count = list.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
