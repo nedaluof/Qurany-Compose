@@ -8,13 +8,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.MediaScannerConnection
-import android.net.Uri
 import android.os.Build
 import android.os.IBinder
+import androidx.core.net.toUri
 import com.nedaluof.data.model.SuraModel
 import com.nedaluof.data.repositories.suras.SurasRepository
 import com.nedaluof.data.util.catchOn
 import com.nedaluof.qurany.R
+import com.nedaluof.qurany.util.ResourceProvider
 import com.nedaluof.qurany.util.isInternetAvailable
 import com.nedaluof.qurany.util.parcelable
 import com.nedaluof.qurany.util.toast
@@ -35,6 +36,9 @@ class QuranyDownloadService : Service() {
 
   @Inject
   lateinit var surasRepository: SurasRepository
+
+  @Inject
+  lateinit var resourceProvider: ResourceProvider
   //endregion
 
   //region logic
@@ -63,7 +67,7 @@ class QuranyDownloadService : Service() {
         if (this.isInternetAvailable()) {
           toast(R.string.alert_download_started_message)
           val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-          val request = DownloadManager.Request(Uri.parse(sura.suraUrl))
+          val request = DownloadManager.Request(sura.suraUrl.toUri())
           request.setAllowedNetworkTypes(
             DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE
           ).setAllowedOverRoaming(false)
@@ -72,11 +76,11 @@ class QuranyDownloadService : Service() {
             .setDestinationInExternalFilesDir(this, null, sura.suraSubPath)
           downloadId = downloadManager.enqueue(request)
         } else {
-          toast(R.string.alert_no_internet_message)
+          toast(resourceProvider.provideString(R.string.alert_no_internet_message))
           stopSelf()
         }
       } else {
-        toast(R.string.alert_sura_exist_message)
+        toast(resourceProvider.provideString(R.string.alert_sura_exist_message))
         stopSelf()
       }
     } else {

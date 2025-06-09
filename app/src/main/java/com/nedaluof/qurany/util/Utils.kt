@@ -19,6 +19,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun Context.toast(@StringRes msg: Int) =
   Toast.makeText(this, this.getString(msg), Toast.LENGTH_LONG).show()
 
+fun Context.toast(message: String) =
+  Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
 fun Context.appVersionName(): String =
   this.packageManager.getPackageInfo(this.packageName, 0).versionName ?: "2.0.0"
 

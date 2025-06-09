@@ -1,3 +1,5 @@
+import java.util.Properties
+
 /*
  * Created By nedaluof  6/13/2020.
  * Updated By nedaluof  6/16/2024.
@@ -15,6 +17,17 @@ plugins {
 }
 
 android {
+  signingConfigs {
+    create("release") {
+      val properties = Properties().apply {
+        load(rootProject.file("local.properties").inputStream())
+      }
+      keyAlias = properties.getProperty("signing.keyAlias")
+      keyPassword = properties.getProperty("signing.keyPassword")
+      storeFile = file(properties.getProperty("signing.storeFile"))
+      storePassword = properties.getProperty("signing.storePassword")
+    }
+  }
   bundle {
     language {
       enableSplit = false
@@ -36,6 +49,7 @@ android {
     release {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+      signingConfig = signingConfigs.getByName("release")
     }
   }
   compileOptions {

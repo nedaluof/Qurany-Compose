@@ -44,6 +44,7 @@ fun QuranyNavHost(
   ) {
     composable(QuranyScreens.SPLASH.route) {
       SplashScreen(navController = navController)
+      BackHandler {}
     }
     composable(QuranyScreens.HOME.route) {
       HomeScreen(
@@ -66,7 +67,7 @@ fun QuranyNavHost(
 
   BackHandler {
     when (navBackStackEntry?.destination?.route) {
-      "main" -> {
+      QuranyScreens.HOME.route -> {
         isBackPressedCounter++
         context.toast(R.string.alert_exit_app_message)
         scope.launch {

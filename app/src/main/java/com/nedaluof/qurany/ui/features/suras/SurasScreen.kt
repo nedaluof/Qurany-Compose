@@ -205,7 +205,6 @@ fun SurasScreen(
   uiState.errorMessage?.let { message ->
     QuranySnackBar(
       message = message,
-      alignValue = Alignment.TopCenter,
       offsetYValue = 100,
       shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
     )
@@ -214,10 +213,7 @@ fun SurasScreen(
   if (uiState.isDeletedFromFavorites == true || uiState.isAddedToFavorites == true) {
     val isDeleted = uiState.isDeletedFromFavorites == true
     QuranySnackBar(
-      message = stringResource(id = if (isDeleted) R.string.alert_process_success_label else R.string.alert_add_to_favorites_success_label),
-      alignValue = Alignment.TopCenter,
-      offsetYValue = 100,
-      shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+      message = stringResource(id = if (isDeleted) R.string.alert_process_success_label else R.string.alert_add_to_favorites_success_label)
     )
   }
 }
@@ -347,7 +343,7 @@ fun SurasTopBar(
     },
     actions = {
       IconButton(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(start = 16.dp),
         onClick = onFavoriteClicked
       ) {
         Icon(
@@ -358,7 +354,7 @@ fun SurasTopBar(
       }
 
       IconButton(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(start = 16.dp),
         onClick = onSearchClickedClick
       ) {
         Icon(
