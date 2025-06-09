@@ -5,6 +5,7 @@ import com.nedaluof.qurany.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+
 /**
  * Created by nedaluof on 11/29/2020.
  */

@@ -46,7 +46,6 @@ internal fun SurasTopBar(
   CenterAlignedTopAppBar(
     modifier = modifier.clip(RoundedCornerShape(bottomEnd = 20.dp)),
     scrollBehavior = scrollBehavior,
-    //windowInsets = WindowInsets(top = 200),
     colors = TopAppBarDefaults.topAppBarColors(
       containerColor = MaterialTheme.colorScheme.primary,
       scrolledContainerColor = MaterialTheme.colorScheme.primary
