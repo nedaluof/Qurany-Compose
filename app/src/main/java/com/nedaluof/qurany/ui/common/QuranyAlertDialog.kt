@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.features.reciters.components
+package com.nedaluof.qurany.ui.common
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon

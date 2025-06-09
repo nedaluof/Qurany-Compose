@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
  * Created By NedaluOf - 6/1/2024.
  */
 @Composable
-fun QuranyLoadingView() {
+fun RecitersLoadingView() {
   Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier.fillMaxSize()

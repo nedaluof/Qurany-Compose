@@ -3,12 +3,13 @@ package com.nedaluof.qurany.ui.features.reciters.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -47,26 +48,34 @@ fun ReciterItem(
     shape = RoundedCornerShape(8.dp),
     border = BorderStroke(1.dp, AppGreen),
     modifier = Modifier
-      .height(70.dp)
       .padding(horizontal = 8.dp)
       .padding(bottom = 8.dp)
   ) {
-    Row(Modifier.fillMaxWidth()) {
-      Image(
-        painter = painterResource(id = R.drawable.ic_reciter),
-        contentDescription = "reciter",
-        Modifier
-          .width(50.dp)
-          .background(AppGreen)
-          .padding(top = 6.dp)
-      )
+    Row(
+      Modifier
+        .fillMaxWidth()
+    ) {
+      Box(
+        modifier = Modifier.background(AppGreen),
+        contentAlignment = Alignment.Center
+      ) {
+        Image(
+          modifier = Modifier
+            .size(width = 50.dp, height = 70.dp)
+            .padding(top = 6.dp),
+          painter = painterResource(id = R.drawable.ic_reciter),
+          contentDescription = "reciter"
+        )
+      }
       Spacer(
         modifier = Modifier
           .padding(horizontal = 4.dp)
           .width(4.dp)
       )
       Column(
-        Modifier.weight(1f)
+        Modifier
+          .padding(vertical = 4.dp)
+          .weight(1f)
       ) {
         Text(
           text = reciter.name,
@@ -82,11 +91,12 @@ fun ReciterItem(
         )
 
         Text(
-          text = if (reciter.count.toInt() > 1) {
-            stringResource(id = R.string.sura_count_more_label, reciter.count.toInt())
-          } else {
-            stringResource(id = R.string.sura_count_one_label, reciter.count.toInt())
-          }, style = MaterialTheme.typography.bodySmall, color = AppGreen
+          text = stringResource(
+            if (reciter.count.toInt() > 1) R.string.sura_count_more_label
+            else R.string.sura_count_one_label, reciter.count.toInt()
+          ),
+          style = MaterialTheme.typography.bodySmall,
+          color = AppGreen
         )
       }
 

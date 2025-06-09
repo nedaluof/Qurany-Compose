@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.features.reciters.components
+package com.nedaluof.qurany.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

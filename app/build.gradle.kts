@@ -33,6 +33,7 @@ android {
       enableSplit = false
     }
   }
+
   namespace = "com.nedaluof.qurany"
   compileSdk = Integer.valueOf(libs.versions.compile.sdk.get())
 
@@ -46,8 +47,12 @@ android {
   }
 
   buildTypes {
+    getByName("debug") {
+      applicationIdSuffix = ".dev"
+      isDebuggable = true
+    }
     release {
-      isMinifyEnabled = false
+      isMinifyEnabled = true
       proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
     }
@@ -64,8 +69,9 @@ android {
     dataBinding = true
     buildConfig = true
   }
-  kapt { correctErrorTypes = true }
 }
+
+kapt { correctErrorTypes = true }
 
 dependencies {
   /** app **/

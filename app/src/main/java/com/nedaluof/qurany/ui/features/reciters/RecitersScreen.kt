@@ -8,20 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,24 +22,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
+import com.nedaluof.qurany.ui.common.QuranyAlertDialog
 import com.nedaluof.qurany.ui.common.QuranySearchBar
-import com.nedaluof.qurany.ui.features.reciters.components.QuranyAlertDialog
-import com.nedaluof.qurany.ui.features.reciters.components.QuranyLoadingView
-import com.nedaluof.qurany.ui.features.reciters.components.QuranySnackBar
+import com.nedaluof.qurany.ui.common.QuranySnackBar
 import com.nedaluof.qurany.ui.features.reciters.components.ReciterItem
+import com.nedaluof.qurany.ui.features.reciters.components.RecitersLoadingView
+import com.nedaluof.qurany.ui.features.reciters.components.RecitersTopBar
 import com.nedaluof.qurany.ui.theme.QuranyTheme
 
 /**
@@ -71,11 +60,11 @@ fun RecitersScreen(
   }
 
   if (uiState.showLoading) {
-    QuranyLoadingView()
+    RecitersLoadingView()
   }
 
   uiState.reciters?.let { reciters ->
-    RecitersList(
+    RecitersScreenContent(
       modifier = modifier,
       recitersList = reciters,
       searchText = uiState.searchQuery,
@@ -121,7 +110,7 @@ fun RecitersScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecitersList(
+fun RecitersScreenContent(
   modifier: Modifier = Modifier,
   isSearching: Boolean = false,
   isForFavorites: Boolean = false,
@@ -185,49 +174,8 @@ fun RecitersList(
   }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun RecitersTopBar(
-  isSearching: Boolean,
-  onSearchClickedClick: () -> Unit,
-  scrollBehavior: TopAppBarScrollBehavior
-) {
-  CenterAlignedTopAppBar(
-    modifier = Modifier
-      .clip(RoundedCornerShape(bottomEnd = 20.dp, bottomStart = 20.dp)),
-    scrollBehavior = scrollBehavior,
-    windowInsets = WindowInsets(0),
-    title = {
-      Text(
-        modifier = Modifier.fillMaxWidth(),
-        text = stringResource(id = R.string.app_name),
-        color = Color.White,
-        textAlign = TextAlign.Center,
-        fontSize = 18.sp,
-        fontWeight = FontWeight.Medium
-      )
-    },
-    actions = {
-      IconButton(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        onClick = onSearchClickedClick
-      ) {
-        Icon(
-          imageVector = if (isSearching) Icons.Default.Close else Icons.Default.Search,
-          contentDescription = null,
-          tint = Color.White
-        )
-      }
-    },
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primary,
-      scrolledContainerColor = MaterialTheme.colorScheme.primary
-    )
-  )
-}
-
 @Preview
 @Composable
 fun RecitersScreenPreview() {
-  QuranyTheme { RecitersList() }
+  QuranyTheme { RecitersScreenContent() }
 }

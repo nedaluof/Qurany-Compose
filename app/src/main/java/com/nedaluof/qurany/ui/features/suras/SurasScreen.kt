@@ -1,10 +1,8 @@
 package com.nedaluof.qurany.ui.features.suras
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,22 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -37,17 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,8 +45,9 @@ import com.nedaluof.qurany.R
 import com.nedaluof.qurany.databinding.PlayerBottomSheetLayoutBinding
 import com.nedaluof.qurany.service.QuranyDownloadService
 import com.nedaluof.qurany.ui.common.QuranySearchBar
-import com.nedaluof.qurany.ui.features.reciters.components.QuranySnackBar
+import com.nedaluof.qurany.ui.common.QuranySnackBar
 import com.nedaluof.qurany.ui.features.suras.components.SuraItem
+import com.nedaluof.qurany.ui.features.suras.components.SurasTopBar
 import com.nedaluof.qurany.ui.features.suras.components.rememberManagedMediaController
 import com.nedaluof.qurany.ui.theme.QuranyTheme
 import com.nedaluof.qurany.util.isInternetAvailable
@@ -298,75 +282,6 @@ fun SurasScreenContent(
       }
     }
   }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SurasTopBar(
-  modifier: Modifier = Modifier,
-  reciterName: String,
-  scrollBehavior: TopAppBarScrollBehavior,
-  isInFavorites: Boolean,
-  isSearching: Boolean,
-  onSearchClickedClick: () -> Unit,
-  onFavoriteClicked: () -> Unit,
-  onCloseClicked: () -> Unit
-) {
-  CenterAlignedTopAppBar(
-    colors = TopAppBarDefaults.topAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primary,
-      scrolledContainerColor = MaterialTheme.colorScheme.primary
-    ),
-    title = {
-      Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-      ) {
-        Text(
-          text = reciterName,
-          color = Color.White,
-          fontSize = 18.sp,
-          fontWeight = FontWeight.Medium
-        )
-      }
-    },
-    navigationIcon = {
-      IconButton(
-        onClick = onCloseClicked
-      ) {
-        Icon(
-          painter = painterResource(id = R.drawable.ic_back_arrow),
-          contentDescription = "close suras screen",
-          tint = Color.White
-        )
-      }
-    },
-    actions = {
-      IconButton(
-        modifier = Modifier.padding(start = 16.dp),
-        onClick = onFavoriteClicked
-      ) {
-        Icon(
-          imageVector = if (isInFavorites) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-          contentDescription = "add to favorite",
-          tint = Color.White
-        )
-      }
-
-      IconButton(
-        modifier = Modifier.padding(start = 16.dp),
-        onClick = onSearchClickedClick
-      ) {
-        Icon(
-          imageVector = if (isSearching) Icons.Default.Close else Icons.Default.Search,
-          contentDescription = null,
-          tint = Color.White
-        )
-      }
-    },
-    modifier = modifier.clip(RoundedCornerShape(bottomEnd = 20.dp)),
-    scrollBehavior = scrollBehavior
-  )
 }
 
 @Preview
