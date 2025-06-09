@@ -13,11 +13,14 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class MainViewModel @Inject constructor(
-  appRepository: AppRepository
+  private val appRepository: AppRepository
 ) : ViewModel() {
 
   //region variables
-  val isNightModeEnabled = appRepository.isNightModeEnabled()
+  val isNightMode: Boolean
+    get() = appRepository.isNightModeEnabledBlocking()
+
+  val isNightModeEnabledFlow = appRepository.isNightModeEnabled()
     .stateIn(
       scope = viewModelScope,
       initialValue = false,

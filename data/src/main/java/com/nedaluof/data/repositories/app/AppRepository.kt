@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface AppRepository {
   fun isNightModeEnabled(): Flow<Boolean>
+  fun isNightModeEnabledBlocking(): Boolean
   fun isCurrentLanguageEnglish(): Boolean
   fun flipNightMode()
   fun updateCurrentLanguage()

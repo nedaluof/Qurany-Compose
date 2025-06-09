@@ -13,7 +13,7 @@
     <string name="no_reciters_label">لا يوجد قراء</string>
     <string name="no_reciters_search_label">لا يوجد قارئ يتطابق مع نص البحث.</string>
     <string name="no_suras_match_search_query_message">لا يوجد سور تتطابق مع نص البحث.</string>
-    <string name="no_favorite_reciters_message">لم تقم بإضافة أي قارئ لقائمتك المفضلة ,إذهب الى قائمة القرائ وأضف واحدا عن طريق الضغط علة زر القلب لتراه هنا</string>
+    <string name="no_favorite_reciters_message">لم تقم بإضافة أي قارئ لقائمتك المفضلة, إذهب الى قائمة القرائ وأضف واحدا عن طريق الضغط على زر القلب لتراه هنا</string>
     <string name="sura_count_more_label">هنالك %d سورة</string>
     <string name="sura_count_one_label">هنالك سورة واحدة فقط</string>
     <string name="sura_number_label">رقم السورة : %d</string>
@@ -29,7 +29,7 @@
     <string name="alert_download_completed_message">الأن يمكنك الإستماع للسورة بدون إنترنت</string>
     <string name="alert_download_started_message">بدء التحميل الرجاء الإنتظار</string>
     <string name="alert_no_internet_message">تأكد من أنك تملك إتصال بالشبكة</string>
-    <string name="alert_sura_exist_message">السورة محملة مسبقا , يمكنك الإستماع لها مباشرة عند الضغط على زر التشغيل</string>
+    <string name="alert_sura_exist_message">السورة محملة مسبقا, يمكنك الإستماع لها مباشرة عند الضغط على زر التشغيل</string>
     <string name="alert_sura_playing_locally_message">تم الأن تشغيل السورة من ذاكرة الجهاز</string>
     <string name="alert_sura_playing_online_message">تم الأن تشغيل السورة عبر الإنترنت</string>
     <string name="alert_exit_app_message">للخروج الرجاء الضغط على زر الرجوع مرة أخرى</string>

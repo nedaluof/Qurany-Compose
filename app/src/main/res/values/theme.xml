@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
+    <style name="Theme.Qurany.Light.Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">#1B948E</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:ignore="NewApi">#1B948E
+        </item>
+    </style>
+
+    <style name="Theme.Qurany.Dark.Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">#313131</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:ignore="NewApi">#313131
+        </item>
+    </style>
 </resources>

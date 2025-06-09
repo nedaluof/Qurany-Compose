@@ -2,7 +2,6 @@ package com.nedaluof.qurany.ui.features.reciters.components
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -53,7 +52,7 @@ internal fun RecitersTopBar(
     },
     actions = {
       IconButton(
-        modifier = Modifier.padding(end = 40.dp),
+        modifier = Modifier,
         onClick = onSearchClickedClick
       ) {
         Icon(

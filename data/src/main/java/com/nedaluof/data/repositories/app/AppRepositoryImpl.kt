@@ -27,6 +27,10 @@ class AppRepositoryImpl @Inject constructor(
     return isNightModeEnabledFlow
   }
 
+  override fun isNightModeEnabledBlocking(): Boolean {
+    return preferencesManager.getFromPreferences(NIGHT_MODE_KEY, false) == true
+  }
+
   override fun isCurrentLanguageEnglish(): Boolean {
     return (preferencesManager.getFromPreferences<String>(LANGUAGE_KEY, "ar") ?: "ar") == "en"
   }

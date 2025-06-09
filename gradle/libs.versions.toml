@@ -5,7 +5,7 @@ kotlin = "2.1.21"
 ksp = "2.1.21-2.0.1"
 
 min-sdk = "26"
-compile-sdk = "35"
+compile-sdk = "36"
 version-code = "8"
 version-name = "2.0.0"
 
