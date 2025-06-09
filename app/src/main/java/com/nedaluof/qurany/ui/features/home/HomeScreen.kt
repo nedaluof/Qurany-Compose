@@ -42,7 +42,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.ui.navigation.HomeBottomNavHost
 import com.nedaluof.qurany.ui.navigation.HomeBottomNavScreens
@@ -55,7 +54,7 @@ import com.nedaluof.qurany.ui.theme.QuranyTheme
 fun HomeScreen(
   modifier: Modifier = Modifier,
   viewModel: HomeViewModel = hiltViewModel(),
-  onReciterClicked: (ReciterModel) -> Unit = {}
+  onReciterClicked: (reciterId: Int) -> Unit = {}
 ) {
   val navController = rememberNavController()
   val isCurrentLanguageEnglish by viewModel.isCurrentLanguageEnglish.collectAsStateWithLifecycle()
@@ -99,6 +98,7 @@ fun QuranyTobBar(
   ) {
     Row(
       modifier = Modifier
+        .padding(horizontal = 16.dp)
         .displayCutoutPadding()
         .fillMaxWidth(),
       verticalAlignment = Alignment.CenterVertically

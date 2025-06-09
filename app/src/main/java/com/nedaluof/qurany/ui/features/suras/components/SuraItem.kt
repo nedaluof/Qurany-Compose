@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.features.suras
+package com.nedaluof.qurany.ui.features.suras.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

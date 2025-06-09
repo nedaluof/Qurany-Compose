@@ -46,17 +46,19 @@ data class ReciterEntity(
 fun List<ReciterEntity>.asReciterModels(
   locale: String
 ) = this.map { entity ->
-  ReciterModel().apply {
-    id = entity.reciterId
-    name = if (locale == "en") entity.name?.english ?: "" else entity.name?.arabic ?: ""
-    serverLink = entity.serverLink ?: ""
-    rewaya = if (locale == "en") entity.rewaya?.english ?: "" else entity.rewaya?.arabic ?: ""
-    count = entity.count ?: "0"
-    letter = if (locale == "en") entity.letter?.english ?: "" else entity.letter?.arabic ?: ""
-    suras = entity.suras ?: ""
-    isInMyFavorites = entity.isInMyFavorites
-  }
+  entity.asReciterModel(locale)
 }
+
+fun ReciterEntity.asReciterModel(locale: String) = ReciterModel(
+  id = reciterId,
+  name = if (locale == "en") name?.english ?: "" else name?.arabic ?: "",
+  serverLink = serverLink ?: "",
+  rewaya = if (locale == "en") rewaya?.english ?: "" else rewaya?.arabic ?: "",
+  count = count ?: "0",
+  letter = if (locale == "en") letter?.english ?: "" else letter?.arabic ?: "",
+  suras = suras ?: "",
+  isInMyFavorites = isInMyFavorites
+)
 
 @JsonClass(generateAdapter = true)
 data class LocalText(

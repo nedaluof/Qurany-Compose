@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ fun QuranySnackBar(
   message: String?,
   isError: Boolean = false,
   alignValue: Alignment = Alignment.BottomCenter,
+  shape: Shape = RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp),
   offsetYValue: Int = 10
 ) {
   val snackBarHostState = remember { SnackbarHostState() }
@@ -44,7 +46,9 @@ fun QuranySnackBar(
   }
 
   val swipeState = rememberSwipeToDismissBoxState()
-  SnackbarHost(hostState = snackBarHostState) { data ->
+  SnackbarHost(
+    hostState = snackBarHostState
+  ) { data ->
     SwipeToDismissBox(
       modifier = Modifier.offset(y = offsetYValue.dp),
       state = swipeState, backgroundContent = {
@@ -58,17 +62,18 @@ fun QuranySnackBar(
       Box(
         modifier = Modifier.fillMaxSize()
       ) {
-        Text(modifier = Modifier
-          .fillMaxWidth()
-          .graphicsLayer {
-            shadowElevation = 5f
-          }
-          .background(
-            if (isError) Color.Red else MaterialTheme.colorScheme.primary,
-            shape = RoundedCornerShape(topEnd = 8.dp, topStart = 8.dp)
-          )
-          .padding(vertical = 16.dp)
-          .align(alignValue),
+        Text(
+          modifier = Modifier
+            .fillMaxWidth()
+            .graphicsLayer {
+              shadowElevation = 5f
+            }
+            .background(
+              if (isError) Color.Red else MaterialTheme.colorScheme.primary,
+              shape = shape
+            )
+            .padding(vertical = 16.dp)
+            .align(alignValue),
           text = data.visuals.message,
           color = Color.White,
           fontSize = 14.sp,

@@ -35,16 +35,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
-import com.nedaluof.qurany.ui.common.QuranyAlertDialog
-import com.nedaluof.qurany.ui.common.QuranyLoadingView
 import com.nedaluof.qurany.ui.common.QuranySearchBar
+import com.nedaluof.qurany.ui.features.reciters.components.QuranyAlertDialog
+import com.nedaluof.qurany.ui.features.reciters.components.QuranyLoadingView
 import com.nedaluof.qurany.ui.features.reciters.components.QuranySnackBar
 import com.nedaluof.qurany.ui.features.reciters.components.ReciterItem
 import com.nedaluof.qurany.ui.theme.QuranyTheme
@@ -57,7 +59,7 @@ fun RecitersScreen(
   modifier: Modifier = Modifier,
   isForFavorites: Boolean = false,
   viewModel: RecitersViewModel = hiltViewModel(),
-  onReciterClicked: (ReciterModel) -> Unit = {}
+  onReciterClicked: (reciterId: Int) -> Unit = {}
 ) {
   LaunchedEffect(isForFavorites) {
     viewModel.loadReciters(isForFavorites)
@@ -95,7 +97,7 @@ fun RecitersScreen(
 
   if (uiState.isDeletedFromFavorites == true || uiState.isAddedToFavorites == true) {
     val isDeleted = uiState.isDeletedFromFavorites == true
-    QuranySnackBar(message = stringResource(id = if (isDeleted) R.string.alrt_delete_success else R.string.alrt_add_success_msg))
+    QuranySnackBar(message = stringResource(id = if (isDeleted) R.string.alert_process_success_label else R.string.alert_add_to_favorites_success_label))
   }
 
   reciterSelectedToDelete?.let {
@@ -107,9 +109,10 @@ fun RecitersScreen(
         reciterSelectedToDelete?.let(viewModel::deleteReciterFromFavorites)
         reciterSelectedToDelete = null
       },
-      title = stringResource(id = R.string.alrt_delete_title),
+      title = stringResource(id = R.string.alert_remove_from_favorites_title_label),
       description = stringResource(
-        id = R.string.alrt_delete_msg, reciterSelectedToDelete?.name ?: ""
+        id = R.string.alert_remove_from_favorites_description_label,
+        reciterSelectedToDelete?.name ?: ""
       ),
       confirmationButtonTitle = stringResource(id = R.string.delete_label),
       dismissButtonTitle = stringResource(id = R.string.cancel_label),
@@ -126,7 +129,7 @@ fun RecitersList(
   searchText: String = "",
   recitersList: List<ReciterModel> = emptyList(),
   onToggleSearchingBarRequested: () -> Unit = {},
-  onReciterClicked: (ReciterModel) -> Unit = {},
+  onReciterClicked: (reciterId: Int) -> Unit = {},
   onSearchTextChange: (String) -> Unit = {},
   onAddToFavoriteClicked: (ReciterModel) -> Unit = {}
 ) {
@@ -160,7 +163,7 @@ fun RecitersList(
           items(count = recitersList.size/*, key = { items[it].id ?: UUID.randomUUID() }*/) { index ->
             val item = recitersList[index]
             ReciterItem(reciter = item, {
-              onReciterClicked(item)
+              onReciterClicked(item.id)
             }) {
               onAddToFavoriteClicked(item)
             }
@@ -201,11 +204,15 @@ private fun RecitersTopBar(
         text = stringResource(id = R.string.app_name),
         color = Color.White,
         textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.bodyLarge
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Medium
       )
     },
     actions = {
-      IconButton(onClick = onSearchClickedClick) {
+      IconButton(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        onClick = onSearchClickedClick
+      ) {
         Icon(
           searchIcon,
           contentDescription = stringResource(

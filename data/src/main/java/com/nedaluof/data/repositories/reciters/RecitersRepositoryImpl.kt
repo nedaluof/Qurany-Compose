@@ -8,6 +8,7 @@ import com.nedaluof.data.model.LocalText
 import com.nedaluof.data.model.ReciterDto
 import com.nedaluof.data.model.ReciterEntity
 import com.nedaluof.data.model.ReciterModel
+import com.nedaluof.data.model.asReciterModel
 import com.nedaluof.data.model.asReciterModels
 import com.nedaluof.data.util.catchOnSuspend
 import kotlinx.coroutines.CoroutineScope
@@ -51,6 +52,16 @@ class RecitersRepositoryImpl @Inject constructor(
         it.asReciterModels(appLanguage)
       }.distinctUntilChanged()
     }
+  }
+
+  override fun getReciterById(reciterId: Int): Flow<Result<ReciterModel>> = flow {
+    val appLanguage = preferences.getFromPreferences(PreferencesKeys.LANGUAGE_KEY, "ar") ?: "ar"
+    catchOnSuspend({
+      val reciter = recitersDao.getReciterById(reciterId)
+      emit(Result.success(reciter.asReciterModel(appLanguage)))
+    }, {
+      emit(Result.failure(Exception(it.message ?: "")))
+    })
   }
 
   override fun addOrRemoveReciterFromFavorites(

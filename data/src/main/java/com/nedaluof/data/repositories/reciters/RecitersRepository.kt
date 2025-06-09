@@ -13,5 +13,7 @@ interface RecitersRepository {
     onError: (String?) -> Unit
   ): Flow<List<ReciterModel>>
 
+  fun getReciterById(reciterId: Int): Flow<Result<ReciterModel>>
+
   fun addOrRemoveReciterFromFavorites(reciterId: Int): Flow<Result<Boolean>>
 }

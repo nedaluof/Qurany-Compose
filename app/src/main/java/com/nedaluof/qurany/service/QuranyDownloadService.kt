@@ -61,7 +61,7 @@ class QuranyDownloadService : Service() {
       val isSuraFileExist = surasRepository.checkIfSuraExist(sura.suraSubPath)
       if (!isSuraFileExist) {
         if (this.isInternetAvailable()) {
-          toast(R.string.alrt_download_start_title)
+          toast(R.string.alert_download_started_message)
           val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
           val request = DownloadManager.Request(Uri.parse(sura.suraUrl))
           request.setAllowedNetworkTypes(
@@ -72,11 +72,11 @@ class QuranyDownloadService : Service() {
             .setDestinationInExternalFilesDir(this, null, sura.suraSubPath)
           downloadId = downloadManager.enqueue(request)
         } else {
-          toast(R.string.alrt_no_internet_msg)
+          toast(R.string.alert_no_internet_message)
           stopSelf()
         }
       } else {
-        toast(R.string.alrt_sura_exist_message)
+        toast(R.string.alert_sura_exist_message)
         stopSelf()
       }
     } else {
@@ -89,7 +89,7 @@ class QuranyDownloadService : Service() {
     override fun onReceive(context: Context, intent: Intent) {
       val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
       if (downloadId == id) {
-        toast(R.string.alrt_download_completed_msg)
+        toast(R.string.alert_download_completed_message)
         runMediaScanner()
       }
     }

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.nedaluof.data.model.ReciterModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.ui.features.reciters.RecitersScreen
 
@@ -16,7 +15,7 @@ import com.nedaluof.qurany.ui.features.reciters.RecitersScreen
 @Composable
 fun HomeBottomNavHost(
   navController: NavHostController,
-  onReciterClicked: (ReciterModel) -> Unit
+  onReciterClicked: (reciterId: Int) -> Unit
 ) {
   NavHost(
     navController = navController,

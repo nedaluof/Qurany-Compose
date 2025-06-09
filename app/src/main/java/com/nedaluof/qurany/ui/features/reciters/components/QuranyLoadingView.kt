@@ -1,4 +1,4 @@
-package com.nedaluof.qurany.ui.common
+package com.nedaluof.qurany.ui.features.reciters.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
