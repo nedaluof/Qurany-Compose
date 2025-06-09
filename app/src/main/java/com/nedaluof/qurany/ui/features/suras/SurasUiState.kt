@@ -10,6 +10,8 @@ import com.nedaluof.data.model.SuraModel
 data class SurasUiState(
   val reciterName: String = "",
   val isReciterInFavorites: Boolean = false,
+  val searchQuery: String = "",
+  val isSearching: Boolean = false,
   val errorMessage: String? = null,
   val suras: List<SuraModel> = emptyList(),
   val isDeletedFromFavorites: Boolean? = null,

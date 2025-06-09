@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -139,7 +138,7 @@ fun RecitersList(
     contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
     topBar = {
       RecitersTopBar(
-        searchIcon = if (isSearching) Icons.Default.Close else Icons.Default.Search,
+        isSearching = isSearching,
         onSearchClickedClick = onToggleSearchingBarRequested,
         scrollBehavior = scrollBehavior
       )
@@ -173,7 +172,7 @@ fun RecitersList(
         if (isForFavorites || isSearching) {
           Box(modifier = Modifier.fillMaxSize()) {
             Text(
-              stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_label else R.string.no_reciters_search_label),
+              stringResource(id = if (isForFavorites) R.string.no_favorite_reciters_message else R.string.no_reciters_search_label),
               modifier = Modifier
                 .align(Alignment.Center)
                 .padding(start = 18.dp, end = 18.dp),
@@ -189,7 +188,7 @@ fun RecitersList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecitersTopBar(
-  searchIcon: ImageVector,
+  isSearching: Boolean,
   onSearchClickedClick: () -> Unit,
   scrollBehavior: TopAppBarScrollBehavior
 ) {
@@ -214,10 +213,9 @@ private fun RecitersTopBar(
         onClick = onSearchClickedClick
       ) {
         Icon(
-          searchIcon,
-          contentDescription = stringResource(
-            id = R.string.reciters_search_hint_label
-          ), tint = Color.White
+          imageVector = if (isSearching) Icons.Default.Close else Icons.Default.Search,
+          contentDescription = null,
+          tint = Color.White
         )
       }
     },

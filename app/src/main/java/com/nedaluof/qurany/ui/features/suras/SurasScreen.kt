@@ -1,17 +1,22 @@
 package com.nedaluof.qurany.ui.features.suras
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,6 +61,7 @@ import com.nedaluof.data.model.SuraModel
 import com.nedaluof.qurany.R
 import com.nedaluof.qurany.databinding.PlayerBottomSheetLayoutBinding
 import com.nedaluof.qurany.service.QuranyDownloadService
+import com.nedaluof.qurany.ui.common.QuranySearchBar
 import com.nedaluof.qurany.ui.features.reciters.components.QuranySnackBar
 import com.nedaluof.qurany.ui.features.suras.components.SuraItem
 import com.nedaluof.qurany.ui.features.suras.components.rememberManagedMediaController
@@ -67,7 +74,6 @@ import kotlinx.coroutines.launch
 /**
  * Created By NedaluOf - 6/3/2024.
  */
-
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -169,8 +175,10 @@ fun SurasScreen(
     }) {
     SurasScreenContent(
       reciterName = uiState.reciterName,
-      suras = uiState.suras,
+      surasList = uiState.suras,
       isInFavorites = uiState.isReciterInFavorites,
+      isSearching = uiState.isSearching,
+      searchText = uiState.searchQuery,
       onPlayClicked = { sura ->
         coroutineScope.launch {
           bottomSheetScaffoldState.bottomSheetState.expand()
@@ -184,6 +192,8 @@ fun SurasScreen(
       },
       onCloseClicked = onBackPressed,
       onFavoriteClicked = viewModel::addOrDeleteFromFavorites,
+      onSearchClickedClick = viewModel::toggleSearching,
+      onSearchTextChange = viewModel::onSearchTextChange,
       onScrolled = {
         coroutineScope.launch {
           bottomSheetScaffoldState.bottomSheetState.partialExpand()
@@ -217,43 +227,79 @@ fun SurasScreen(
 fun SurasScreenContent(
   modifier: Modifier = Modifier,
   reciterName: String = "",
-  suras: List<SuraModel> = emptyList(),
+  surasList: List<SuraModel> = emptyList(),
   isInFavorites: Boolean = false,
+  isSearching: Boolean = false,
+  searchText: String = "",
+  onSearchTextChange: (String) -> Unit = {},
   onFavoriteClicked: () -> Unit = {},
-  onPlayClicked: (SuraModel) -> Unit,
-  onDownloadClicked: (SuraModel) -> Unit,
+  onPlayClicked: (SuraModel) -> Unit = {},
+  onDownloadClicked: (SuraModel) -> Unit = {},
   onCloseClicked: () -> Unit = {},
   onScrolled: () -> Unit = {},
+  onSearchClickedClick: () -> Unit = {},
 ) {
+  val lazyListState = rememberLazyListState()
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-  Scaffold(modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
-    SurasTopBar(
-      reciterName = reciterName,
-      isInFavorites = isInFavorites,
-      scrollBehavior = scrollBehavior,
-      onCloseClicked = onCloseClicked,
-      onFavoriteClicked = onFavoriteClicked
-    )
-  }) { paddingValues ->
-    val state = rememberLazyListState()
-    LazyColumn(
-      modifier = modifier
-        .padding(paddingValues)
-        .fillMaxHeight(),
-      state = state,
-      contentPadding = PaddingValues(top = 10.dp, bottom = 60.dp)
-    ) {
-      items(count = suras.size, key = { suras[it].id }) { index ->
-        val item = suras[index]
-        SuraItem(
-          sura = item,
-          onPlayClicked = { onPlayClicked(item) },
-          onDownloadClicked = { onDownloadClicked(item) })
-      }
-    }
+  LaunchedEffect(lazyListState.isScrollInProgress) {
+    onScrolled()
+  }
 
-    LaunchedEffect(state.isScrollInProgress) {
-      onScrolled()
+  Scaffold(
+    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    topBar = {
+      SurasTopBar(
+        reciterName = reciterName,
+        isInFavorites = isInFavorites,
+        isSearching = isSearching,
+        scrollBehavior = scrollBehavior,
+        onCloseClicked = onCloseClicked,
+        onFavoriteClicked = onFavoriteClicked,
+        onSearchClickedClick = onSearchClickedClick
+      )
+    }) { paddingValues ->
+    Column(
+      Modifier
+        .padding(paddingValues)
+        .fillMaxSize()
+    ) {
+      if (isSearching) {
+        QuranySearchBar(
+          modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+          searchQuery = searchText,
+          onTextChange = onSearchTextChange,
+          placeHolder = stringResource(id = R.string.reciter_suras_search_hint_label)
+        )
+      }
+      if (surasList.isNotEmpty()) {
+        LazyColumn(
+          modifier = Modifier.fillMaxHeight(),
+          state = lazyListState,
+          contentPadding = PaddingValues(top = 10.dp, bottom = 60.dp)
+        ) {
+          items(count = surasList.size, key = { surasList[it].id }) { index ->
+            val item = surasList[index]
+            SuraItem(
+              sura = item,
+              onPlayClicked = { onPlayClicked(item) },
+              onDownloadClicked = { onDownloadClicked(item) })
+          }
+        }
+      } else {
+        if (isSearching) {
+          Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+              modifier = Modifier
+                .align(Alignment.Center)
+                .padding(start = 18.dp, end = 18.dp),
+              text = stringResource(id = R.string.no_suras_match_search_query_message),
+              textAlign = TextAlign.Center
+            )
+          }
+        }
+      }
     }
   }
 }
@@ -265,6 +311,8 @@ fun SurasTopBar(
   reciterName: String,
   scrollBehavior: TopAppBarScrollBehavior,
   isInFavorites: Boolean,
+  isSearching: Boolean,
+  onSearchClickedClick: () -> Unit,
   onFavoriteClicked: () -> Unit,
   onCloseClicked: () -> Unit
 ) {
@@ -308,6 +356,17 @@ fun SurasTopBar(
           tint = Color.White
         )
       }
+
+      IconButton(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        onClick = onSearchClickedClick
+      ) {
+        Icon(
+          imageVector = if (isSearching) Icons.Default.Close else Icons.Default.Search,
+          contentDescription = null,
+          tint = Color.White
+        )
+      }
     },
     modifier = modifier.clip(RoundedCornerShape(bottomEnd = 20.dp)),
     scrollBehavior = scrollBehavior
@@ -319,9 +378,7 @@ fun SurasTopBar(
 fun SurasListPreview() {
   QuranyTheme {
     SurasScreenContent(
-      reciterName = ReciterModel.mockList()[0].name,
-      onPlayClicked = {},
-      onDownloadClicked = {},
+      reciterName = ReciterModel.mockList()[0].name
     )
   }
 }

@@ -9,9 +9,11 @@
     <string name="favorites_nav_label">المفضلة</string>
     <string name="rewaya_label">رواية :</string>
     <string name="reciters_search_hint_label">إبحث في قائمة القراء</string>
+    <string name="reciter_suras_search_hint_label">إبحث في سور القارء</string>
     <string name="no_reciters_label">لا يوجد قراء</string>
     <string name="no_reciters_search_label">لا يوجد قارئ يتطابق مع نص البحث.</string>
-    <string name="no_favorite_reciters_label">لم تقم بإضافة أي قارئ لقائمتك المفضلة ,إذهب الى قائمة القرائ وأضف واحدا عن طريق الضغط علة زر القلب لتراه هنا</string>
+    <string name="no_suras_match_search_query_message">لا يوجد سور تتطابق مع نص البحث.</string>
+    <string name="no_favorite_reciters_message">لم تقم بإضافة أي قارئ لقائمتك المفضلة ,إذهب الى قائمة القرائ وأضف واحدا عن طريق الضغط علة زر القلب لتراه هنا</string>
     <string name="sura_count_more_label">هنالك %d سورة</string>
     <string name="sura_count_one_label">هنالك سورة واحدة فقط</string>
     <string name="sura_number_label">رقم السورة : %d</string>

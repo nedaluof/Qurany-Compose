@@ -29,6 +29,7 @@ class SurasViewModel @Inject constructor(
   val uiState = _uiState.asStateFlow()
 
   private var reciter: ReciterModel? = null
+  private val surasList = mutableListOf<SuraModel>()
   val currentPlayingSura = mutableStateOf<SuraModel?>(null)
   //endregion
 
@@ -38,11 +39,15 @@ class SurasViewModel @Inject constructor(
       recitersRepository.getReciterById(reciterId).collect { result ->
         result.onSuccess { reciterModel ->
           reciter = reciterModel
+          with(surasList) {
+            clear()
+            addAll(surasRepository.loadReciterSuras(reciterModel))
+          }
           _uiState.update {
             it.copy(
               reciterName = reciterModel.name,
               isReciterInFavorites = reciterModel.isInMyFavorites,
-              suras = surasRepository.loadReciterSuras(reciterModel)
+              suras = surasList
             )
           }
         }.onFailure { throwable ->
@@ -82,6 +87,29 @@ class SurasViewModel @Inject constructor(
             }
           }
       }
+    }
+  }
+
+  fun onSearchTextChange(text: String) {
+    _uiState.update {
+      it.copy(
+        searchQuery = text,
+        suras = if (text.isNotEmpty() && text.isNotBlank()) {
+          surasList.filter { reciter ->
+            reciter.name.uppercase().contains(uiState.value.searchQuery.trim().uppercase())
+          }
+        } else surasList
+      )
+    }
+  }
+
+  fun toggleSearching() {
+    _uiState.update {
+      it.copy(
+        isSearching = !it.isSearching,
+        searchQuery = "",
+        suras = surasList
+      )
     }
   }
   //endregion

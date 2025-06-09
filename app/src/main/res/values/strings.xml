@@ -13,9 +13,11 @@
     <string name="favorites_nav_label">Favorites</string>
     <string name="rewaya_label">Rewaya:</string>
     <string name="reciters_search_hint_label">Search in reciters</string>
+    <string name="reciter_suras_search_hint_label">Search in reciter suras</string>
     <string name="no_reciters_label">No reciters</string>
     <string name="no_reciters_search_label">No reciters match typed text.</string>
-    <string name="no_favorite_reciters_label">You not added any reciters to your favorites list , try to add one by viewing the reciters list then click on heart button to add it.</string>
+    <string name="no_suras_match_search_query_message">No suras match typed text.</string>
+    <string name="no_favorite_reciters_message">You not added any reciters to your favorites list , try to add one by viewing the reciters list then click on heart button to add it.</string>
     <string name="sura_count_more_label">There %d Suras</string>
     <string name="sura_count_one_label">There is only one sura</string>
     <string name="sura_number_label">Sura No : %d</string>
