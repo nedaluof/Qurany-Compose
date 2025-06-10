@@ -6,8 +6,8 @@ ksp = "2.1.21-2.0.1"
 
 min-sdk = "26"
 compile-sdk = "36"
-version-code = "8"
-version-name = "2.0.0"
+version-code = "9"
+version-name = "2.0.1"
 
 core-ktx = "1.16.0"
 activity-ktx = "1.10.1"
