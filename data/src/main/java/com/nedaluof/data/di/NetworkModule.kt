@@ -1,5 +1,6 @@
 package com.nedaluof.data.di
 
+import com.nedaluof.data.BuildConfig
 import com.nedaluof.data.datasource.remotesource.api.ApiService
 import com.nedaluof.data.datasource.remotesource.api.ApiService.Companion.BASE_URL
 import com.squareup.moshi.Moshi
@@ -30,12 +31,15 @@ object NetworkModule {
 
   @Singleton
   @Provides
-  fun provideOkHttpClient(interceptor: HttpLoggingInterceptor) =
-    OkHttpClient.Builder()
-      .addInterceptor(interceptor)
+  fun provideOkHttpClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
+    val client = OkHttpClient.Builder()
       .readTimeout(180, TimeUnit.SECONDS)
       .connectTimeout(180, TimeUnit.SECONDS)
-      .build()
+    if (BuildConfig.DEBUG) {
+      client.addInterceptor(interceptor)
+    }
+    return client.build()
+  }
 
   @Singleton
   @Provides

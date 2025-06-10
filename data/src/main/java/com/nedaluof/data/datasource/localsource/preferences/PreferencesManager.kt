@@ -1,9 +1,9 @@
 package com.nedaluof.data.datasource.localsource.preferences
 
 import android.content.Context
+import com.nedaluof.data.BuildConfig
 import com.nedaluof.mihawk.MiHawk
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +21,7 @@ class PreferencesManager @Inject constructor(
 
   init {
     MiHawk.Builder(context)
-      .withLoggingEnabled(true)
+      .withLoggingEnabled(BuildConfig.DEBUG)
       .withPreferenceName("QURANY_PREFERENCES")
       .build()
   }
