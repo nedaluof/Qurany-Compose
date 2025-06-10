@@ -91,21 +91,29 @@ class RecitersRepositoryImpl @Inject constructor(
             if (englishResponse.isSuccessful) {
               arabicRecitersVersion.addAll(arabicResponse.body()?.reciters ?: emptyList())
               englishRecitersVersion.addAll(englishResponse.body()?.reciters ?: emptyList())
+              arabicRecitersVersion.sortBy { it.id }
+              englishRecitersVersion.sortBy { it.id }
               if (arabicRecitersVersion.isNotEmpty() && englishRecitersVersion.isNotEmpty()) {
                 if (arabicRecitersVersion.size == englishRecitersVersion.size) {
                   for (index in arabicRecitersVersion.indices) {
                     finalRecitersVersion.add(
                       ReciterEntity(
-                        id = arabicRecitersVersion[index].id, name = LocalText(
+                        id = arabicRecitersVersion[index].id,
+                        name = LocalText(
                           arabicRecitersVersion[index].name ?: "",
                           englishRecitersVersion[index].name ?: ""
-                        ), serverLink = arabicRecitersVersion[index].server, rewaya = LocalText(
+                        ),
+                        serverLink = arabicRecitersVersion[index].server,
+                        rewaya = LocalText(
                           arabicRecitersVersion[index].rewaya ?: "",
                           englishRecitersVersion[index].rewaya ?: ""
-                        ), count = arabicRecitersVersion[index].count, letter = LocalText(
+                        ),
+                        count = arabicRecitersVersion[index].count,
+                        letter = LocalText(
                           arabicRecitersVersion[index].letter ?: "",
                           englishRecitersVersion[index].letter ?: ""
-                        ), suras = arabicRecitersVersion[index].suras ?: ""
+                        ),
+                        suras = arabicRecitersVersion[index].suras ?: ""
                       )
                     )
                   }

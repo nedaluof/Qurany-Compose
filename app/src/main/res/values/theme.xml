@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/green_200</item>
+        <item name="colorPrimaryDark">@color/green_200</item>
+        <item name="colorAccent">@color/green_200</item>
+    </style>
 
     <style name="Theme.Qurany.Light.Splash" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">#1B948E</item>

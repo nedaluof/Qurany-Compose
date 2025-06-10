@@ -52,8 +52,7 @@ fun ReciterItem(
       .padding(bottom = 8.dp)
   ) {
     Row(
-      Modifier
-        .fillMaxWidth()
+      modifier = Modifier.fillMaxWidth()
     ) {
       Box(
         modifier = Modifier.background(AppGreen),
