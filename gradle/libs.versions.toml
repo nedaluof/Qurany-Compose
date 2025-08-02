@@ -1,8 +1,9 @@
 [versions]
-
-agp = "8.10.1"
-kotlin = "2.1.21"
-ksp = "2.1.21-2.0.1"
+agp = "8.11.1"
+kotlin = "2.2.0"
+ksp = "2.2.0-2.0.2"
+google-services = "4.4.3"
+firebase-crashlytics-plugin = "3.0.5"
 
 min-sdk = "26"
 compile-sdk = "36"
@@ -13,31 +14,33 @@ core-ktx = "1.16.0"
 activity-ktx = "1.10.1"
 app-compat = "1.7.1"
 xml-material = "1.12.0"
-compose-bom = "2025.06.00"
+compose-bom = "2025.07.00"
 hilt-navigation-compose = "1.2.0"
 compose-activity = "1.10.1"
-compose-lifecycle = "2.9.1"
-compose-navigation = "2.9.0"
+compose-lifecycle = "2.9.2"
+compose-navigation = "2.9.3"
 splash-api = "1.0.1"
 material-icons-extended = "1.7.8"
-media3 = "1.7.1"
-firebase_bom = "33.15.0"
-hilt = "2.56.2"
-room = "2.7.1"
+media3 = "1.8.0"
+
+firebase_bom = "34.0.0"
+
+hilt = "2.57"
+room = "2.7.2"
 mihawk = "1.3.0"
-timber = "5.0.1"
 coroutines = "1.10.2"
-retrofit = "2.11.0"
-interceptor = "5.0.0-alpha.10"
-moshi = "1.15.1"
-google-services = "4.4.2"
-firebase-crashlytics-plugin = "3.0.4"
+retrofit = "3.0.0"
+interceptor = "5.1.0"
+moshi = "1.15.2"
+
+timber = "5.0.1"
+
 junit = "4.13.2"
-junit-ext = "1.2.1"
-test-runner = "1.6.2"
-test-rules = "1.6.1"
-mockito-core = "5.12.0"
-mockito-inline = "3.9.0"
+junit-ext = "1.3.0"
+test-runner = "1.7.0"
+test-rules = "1.7.0"
+mockito-core = "5.18.0"
+mockito-inline = "5.2.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -58,19 +61,17 @@ compose-navigation = { group = "androidx.navigation", name = "navigation-compose
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "material-icons-extended" }
 splash-api = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-api" }
 
-
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose" }
 compose-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
 compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
 media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
 media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
+media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose", version.ref = "media3" }
 media3-session = { group = "androidx.media3", name = "media3-session", version.ref = "media3" }
+
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase_bom" }
-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
-firebase-analytics-ktx = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
-firebase-inappmessaging-display-ktx = { group = "com.google.firebase", name = "firebase-inappmessaging-display-ktx" }
+
 room-database = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -81,6 +82,12 @@ moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "interceptor" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase_bom" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-inappmessaging-display = { group = "com.google.firebase", name = "firebase-inappmessaging-display" }
+
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -104,9 +111,9 @@ firebase-crashlytics-plugin = { id = "com.google.firebase.crashlytics", version.
 
 [bundles]
 compose = ["compose-material", "compose-ui", "compose-view-binding", "compose-foundation", "compose-ui-tooling"]
-media3 = ["media3-exoplayer", "media3-session", "media3-ui"]
+media3 = ["media3-exoplayer", "media3-session", "media3-ui", "media3-ui-compose"]
 compose-lifecycle = ["compose-lifecycle-runtime", "compose-lifecycle-viewmodel"]
-firebase = ["firebase-crashlytics-ktx", "firebase-analytics-ktx", "firebase-inappmessaging-display-ktx"]
+firebase = ["firebase-crashlytics", "firebase-analytics", "firebase-inappmessaging-display"]
 room = ["room-database", "room-ktx"]
 test = ["junit-ext", "test-runner", "test-rules"]
 mockito = ["mockito-core", "mockito-inline"]

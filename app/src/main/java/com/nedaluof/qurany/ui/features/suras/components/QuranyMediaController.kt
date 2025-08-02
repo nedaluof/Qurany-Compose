@@ -11,9 +11,9 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
@@ -28,7 +28,6 @@ import com.nedaluof.qurany.service.QuranyPlayerService
 fun rememberManagedMediaController(
   lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle
 ): State<MediaController?> {
-  // Application context is used to prevent memory leaks
   val appContext = LocalContext.current.applicationContext
   val controllerManager = remember { MediaControllerManager.getInstance(appContext) }
 
