@@ -6,12 +6,10 @@ import java.util.Properties
  */
 plugins {
   alias(libs.plugins.com.android.application)
-  alias(libs.plugins.org.jetbrains.kotlin.android)
   alias(libs.plugins.ksp)
   alias(libs.plugins.hilt)
   alias(libs.plugins.google.services)
   alias(libs.plugins.firebase.crashlytics.plugin)
-  alias(libs.plugins.org.jetbrains.kotlin.kapt)
   alias(libs.plugins.kotlin.compose)
   alias(libs.plugins.kotlin.parcelize)
 }
@@ -53,16 +51,13 @@ android {
     }
     release {
       isMinifyEnabled = true
-      proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-  }
-  kotlinOptions {
-    jvmTarget = "17"
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
   }
   buildFeatures {
     compose = true
@@ -70,8 +65,6 @@ android {
     buildConfig = true
   }
 }
-
-kapt { correctErrorTypes = true }
 
 dependencies {
   /** app **/
