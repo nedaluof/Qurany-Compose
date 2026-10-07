@@ -77,6 +77,7 @@ fun SurasScreen(
       initialValue = SheetValue.Expanded
     )
   )
+  val appName = stringResource(R.string.app_name)
   LaunchedEffect(suraToPlay) {
     suraToPlay?.let { sura ->
       val isLocal = viewModel.isSuraExistInLocalStorage(sura.suraSubPath)
@@ -93,8 +94,8 @@ fun SurasScreen(
           .setMediaId("${suraToPlay?.id}")
           .setUri(suraURI)
           .setMediaMetadata(
-            MediaMetadata.Builder().setDisplayTitle(context.getString(R.string.app_name))
-              .setTitle(context.getString(R.string.app_name)).setArtist(suraToPlay?.reciterName)
+            MediaMetadata.Builder().setDisplayTitle(appName)
+              .setTitle(appName).setArtist(suraToPlay?.reciterName)
               .setTitle(suraToPlay?.playerTitle).build()
           ).build()
       mediaController?.run {
